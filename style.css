@@ -1,0 +1,211 @@
+ :root {
+  /* The Boutique Palette */
+  --navy: #001f3f;       /* Background */
+  --white: #ffffff;      /* Cards/Text */
+  --bronze: #8B4513;     /* Buttons/Highlights */
+  --soft-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+/* Global Reset - Makes sure every browser treats your page the same */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: var(--navy);
+  color: var(--white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+ 
+.login-container {
+    background-color: var(--white); 
+    color: var(--navy);            
+    width: 400px;
+    height: auto;                 
+    padding: 40px;                 
+    display: flex;
+    flex-direction: column;     
+    justify-content: center;
+    border-radius: 25px;
+    box-shadow: var(--soft-shadow);
+    border: none;                 
+    border-top: 8px solid var(--bronze); 
+    border-bottom: 8px solid var(--bronze);
+    height: 450px; /* Set one specific height for the card */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.login-container h2{
+    display: flex;
+    justify-content: center;
+    font-size: 2.3em;
+}
+
+.input-box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 310px;
+
+    
+}
+
+.input-box input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+/* Style your button like a pro */
+.login-button {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--bronze);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.login-button:hover {
+    background-color: #5d2e0d; /* Darker bronze on hover */
+}
+
+.remember-container {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+    color: #666;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* This glues the box and text together */
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* This is the "magic" property that controls the space between box and text */
+}
+
+.checkbox-group input {
+  cursor: pointer;
+  width: auto; /* Prevents the checkbox from stretching */
+}
+
+.remember-container a {
+  color: var(--bronze);
+  text-decoration: none;
+}
+
+.remember-container a:hover {
+  text-decoration: underline;
+}
+
+#auth-feedback {
+    /* Keep it in the layout but make it thin */
+    margin: 0; 
+    height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+#auth-feedback.feedback-visible {
+    height: 40px;
+    margin-bottom: 10px;
+}
+/* Start hidden */
+.feedback-hidden {
+    visibility: hidden;
+    opacity: 0;
+    max-height: 0;
+    margin-bottom: 0;
+    overflow: hidden;
+    transition: all 0.3s ease; /* Makes the transition smooth, not jerky */
+}
+
+.feedback-visible {
+    visibility: visible;
+    opacity: 1;
+    max-height: 100px; /* Give it enough room to grow */
+    margin-bottom: 20px;
+    padding: 12px;
+}
+/* The "Boutique Red" Vibe */
+.error-vibe {
+    background-color: #fce4e4;  /* Very soft red/pink */
+    color: #921c1c;             /* Deep professional crimson */
+    border: 1px solid #f1b0b0;
+    border-left: 5px solid #921c1c; /* A bold accent line */
+}
+
+/* The Animation Logic */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.shake {
+    animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+/* The Floating Popup*/
+.popup-hidden {
+    position: fixed;
+    top: -100px; 
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 15px 30px;
+    color: white;
+    font-weight: 600;
+    border-radius: 8px;
+    z-index: 9999;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+    transition: top 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy entrance */
+}
+
+/* When the JS adds .show, it slides down */
+.popup-hidden.show {
+    top: 30px; 
+}
+
+/* Boutique Red (Success) */
+.popup-red {
+    background-color: #e74c3c;
+    border-bottom: 4px solid #c0392b;
+}
+
+/* Boutique Green (Success) */
+.popup-green {
+    background-color: #2ecc71;
+    border-bottom: 4px solid #27ae60;
+}
