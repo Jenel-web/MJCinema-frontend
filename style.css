@@ -19,8 +19,12 @@ body {
   color: var(--white);
   display: flex;
   justify-content: center;
+  flex-direction: column;
   align-items: center;
   min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  padding-top: 80px;
 }
  
 .login-container {
@@ -208,4 +212,193 @@ body {
 .popup-green {
     background-color: #2ecc71;
     border-bottom: 4px solid #27ae60;
+}
+ /* Dashboard HTML: Navigation*/
+nav{
+    position: fixed;
+    background-color: var(--white);
+    top: 0;
+    width: 100%;
+    left: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center; /*this makes it come to the center */
+    gap: 1rem;
+    backdrop-filter: blur(10px); /* This creates the "Glass" effect */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(205, 127, 50, 0.2);
+}
+
+.nav-container {
+    width: 100%;
+    max-width: 1400px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+    padding: 0 40px;
+}
+
+.logo-container{
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-right: 200px;
+}
+
+.logo-container img{
+    height: 80px;
+    width: 80px;
+    mix-blend-mode: multiply;
+}
+
+.logo-container h3{
+    color: var(--navy);
+    font-size: 1.2rem;
+    letter-spacing: 3px; /* Premium spacing */
+    font-weight: 300;
+    margin-right: 5rem;
+}
+
+.links-container{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+ .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    
+  }
+
+.nav-links a{
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: bold;
+    color: var(navy);
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    position: relative;
+    letter-spacing: 1.3px;
+
+}
+
+.nav-links a:hover{
+    color: var(--bronze);
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -5px;
+    left: 0;
+    background-color: var(--bronze);
+    transition: width 0.3s ease;
+}
+
+/* Now-Showing Section */
+#now-showing {
+    width: 100%;
+    padding: 40px 0;
+}
+
+.movie-grid {
+    display: grid;
+    /* This creates a responsive grid: min card width 250px, max 1fr */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 30px;
+    padding: 20px 5%;
+    /* Remove all the horizontal scroll/swipe properties */
+    overflow-x: visible;
+    scroll-snap-type: none;
+}
+
+.movie-card {
+     filter: grayscale(0.4); 
+    background-color: var(--navy);
+    border-radius: 15px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* Reset the transformations from the stacking effect */
+    transform: none;
+    opacity: 1;
+    margin: 0;
+}
+
+/* A nice, subtle hover effect for the grid */
+.movie-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+}
+
+.movie-card img {
+    width: 100%;
+    aspect-ratio: 2 / 3; /* Keeps all posters the same size */
+    object-fit: cover;
+}
+
+.card-info {
+    padding: 15px;
+    text-align: center;
+}
+.book-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--bronze);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.book-btn:hover {
+    background-color: #a0522d;
+    filter: brightness(1.2);
+}
+
+/* Container for the specific 'Coming Soon' card to look disabled */
+.movie-card:has(.coming-soon-tag) {
+/* Slightly desaturate the poster */
+    opacity: 0.85;          /* Makes it feel 'faded' */
+    transition: all 0.3s ease;
+}
+
+/* The Brown Fading Tag */
+.coming-soon-tag {
+    background-color: #5d4037; /* Deep Earthy Brown */
+    color: #d7ccc8;           /* Light sand color for text */
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 8px;
+    /* This creates the 'fading' look using a gradient */
+    background: linear-gradient(135deg, #e23c09 0%, #161514 100%);
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+}
+
+/* The Date Text */
+.movie-date {
+    color: #8d6e63; /* Muted brown */
+    font-size: 1.1rem;
+    margin-top: 5px;
+    font-style: italic;
+}
+
+/* Remove hover effects for coming soon cards so they don't 'react' to the mouse */
+.movie-card:has(.coming-soon-tag):hover {
+    transform: none; 
+    box-shadow: none;
 }
