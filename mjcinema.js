@@ -56,11 +56,31 @@ function showError(msg) {
   }, 3000);
 }
 
+//for movie booking
+function openMovieDetails(movie) {
+  const openMovie = document.getElementById("movie-modal");
+  const imageBaseUrl = "https://image.tmdb.org/t/p/w500";
+  //once the movie is tapped, it will show the modal
+  openMovie.innerHTML = `
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <img src="${imageBaseUrl + movie.poster}">
+            <h2>${movie.title}</h2>
+            <p class="rating">⭐ ${movie.rating}</p>
+            <p class="overview">${movie.overview}</p>
+            <button onclick="proceedToBooking(${movie.id})">Book Seats</button>
+        </div>
+    `; //this will be the html of the movies that will be tapped by the user
+  openMovie.style.display = "block";
+}
+
 //this is used to show the movies in grid form
 async function loadMovies(url, type) {
   try {
     const response = await fetch(url);
     const data = await response.json();
+
+    window.allMovies = data; //saves all the movies here so that ClickedCardHandler can use it later.
     const grid = document.getElementById("movie-grid");
 
     if (!Array.isArray(data)) {
@@ -73,20 +93,19 @@ async function loadMovies(url, type) {
 
     grid.innerHTML = data
       .map(
-    
         (movie) => `
-      <div class="movie-card">
+      <div class="movie-card" onclick = "ClickedCardHandler(${movie.id})">
           <img src="${imageBaseUrl + movie.poster}" alt="${movie.title}">
           <div class="card-info">
               <h3>${movie.title}</h3>
               ${
                 type === "now"
-                  ? '<button class="book-btn">Book Now</button>'
+                  ? ""
                   : `<p class="coming-soon-tag">Coming Soon</p> 
                     <h2 class="movie-date">${
                       movie.showDate ? movie.showDate : "TBA"
-                    }</h2>` 
-                    // this is for the showdate to be shown if there is and none if there is none.
+                    }</h2>`
+                // this is for the showdate to be shown if there is and none if there is none.
               }
           </div>
       </div>
@@ -100,6 +119,11 @@ async function loadMovies(url, type) {
   }
 }
 
+function ClickedCardHandler(movieId) {
+  const movie = window.allMovies.find((m) => m.id === movieId); //finds the movie Id
+
+  openMovieDetails(movie);
+}
 // 4. EVENT LISTENERS
 const registerBtn = document.querySelector("#register-button"); // use . for classes
 //shows that its an id with #
@@ -173,6 +197,8 @@ if (loginBtn) {
     );
 
     if (result.success) {
+      localStorage.setItem("userId", result.data.userId); //stores the userID and password of the user logged in
+      localStorage.setItem("username", result.data.username); //this will be used for future transactions of the user.
       showPopup(result.message, "green");
       window.location.href = "dashboard.html";
     } else if (result.message === "Server is offline. Try again later.") {
@@ -190,9 +216,11 @@ const comingSoon = document.getElementById("coming-soon");
 if (nowShowing) {
   nowShowing.addEventListener("click", (e) => {
     e.preventDefault();
+    const movie = document.getElementById("movieCard");
     loadMovies("http://localhost:8080/schedule/now-showing", "now");
+    //uses the movie as a parameter
   });
-}
+} //if the nav button now showing is tapped. it will show the now showing movies html
 if (comingSoon) {
   comingSoon.addEventListener("click", (e) => {
     e.preventDefault();
