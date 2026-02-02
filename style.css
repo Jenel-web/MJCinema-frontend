@@ -402,3 +402,131 @@ nav{
     transform: none; 
     box-shadow: none;
 }
+
+/* The Modal Background (Overlay) */
+#movie-modal {
+    display: none; /* Hidden by default */
+    position: fixed; 
+    z-index: 2000; /* Stays on top of everything */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85); /* Darken the background */
+    backdrop-filter: blur(5px); /* Modern blur effect */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Prevents the background from scrolling */
+}
+
+
+
+
+
+/* The Modal Content for Now Showing Movies */
+.modal-content {
+    background: #1c1c1c;
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 800px;
+    position: relative;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    gap: 25px;
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Animation for the popup */
+@keyframes fadeIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* Close Button (X) */
+.close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 30px;
+    font-weight: bold;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close:hover {
+    color: #ff4d4d; /* Changes to red on hover */
+}
+
+
+
+
+/* Layout inside the modal */
+.modal-content img {
+    width: 250px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.modal-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.modal-info h2 {
+    margin-top: 0;
+    font-size: 2rem;
+    color: #f1c40f; /* Cinema Gold */
+}
+
+.modal-info .overview {
+    line-height: 1.6;
+    color: #ccc;
+}
+
+/* The Booking Button inside the modal */
+.book-btn-modal {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    align-self: flex-start;
+    transition: background 0.3s;
+}
+
+.book-btn-modal:hover {
+    background-color: #c0392b;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between; /* Pushes title left, rating right */
+    align-items: center;           /* Keeps them vertically aligned */
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+/* Fix for the rating style */
+.modal-header .rating {
+    color: #f1c40f;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 1.3rem;
+    white-space: nowrap; /* Prevents the rating from wrapping */
+
+}
+
+/* Ensure title doesn't take up 100% width and squash the rating */
+.modal-header h2 {
+    margin: 0;
+    max-width: 70%; 
+}

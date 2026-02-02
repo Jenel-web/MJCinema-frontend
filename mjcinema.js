@@ -8,14 +8,14 @@ async function authData(url, data) {
       body: JSON.stringify(data),
     });
 
-    const result = await response.json();
+    const result = await response.json(); // gets the result in json form
     if (response.ok) {
-      return { success: true, data: result };
+      return { success: true, data: result }; //will be true if the status code is 200 - 299
     } else {
-      return { success: false, message: result.message || "An error occurred" };
+      return { success: false, message: result.message || "An error occurred" }; // if not, the success will be false
     }
   } catch (error) {
-    return { success: false, message: "Server is offline. Try again later." };
+    return { success: false, message: "Server is offline. Try again later." }; // handles connection error
   }
 }
 function showPopup(message, color) {
@@ -57,21 +57,40 @@ function showError(msg) {
 }
 
 //for movie booking
-function openMovieDetails(movie) {
-  const openMovie = document.getElementById("movie-modal");
+function openMovieDetails(movie, type) {
+  const modal = document.getElementById("movie-modal"); //gets id
   const imageBaseUrl = "https://image.tmdb.org/t/p/w500";
-  //once the movie is tapped, it will show the modal
-  openMovie.innerHTML = `
+
+  //html that will be shown when the movie is clicked
+  modal.innerHTML = `
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
-            <img src="${imageBaseUrl + movie.poster}">
-            <h2>${movie.title}</h2>
-            <p class="rating">⭐ ${movie.rating}</p>
-            <p class="overview">${movie.overview}</p>
-            <button onclick="proceedToBooking(${movie.id})">Book Seats</button>
+            
+            <img src="${imageBaseUrl + movie.poster}" alt="${
+    movie.title
+  }" style="width: 250px; border-radius: 10px;">
+            
+            <div class="modal-info">
+                <div class="modal-header">
+                    <h2>${movie.title}</h2>
+                    <span class="rating">⭐ ${movie.rating} / 10</span>
+                </div>
+                
+                <p class="overview">${movie.overview}</p>
+                ${
+                  type === "now"
+                    ? `<button
+                      class="book-btn-modal"
+                      onclick="proceedToBooking(${movie.movieId})">Book Seats
+                    </button>`
+                    : ""
+                }
+            </div>
         </div>
-    `; //this will be the html of the movies that will be tapped by the user
-  openMovie.style.display = "block";
+    `;
+
+  modal.style.display = "flex";
+  document.body.style.overflow = "hidden";
 }
 
 //this is used to show the movies in grid form
@@ -80,13 +99,18 @@ async function loadMovies(url, type) {
     const response = await fetch(url);
     const data = await response.json();
 
-    window.allMovies = data; //saves all the movies here so that ClickedCardHandler can use it later.
+    // Force it onto the window object explicitly
+    window.allMovies = Array.from(data);
+    console.log(
+      "Data successfully saved to window.allMovies:",
+      window.allMovies
+    ); //saves all the movies here so that ClickedCardHandler can use it later.
     const grid = document.getElementById("movie-grid");
 
     if (!Array.isArray(data)) {
       console.error("Backend sent an object instead of a list:", data);
       grid.innerHTML = "<p>Unexpected data format from server.</p>";
-      return;
+      return; //checks the data send by the backend
     }
     // We use .map().join('') here because it's faster than innerHTML += in a loop
     const imageBaseUrl = "https://image.tmdb.org/t/p/w500";
@@ -94,7 +118,9 @@ async function loadMovies(url, type) {
     grid.innerHTML = data
       .map(
         (movie) => `
-      <div class="movie-card" onclick = "ClickedCardHandler(${movie.id})">
+      <div class="movie-card" onclick = "ClickedCardHandler(${
+        movie.movieId
+      }, '${type}')"> 
           <img src="${imageBaseUrl + movie.poster}" alt="${movie.title}">
           <div class="card-info">
               <h3>${movie.title}</h3>
@@ -119,17 +145,37 @@ async function loadMovies(url, type) {
   }
 }
 
-function ClickedCardHandler(movieId) {
-  const movie = window.allMovies.find((m) => m.id === movieId); //finds the movie Id
+function ClickedCardHandler(movieId, type) {
+  const idFinder = Number(movieId);
+  const allMovies = window.allMovies;
+  const movie = window.allMovies.find((m) => Number(m.movieId) === idFinder); //finds the movieId
 
-  openMovieDetails(movie);
+  if (!movie) {
+    console.error(
+      "Search failed! Checked " +
+        window.allMovies.length +
+        " movies but couldn't find ID: " +
+        idFinder
+    );
+    console.log("Current Array Data:", window.allMovies);
+    return;
+    //only shows the HTML
+  }
+  openMovieDetails(movie, type);
 }
+
+function closeModal() {
+  const modal = document.getElementById("movie-modal");
+  if (modal) {
+    modal.style.display = "none";
+    document.body.style.overflow = "auto"; // Re-enable background scrolling
+  }
+} // this is for closing the popup.
 // 4. EVENT LISTENERS
 const registerBtn = document.querySelector("#register-button"); // use . for classes
 //shows that its an id with #
 
 if (registerBtn) {
-  // 2. LISTEN for the click
   registerBtn.addEventListener("click", async (e) => {
     // STOP the form from submitting to a server (for now)
     e.preventDefault();
@@ -149,18 +195,18 @@ if (registerBtn) {
     };
 
     if (pass !== con) {
-      showError("Passwords do not match.");
-      return;
+      showError("Passwords do not match."); //uses the showError function which will have a popup red feedback
+      return; //compares the two entered password which should be the same
     }
     const count = pass.length;
     if (count < 8) {
       showError("Password length should be more than 8 characters.");
       return;
-    }
+    } //passwords should be more thann 8 characters
     const result = await authData(
       "http://localhost:8080/user/register",
       registerData
-    );
+    ); //result will be the data fetched from the endpoint
 
     if (result.success) {
       showPopup("Account Created. Redirecting...", "green");
@@ -224,6 +270,6 @@ if (nowShowing) {
 if (comingSoon) {
   comingSoon.addEventListener("click", (e) => {
     e.preventDefault();
-    loadMovies("http://localhost:8080/schedule/coming-soon", "soon");
+    loadMovies("http://localhost:8080/schedule/coming-soon", "soon"); //this is where the typex comes from
   });
 }
