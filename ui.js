@@ -1,4 +1,4 @@
-class UI {
+export class UI {
   showPopup(message, color) {
     const popup = document.getElementById("status-popup");
 

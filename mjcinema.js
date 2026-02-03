@@ -1,60 +1,8 @@
-async function authData(url, data) {
-  try {
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+import { UI } from "./ui.js";
+import { Auth } from "./auth.js";
 
-    const result = await response.json(); // gets the result in json form
-    if (response.ok) {
-      return { success: true, data: result }; //will be true if the status code is 200 - 299
-    } else {
-      return { success: false, message: result.message || "An error occurred" }; // if not, the success will be false
-    }
-  } catch (error) {
-    return { success: false, message: "Server is offline. Try again later." }; // handles connection error
-  }
-}
-function showPopup(message, color) {
-  const popup = document.getElementById("status-popup");
-
-  popup.classList.remove("popup-green", "popup-red");
-
-  popup.innerText = message;
-
-  // We use the "green" label to decide which CSS class to add
-  if (color === "green") {
-    popup.classList.add("popup-green");
-  } else if (color === "red") {
-    popup.classList.add("popup-red");
-  }
-  popup.classList.add("show");
-
-  // 4. Auto-hide after 3 seconds
-  setTimeout(() => {
-    popup.classList.remove("show");
-  }, 3000);
-}
-
-function showError(msg) {
-  const feedback = document.getElementById("auth-feedback");
-  const container = document.querySelector(".login-container");
-
-  feedback.innerText = msg;
-  feedback.className = "feedback-visible error-vibe"; // Swaps to our floating box
-
-  // Add the shake to the container for impact
-  container.classList.add("shake");
-  setTimeout(() => container.classList.remove("shake"), 400);
-
-  // AUTO-HIDE after 3 seconds so they can type again
-  setTimeout(() => {
-    feedback.className = "feedback-hidden";
-  }, 3000);
-}
+const authApp = new Auth(); //automatically does what the function sayss
+const ui = new UI(); //imports UI and instantiates
 
 //for movie booking
 function openMovieDetails(movie, type) {
@@ -85,6 +33,7 @@ function openMovieDetails(movie, type) {
                     </button>`
                     : ""
                 }
+                <div id="schedule-container"></div>
             </div>
         </div>
     `;
@@ -162,6 +111,7 @@ function ClickedCardHandler(movieId, type) {
     //only shows the HTML
   }
   openMovieDetails(movie, type);
+  localStorage.setItem("movieId", movieId);
 }
 
 function closeModal() {
@@ -171,90 +121,73 @@ function closeModal() {
     document.body.style.overflow = "auto"; // Re-enable background scrolling
   }
 } // this is for closing the popup.
-// 4. EVENT LISTENERS
-const registerBtn = document.querySelector("#register-button"); // use . for classes
-//shows that its an id with #
 
-if (registerBtn) {
-  registerBtn.addEventListener("click", async (e) => {
-    // STOP the form from submitting to a server (for now)
-    e.preventDefault();
+const movieId = localStorage.getItem("movieId");
 
-    const feedback = document.getElementById("auth-feedback");
-    if (feedback.classList.contains("feedback-visible")) {
-      feedback.className = "feedback-hidden";
+//for booking
+async function proceedToBooking(movieId) {
+  const baseUrl = "http://localhost:8080";
+  const bookBtn = document.querySelector(".book-btn-modal");
+  if (bookBtn) {
+    try {
+      const response = await fetch(
+        `${baseUrl}/schedule/movieSchedules/${movieId}`
+      );
+
+      if (!response.ok) {
+        console.log("unable to fetch schedules");
+      }
+
+      const schedules = await response.json();
+
+      renderScheduleSelection(schedules);
+    } catch (e) {
+      console.error("Error:", e);
     }
-    // 3. GET the data
-    const user = document.querySelector("#reg-username").value;
-    const pass = document.querySelector("#reg-password").value; // to get the value
-    const con = document.querySelector("#confirm-password").value;
-    const registerData = {
-      username: user,
-      password: pass,
-      confirm: con,
-    };
+  }
+}
+function renderScheduleSelection(schedules) {
+  const container = document.getElementById("schedule-container");
+  container.innerHTML = `<h3>Select a Showtime</h3>`;
 
-    if (pass !== con) {
-      showError("Passwords do not match."); //uses the showError function which will have a popup red feedback
-      return; //compares the two entered password which should be the same
-    }
-    const count = pass.length;
-    if (count < 8) {
-      showError("Password length should be more than 8 characters.");
+  // 1. Create the dropdown (select) element
+  const select = document.createElement("select");
+  select.id = "showtime-dropdown";
+  select.className = "schedule-dropdown";
+
+  // 2. Add a default "Choose" option
+  const defaultOpt = document.createElement("option");
+  defaultOpt.text = "-- Choose a showtime --";
+  defaultOpt.value = "";
+  select.appendChild(defaultOpt);
+
+  // 3. Fill the dropdown with schedules
+  schedules.forEach((sched) => {
+    const option = document.createElement("option");
+    option.value = sched.id; // The ID we need for booking
+    option.text = `${sched.showDate} | ${sched.startTime} - ${sched.cinema.location}`;
+    select.appendChild(option);
+  });
+
+  // 4. Create a "Proceed" button
+  const proceedBtn = document.createElement("button");
+  proceedBtn.innerText = "Select Seats";
+  proceedBtn.className = "confirm-sched-btn";
+
+  proceedBtn.onclick = () => {
+    const selectedId = select.value;
+    if (!selectedId) {
+      alert("Please select a time slot first!");
       return;
-    } //passwords should be more thann 8 characters
-    const result = await authData(
-      "http://localhost:8080/user/register",
-      registerData
-    ); //result will be the data fetched from the endpoint
-
-    if (result.success) {
-      showPopup("Account Created. Redirecting...", "green");
-      setTimeout(() => {
-        window.location.href = "index.html";
-      }, 2000); //shows the popup for 2 seconds
-    } else {
-      showPopup("Server is offline. Try again later.", "red");
     }
-  });
+    // Save and redirect
+    localStorage.setItem("selectedScheduleId", selectedId);
+    window.location.href = "bookseat.html";
+  };
+
+  container.appendChild(select);
+  container.appendChild(proceedBtn);
 }
-
-const loginBtn = document.querySelector("#login-button");
-if (loginBtn) {
-  loginBtn.addEventListener("click", async (e) => {
-    e.preventDefault();
-
-    const feedback = document.getElementById("auth-feedback");
-    if (feedback.classList.contains("feedback-visible")) {
-      feedback.className = "feedback-hidden";
-    }
-
-    const user = document.querySelector("#username").value;
-    const pass = document.querySelector("#password").value; // get value
-
-    const loginCred = {
-      username: user,
-      password: pass,
-    };
-
-    const result = await authData(
-      "http://localhost:8080/user/login",
-      loginCred
-    );
-
-    if (result.success) {
-      localStorage.setItem("userId", result.data.userId); //stores the userID and password of the user logged in
-      localStorage.setItem("username", result.data.username); //this will be used for future transactions of the user.
-      showPopup(result.message, "green");
-      window.location.href = "dashboard.html";
-    } else if (result.message === "Server is offline. Try again later.") {
-      showPopup("Server is offline. Try again later.", "red");
-    } else {
-      showError("Invalid Username or Password.");
-    }
-  });
-}
-
 const nowShowing = document.getElementById("now-showing");
 const comingSoon = document.getElementById("coming-soon");
 
@@ -273,3 +206,9 @@ if (comingSoon) {
     loadMovies("http://localhost:8080/schedule/coming-soon", "soon"); //this is where the typex comes from
   });
 }
+
+window.ClickedCardHandler = ClickedCardHandler;
+window.closeModal = closeModal;
+window.loadMovies = loadMovies;
+// Add this at the very bottom of your file
+window.proceedToBooking = proceedToBooking;
