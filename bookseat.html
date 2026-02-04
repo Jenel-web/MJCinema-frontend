@@ -3,9 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Booking Page</title>
+    <link rel = "stylesheet" href = "style.css">
 </head>
 <body>
-    <h1>hello world</h1>
+    <div class="booking-wrapper">
+    <header>
+        <button onclick="history.back()">Back</button>
+        <h2 id="movie-title">Movie Title</h2>
+    </header>
+
+    <main class="blueprint-container">
+        <div class="screen-container">
+            <div class="curved-screen"></div>
+            <p>SCREEN</p>
+        </div>
+
+        <div id="seat-grid" class="blueprint-grid">
+            </div>
+
+        <div class="legend">
+            <div class="legend-item"><span class="seat"></span> Available</div>
+            <div class="legend-item"><span class="seat selected"></span> Selected</div>
+            <div class="legend-item"><span class="seat occupied"></span> Taken</div>
+        </div>
+    </main>
+
+    <div class="checkout-bar">
+        <div class="info">
+            <p>Selected Seats: <span id="display-seats">None</span></p>
+            <h3>Total: ₱<span id="display-total">0</span></h3>
+        </div>
+        <button id="confirm-booking-btn" class="btn-primary">Confirm Booking</button>
+    </div>
+</div>
+    <script type = "module" src = "bookseat.js\"></script>
 </body>
 </html>

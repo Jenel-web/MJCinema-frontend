@@ -277,7 +277,7 @@ nav{
     text-decoration: none;
     font-size: 15px;
     font-weight: bold;
-    color: var(--navy);
+    color: var(-);
     text-transform: uppercase;
     transition: all 0.3s ease;
     position: relative;
@@ -584,5 +584,45 @@ nav{
 }
 
 .confirm-sched-btn:hover {
-    background-color: ;
+    background-color: var(--bronze);
+}
+
+/* blueprint.css */
+.blueprint-grid {
+    display: grid;
+    /* Uses the variable from JS */
+    grid-template-columns: repeat(var(--grid-cols), 32px); 
+    gap: 10px;
+    justify-content: center;
+    /* This tilt makes it look like a technical drawing */
+    transform: perspective(1000px) rotateX(15deg);
+    margin: 50px 0;
+}
+
+.seat {
+    width: 30px;
+    height: 30px;
+    border: 1.5px solid #00d2ff; /* Blueprint cyan */
+    background: rgba(0, 210, 255, 0.1);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.seat.selected {
+    background: #f1c40f; /* Gold for selection */
+    box-shadow: 0 0 15px #f1c40f;
+    border-color: #fff;
+}
+
+.seat.occupied {
+    background: #2c3e50;
+    border-color: #1a252f;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.aisle-spacer {
+    width: 30px;
+    height: 30px;
 }

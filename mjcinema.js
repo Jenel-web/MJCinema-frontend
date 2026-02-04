@@ -122,72 +122,73 @@ function closeModal() {
   }
 } // this is for closing the popup.
 
-const movieId = localStorage.getItem("movieId");
+const movieId = localStorage.getItem("movieId"); //should use quotation marks for the fetching of variable
 
 //for booking
 async function proceedToBooking(movieId) {
-  const baseUrl = "http://localhost:8080";
-  const bookBtn = document.querySelector(".book-btn-modal");
+  const baseUrl = "http://localhost:8080"; //makes the base url thank can be accessed within the function
+  const bookBtn = document.querySelector(".book-btn-modal"); //button class
   if (bookBtn) {
     try {
       const response = await fetch(
-        `${baseUrl}/schedule/movieSchedules/${movieId}`
+        `${baseUrl}/schedule/movieSchedules/${movieId}` //use backticks for the string
       );
 
       if (!response.ok) {
         console.log("unable to fetch schedules");
       }
 
-      const schedules = await response.json();
-
-      renderScheduleSelection(schedules);
+      const schedules = await response.json(); //make the response in json form
+      bookBtn.style.display = "none";
+      renderScheduleSelection(schedules); //function to show schedules in html form
     } catch (e) {
       console.error("Error:", e);
     }
   }
 }
 function renderScheduleSelection(schedules) {
-  const container = document.getElementById("schedule-container");
+  const container = document.getElementById("schedule-container"); //parent div which should be in the html
   container.innerHTML = `<h3>Select a Showtime</h3>`;
 
   // 1. Create the dropdown (select) element
-  const select = document.createElement("select");
-  select.id = "showtime-dropdown";
+  const select = document.createElement("select"); //creates element
+  select.id = "showtime-dropdown"; //initalized the class and id of the new element
   select.className = "schedule-dropdown";
 
   // 2. Add a default "Choose" option
   const defaultOpt = document.createElement("option");
   defaultOpt.text = "-- Choose a showtime --";
   defaultOpt.value = "";
-  select.appendChild(defaultOpt);
+  select.appendChild(defaultOpt); //adds this new variable to select
 
   // 3. Fill the dropdown with schedules
   schedules.forEach((sched) => {
     const option = document.createElement("option");
-    option.value = sched.id; // The ID we need for booking
-    option.text = `${sched.showDate} | ${sched.startTime} - ${sched.cinema.location}`;
-    select.appendChild(option);
+    option.value = sched.id; // The ID we need for booking (scheduleId)
+    option.text = `${sched.showDate} | ${sched.startTime} - ${sched.cinema.location}`; //takes the data from the json
+    select.appendChild(option); //appends to select
   });
 
   // 4. Create a "Proceed" button
-  const proceedBtn = document.createElement("button");
+  const proceedBtn = document.createElement("button"); //creates the button
   proceedBtn.innerText = "Select Seats";
   proceedBtn.className = "confirm-sched-btn";
 
   proceedBtn.onclick = () => {
-    const selectedId = select.value;
+    const selectedId = select.value; //the schedId of the value from the option
     if (!selectedId) {
-      alert("Please select a time slot first!");
+      alert("Please select a time slot first!"); //checks if the user selects a schedule
       return;
     }
     // Save and redirect
-    localStorage.setItem("selectedScheduleId", selectedId);
-    window.location.href = "bookseat.html";
+    localStorage.setItem("selectedScheduleId", selectedId); //takes the selected scheduleId and saves it
+    window.location.href = "bookseat.html"; //redirected to booking
   };
 
   container.appendChild(select);
   container.appendChild(proceedBtn);
 }
+
 const nowShowing = document.getElementById("now-showing");
 const comingSoon = document.getElementById("coming-soon");
 
