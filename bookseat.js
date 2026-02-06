@@ -9,31 +9,36 @@ async function initBooking() {
   const cinema = schedule.cinema;
 
   //get the prices
-  const result = await fetch(`http://localhost:8080/schedule/schedPrice/${scheduleId}`);
+  const result = await fetch(
+    `http://localhost:8080/schedule/schedPrice/${scheduleId}`
+  );
   const prices = await result.json();
   let priceList = {};
 
-  prices.forEach(item => {
+  prices.forEach((item) => {
     priceList[item.seatCategory] = item.price;
   });
-  console.log(priceList.VIP)
-  console.log(priceList.REGULAR)
-  console.log(priceList.BALCONY)
-  
+  console.log(priceList.VIP);
+  console.log(priceList.REGULAR);
+  console.log(priceList.BALCONY);
+
   renderBlueprint(cinema.totalRows, cinema.totalColumns, cinema.seatLayout);
 }
 
-async function getOccupiedSeats(scheduleId){
-    const response = await fetch(`http://localhost:8080/seat/occupied/${scheduleId}`);
+async function getOccupiedSeats(scheduleId) {
+  const response = await fetch(
+    `http://localhost:8080/seat/occupied/${scheduleId}`
+  );
 
-    const occupiedSeats = await response.json()
+  const occupiedSeats = await response.json();
 
-    return occupiedSeats;
+  return occupiedSeats;
 }
 
 function renderBlueprint(rows, layoutString, occupiedSeats) {
   const grid = document.getElementById("seat-grid");
   const cols = layoutString.length;
+  //will do the blue print with the length of the string
 
   // Set CSS Variable for grid columns
   grid.style.setProperty("--grid-cols", cols);
@@ -56,12 +61,12 @@ function renderBlueprint(rows, layoutString, occupiedSeats) {
         // Create a clickable seat
         const seat = document.createElement("div");
         seat.className = "seat";
-        
+
         // If the seat is in the 'occupied' list from backend
         if (occupiedSeats.includes(seatId)) {
           seat.classList.add("occupied");
         } else {
-          seat.onclick = () => handleSeatClick(seat, seatId);
+          seat.onclick = () => handleSeatClick(seat, seatId); //onclick will do the function
         }
 
         grid.appendChild(seat);
