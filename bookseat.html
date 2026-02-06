@@ -1,42 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Booking Page</title>
-    <link rel = "stylesheet" href = "style.css">
-</head>
-<body>
-    <div class="booking-wrapper">
-    <header>
-        <button onclick="history.back()">Back</button>
-        <h2 id="movie-title">Movie Title</h2>
-    </header>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+   <div class="booking-wrapper">
+  <header class="booking-header">
+    <h2 id="movie-title">Movie Title</h2>
+    <button class="btn-back" onclick="history.back()">✕ Back</button>
+  </header>
 
-    <main class="blueprint-container">
-        <div class="screen-container">
-            <div class="curved-screen"></div>
-            <p>SCREEN</p>
-        </div>
-
-        <div id="seat-grid" class="blueprint-grid">
-            </div>
-
-        <div class="legend">
-            <div class="legend-item"><span class="seat"></span> Available</div>
-            <div class="legend-item"><span class="seat selected"></span> Selected</div>
-            <div class="legend-item"><span class="seat occupied"></span> Taken</div>
-        </div>
-    </main>
-
-    <div class="checkout-bar">
-        <div class="info">
-            <p>Selected Seats: <span id="display-seats">None</span></p>
-            <h3>Total: ₱<span id="display-total">0</span></h3>
-        </div>
-        <button id="confirm-booking-btn" class="btn-primary">Confirm Booking</button>
+  <main class="blueprint-container">
+    <div class="legend-container">
+      <div class="legend-item">
+        <div class="seat-sample available"></div>
+        <span>Available</span>
+      </div>
+      <div class="legend-item">
+        <div class="seat-sample selected"></div>
+        <span>Selected</span>
+      </div>
+      <div class="legend-item">
+        <div class="seat-sample occupied"></div>
+        <span>Occupied</span>
+      </div>
     </div>
+
+    <div class="screen-container">
+      <div class="curved-screen"></div>
+      <p>SCREEN</p>
+    </div>
+
+    <div id="seat-grid" class="blueprint-grid"></div>
+  </main>
+
+  <footer class="checkout-bar">
+    <div class="info">
+      <p>Selected Seats: <span id="display-seats">None</span></p>
+      <h3>Total: ₱<span id="display-total">0</span></h3>
+    </div>
+    <button id="confirm-booking-btn" class="btn-confirm">
+      Confirm Booking
+    </button>
+  </footer>
 </div>
-    <script type = "module" src = "bookseat.js\"></script>
-</body>
+    <script type="module" src="bookseat.js"></script>
+  </body>
 </html>

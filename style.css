@@ -587,27 +587,41 @@ nav{
     background-color: var(--bronze);
 }
 
+
+/* for the movie booking */
 /* blueprint.css */
 .blueprint-grid {
     display: grid;
-    /* Uses the variable from JS */
-    grid-template-columns: repeat(var(--grid-cols), 32px); 
+    /* Grid columns must match the layout string length */
+    grid-template-columns: repeat(var(--grid-cols), 1fr); 
     gap: 10px;
-    justify-content: center;
-    /* This tilt makes it look like a technical drawing */
-    transform: perspective(1000px) rotateX(15deg);
-    margin: 50px 0;
+    padding: 20px;
+    background: var(--navy);
+    border-radius: 10px;
 }
 
 .seat {
-    width: 30px;
-    height: 30px;
-    border: 1.5px solid #00d2ff; /* Blueprint cyan */
-    background: rgba(0, 210, 255, 0.1);
-    border-radius: 4px;
+    width: 35px;
+    height: 35px;
+    background-color: #444451;
+    color: white;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
     cursor: pointer;
-    transition: 0.3s;
 }
+
+.aisle-spacer {
+    width: 35px;
+    height: 35px;
+    background: transparent; /* Makes the space invisible */
+    pointer-events: none;     /* Users can't click the floor */
+}
+
+/* Legend Styling */
 
 .seat.selected {
     background: #f1c40f; /* Gold for selection */
@@ -616,8 +630,8 @@ nav{
 }
 
 .seat.occupied {
-    background: #2c3e50;
-    border-color: #1a252f;
+    background: #d10f0f;
+    border-color: #1a1c2f;
     opacity: 0.5;
     cursor: not-allowed;
 }
@@ -625,4 +639,225 @@ nav{
 .aisle-spacer {
     width: 30px;
     height: 30px;
+}
+
+/* Container for the whole grid */
+.blueprint-grid {
+    display: grid;
+    /* This variable is set by your JS: grid.style.setProperty("--grid-cols", cols) */
+    grid-template-columns: repeat(var(--grid-cols), 35px); 
+    gap: 8px;
+    justify-content: center;
+    padding: 40px;
+    /* The technical "tilted" look */
+    transform: perspective(1200px) rotateX(15deg);
+    margin: 0 auto;
+}
+
+/* Hover effect for available seats */
+.seat:not(.occupied):hover {
+    background: rgba(0, 210, 255, 0.3);
+    box-shadow: 0 0 10px #00d2ff;
+    transform: translateY(-2px);
+}
+
+/* Selected state (When clicked) */
+.seat.selected {
+    background: #f1c40f; /* Gold selection */
+    border-color: #fff;
+    box-shadow: 0 0 15px #f1c40f;
+    color: #000;
+}
+
+/* Occupied state (Already booked) */
+.seat.occupied {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #444;
+    color: #444;
+    cursor: not-allowed;
+    opacity: 0.4;
+}
+
+
+/* The curved movie screen */
+.screen-container {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.curved-screen {
+    width: 60%;
+    height: 5px;
+    background: #fff;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    box-shadow: 0 -10px 25px rgba(255, 255, 255, 0.8);
+}
+
+.screen-container p {
+    color: #00d2ff;
+    letter-spacing: 8px;
+    font-size: 12px;
+    opacity: 0.6;
+}
+
+/* Checkout Bar at the bottom */
+.checkout-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background:#0a192f;
+    border-top: 1px solid #00d2ff;
+    padding: 20px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 100;
+}
+
+.info h3 {
+    margin: 0;
+    color: #f1c40f;
+}
+
+.seat.vip-seat {
+    border-color: #e74c3c; /* Red border for VIP */
+    color: #e74c3c;
+}
+/* Container for the whole legend */
+.legend-container {
+    display: flex;
+    flex-direction: row;      /* Force items to be side-by-side */
+    justify-content: center;   /* Center them horizontally */
+    gap: 30px;                /* Space between each legend item */
+    margin-bottom: 25px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+}
+
+/* Individual legend item (box + text) */
+.legend-item {
+    display: flex;
+    align-items: center;      /* Align box and text vertically */
+    gap: 8px;                 /* Space between the color box and the label */
+    color: #fff;
+    font-size: 14px;
+}
+
+/* Sample boxes in the legend */
+.seat-sample {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+}
+
+.available { background-color: #444451; }
+.selected { background-color: #00d2ff; }
+.occupied { background-color: #ff4d4d; }
+
+.booking-wrapper {
+    padding-bottom: 100px; /* Space for the checkout div to sit comfortably */
+}
+
+#seat-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--grid-cols), 1fr);
+    gap: 12px;
+    padding: 20px;
+    margin-bottom: 50px; /* Creates a gap between the last row and the checkout info */
+    background: rgba(0, 0, 0, 0.2); /* Optional: darkens seat area for contrast */
+    border-radius: 15px;
+}
+
+/* The Checkout/Info Div */
+.checkout-section {
+    margin-top: 30px;
+    padding: 20px;
+    border-top: 1px solid #444;
+    background-color: #111; /* Keeps it distinct from the seat area */
+}
+
+/* Header & Back Button */
+.booking-header {
+  position: relative;
+  text-align: center;
+  padding: 20px 0;
+  margin-bottom: 20px;
+}
+
+.btn-back {
+  position: absolute;
+  top: 20px;
+  right: 10px; /* Moves it to the upper right */
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.btn-back:hover {
+  background: #ff4d4d;
+  border-color: #ff4d4d;
+}
+
+/* Bottom Checkout Bar */
+.checkout-bar {
+  position: fixed; /* Keeps it visible at the bottom */
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #1a1a1a;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 50px;
+  border-top: 1px solid #333;
+  box-sizing: border-box;
+  z-index: 100;
+}
+
+.checkout-bar .info p {
+  color: #aaa;
+  margin: 0;
+  font-size: 14px;
+}
+
+.checkout-bar .info h3 {
+  color: #fff;
+  margin: 5px 0 0 0;
+  font-size: 24px;
+}
+
+/* The Confirm Button */
+.btn-confirm {
+  background: linear-gradient(45deg, #00d2ff, #3a7bd5);
+  color: white;
+  border: none;
+  padding: 15px 35px;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 210, 255, 0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-confirm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 210, 255, 0.4);
+}
+
+.btn-confirm:active {
+  transform: translateY(0);
+}
+
+/* Ensure the grid doesn't get hidden behind the bar */
+.blueprint-container {
+  padding-bottom: 120px; 
 }

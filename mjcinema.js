@@ -164,7 +164,7 @@ function renderScheduleSelection(schedules) {
   // 3. Fill the dropdown with schedules
   schedules.forEach((sched) => {
     const option = document.createElement("option");
-    option.value = sched.id; // The ID we need for booking (scheduleId)
+    option.value = sched.scheduleId; // The ID we need for booking (scheduleId)
     option.text = `${sched.showDate} | ${sched.startTime} - ${sched.cinema.location}`; //takes the data from the json
     select.appendChild(option); //appends to select
   });
