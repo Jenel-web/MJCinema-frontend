@@ -123,30 +123,59 @@ document.addEventListener("DOMContentLoaded", () => {
   initBooking();
 });
 
+// ticket booking
 async function bookTicket(selectedSeats = []) {
   const id = localStorage.getItem("selectedScheduleId");
-
+  const user = localStorage.getItem("userId");
   const data = {
-    scheduleId: id,
-    seat: selectedSeats,
-  };
+    userId: Number(user),
+    scheduleId: Number(id), //its a string when received in the localStorage
+    selectedSeat: selectedSeats,
+  }; //maps the data to the java post method
+
+  console.log("Sending Data:", JSON.stringify(data));
   try {
-    const response = await fetch(`http://localhost:8080/ticket/book`, {
+    const response = await fetch("http://localhost:8080/ticket/book", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
+      credentials: "include",
     });
 
-    const result = await response.json();
-
-    if(result.ok){
+    if (response.ok) {
+      const result = await response.json(); //does not need to create a new variable for checking
       alert("Ticket booked successfully.");
-    }else{
+    } else {
+      const result = await response.json();
       alert("Booking failed.");
     }
   } catch (error) {
-    console.error( "Error : " + error);
+    console.error("Error : " + error);
   }
 }
+
+const bookBtn = document.querySelector(".btn-confirm");
+
+bookBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  if (selectedSeats.length === 0) {
+    alert("Please select atleast one seat.");
+    return;
+  }
+
+  const modal = document.getElementById("confirm-modal");
+  modal.style.display = "flex"; // Show the modal
+
+  document.getElementById("cancel-btn").onclick = () => {
+    modal.style.display = "none";
+  };
+
+  // Handle "Yes, Book Now"
+  document.getElementById("confirm-btn").onclick = async () => {
+    modal.style.display = "none"; // Hide it
+    await bookTicket(selectedSeats); // Trigger your Java API
+  };
+});
