@@ -1,5 +1,5 @@
-let priceList = {};
-let selectedSeats = [];
+let priceList = {}; //pricelist where the data we fetched will go
+let selectedSeats = []; //initialized the selected seats which is empty at first
 
 async function initBooking() {
   const scheduleId = localStorage.getItem("selectedScheduleId");
@@ -57,32 +57,32 @@ function renderBlueprint(rows, cols, layoutString, occupiedSeats = []) {
   grid.innerHTML = "";
 
   for (let r = 0; r < rows; r++) {
-    const rowLetter = String.fromCharCode(65 + r);
+    const rowLetter = String.fromCharCode(65 + r); //loops from A to the number of rows
     let seatNumberInRow = 1; // Reset for every new row (A, B, C...)
 
     for (let i = 0; i < layoutString.length; i++) {
-      const char = layoutString[i];
+      //this takes the length of the layout String which counts the S and the Blank
+      const char = layoutString[i]; //takes the character in the layoutString to verify
 
       if (char === "_") {
         // If underscore, create an invisible spacer
-        const spacer = document.createElement("div");
+        const spacer = document.createElement("div"); //makes a div for the empty space
         spacer.className = "aisle-spacer";
         grid.appendChild(spacer);
       } else {
         // If 'S', create a seat and give it the next number
-        const seatId = `${rowLetter}${seatNumberInRow}`;
-        const seat = document.createElement("div");
-        seat.className = "seat";
-
-
+        const seatId = `${rowLetter}${seatNumberInRow}`; //assigns the seat Id
+        const seat = document.createElement("div"); //creates an element div
+        seat.className = "seat"; //configured and styled in css based on className
 
         if (occupiedSeats.includes(seatId)) {
-          seat.classList.add("occupied");
+          // checks from the data fetched if its already occupied
+          seat.classList.add("occupied"); //adds the classList name
         } else {
           seat.onclick = () => handleSeatClick(seat, seatId);
         }
 
-        grid.appendChild(seat);
+        grid.appendChild(seat); //gr
         seatNumberInRow++; // Increment only for actual seats
       }
     }
@@ -91,8 +91,9 @@ function renderBlueprint(rows, cols, layoutString, occupiedSeats = []) {
 
 function handleSeatClick(seatElement, seatId) {
   if (seatElement.classList.contains("selected")) {
-    seatElement.classList.remove("selected");
-    selectedSeats = selectedSeats.filter((id) => id !== seatId);
+    seatElement.classList.remove("selected"); //if already selected, it will be unselected
+    selectedSeats = selectedSeats.filter((id) => id !== seatId); //filters the selected seats
+    //makes it a new one where the seat id of unselected will not be there.
   } else {
     seatElement.classList.add("selected");
     selectedSeats.push(seatId);
@@ -105,12 +106,12 @@ function updateUI() {
 
   // Calculate total based on row category
   selectedSeats.forEach((id) => {
-    const row = id.charAt(0);
-    let category = "REGULAR";
+    const row = id.charAt(0); //the row will be the char O which is (A, B, C..)
+    let category = "REGULAR"; //makes it regular for default
     if (row === "A" || row === "B") category = "VIP";
     if (row === "G" || row === "H") category = "BALCONY";
 
-    total += priceList[category] || 0;
+    total += priceList[category] || 0; //adds to the total
   });
 
   document.getElementById("display-seats").innerText =
@@ -121,3 +122,31 @@ function updateUI() {
 document.addEventListener("DOMContentLoaded", () => {
   initBooking();
 });
+
+async function bookTicket(selectedSeats = []) {
+  const id = localStorage.getItem("selectedScheduleId");
+
+  const data = {
+    scheduleId: id,
+    seat: selectedSeats,
+  };
+  try {
+    const response = await fetch(`http://localhost:8080/ticket/book`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+
+    if(result.ok){
+      alert("Ticket booked successfully.");
+    }else{
+      alert("Booking failed.");
+    }
+  } catch (error) {
+    console.error( "Error : " + error);
+  }
+}
