@@ -171,7 +171,7 @@ function showStatus(isSuccess, title, message) {
   const msgEl = document.getElementById("status-message");
   const iconContainer = document.getElementById("status-icon-container");
   const okBtn = document.getElementById("status-ok-btn");
-
+  //make the html and get the elements then make the pop Ups
   // Set Content
   titleEl.innerText = title;
   msgEl.innerText = message;
@@ -189,7 +189,7 @@ function showStatus(isSuccess, title, message) {
 
   modal.style.display = "flex";
 
-  okBtn.onclick = () => {
+  okBtn.onclick = () => { //does this when the button is clicked
     modal.style.display = "none";
     // Redirect logic remains
     if (isSuccess) window.location.href = "dashboard.html";
