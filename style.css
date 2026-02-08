@@ -754,8 +754,8 @@ nav{
 }
 
 .available { background-color: #444451; }
-.selected { background-color: #00d2ff; }
-.occupied { background-color: #ff4d4d; }
+.selected { background-color: #f1c40f; }
+.occupied { background-color: rgba(255, 255, 255, 0.1); }
 
 .booking-wrapper {
     padding-bottom: 100px; /* Space for the checkout div to sit comfortably */
@@ -991,4 +991,74 @@ nav{
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+/* Booking Status Pop Up */
+/* Status Modal Specifics */
+.status-card {
+    display: flex;
+    background: #1a1a1a; /* Darker for better contrast */
+    width: 600px; /* Increased length for rectangular look */
+    min-height: 150px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    animation: slideIn 0.3s ease-out;
+}
+
+#status-accent-bar {
+    width: 12px; /* The bold color strip on the left */
+    height: 100%;
+}
+
+.status-body {
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+    flex-grow: 1;
+    gap: 20px;
+}
+
+.status-text {
+    flex-grow: 1;
+}
+
+#status-title {
+    margin: 0;
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+}
+
+#status-message {
+    margin: 5px 0 0;
+    color: #bbb;
+    font-size: 0.95rem;
+}
+
+/* Success State - Boutique Gold */
+.status-card.success #status-accent-bar { background: #d4a373; }
+.status-card.success #status-title { color: #d4a373; }
+
+/* Error State - Vibrant Seen Red */
+.status-card.error #status-accent-bar { background: #ff3e3e; }
+.status-card.error #status-title { color: #ff3e3e; }
+
+#status-ok-btn {
+    padding: 10px 25px;
+    white-space: nowrap;
+    background: transparent;
+    border: 1px solid #444;
+    color: #fff;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#status-ok-btn:hover {
+    background: #fff;
+    color: #000;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }

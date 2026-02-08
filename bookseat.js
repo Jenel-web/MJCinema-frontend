@@ -145,17 +145,56 @@ async function bookTicket(selectedSeats = []) {
     });
 
     if (response.ok) {
-      const result = await response.json(); //does not need to create a new variable for checking
-      alert("Ticket booked successfully.");
-    } else {
       const result = await response.json();
-      alert("Booking failed.");
+      showStatus(
+        true,
+        "Booking Confirmed!",
+        "Your seats are secured. Enjoy the show!"
+      ); //says the message
+    } else {
+      const result = await response.json(); //jsonify the response
+      // 'result.message' comes from the GlobalExceptionHandler
+      showStatus(
+        false,
+        "Booking Failed",
+        result.message || "An unexpected error occurred."
+      );
     }
   } catch (error) {
     console.error("Error : " + error);
   }
 }
+function showStatus(isSuccess, title, message) {
+  const modal = document.getElementById("status-modal");
+  const card = modal.querySelector(".status-card");
+  const titleEl = document.getElementById("status-title");
+  const msgEl = document.getElementById("status-message");
+  const iconContainer = document.getElementById("status-icon-container");
+  const okBtn = document.getElementById("status-ok-btn");
 
+  // Set Content
+  titleEl.innerText = title;
+  msgEl.innerText = message;
+
+  // Remove old states and apply new one
+  card.classList.remove("success", "error");
+
+  if (isSuccess) {
+    card.classList.add("success");
+    iconContainer.innerHTML = "🎟️";
+  } else {
+    card.classList.add("error");
+    iconContainer.innerHTML = "❌";
+  }
+
+  modal.style.display = "flex";
+
+  okBtn.onclick = () => {
+    modal.style.display = "none";
+    // Redirect logic remains
+    if (isSuccess) window.location.href = "dashboard.html";
+  };
+}
 const bookBtn = document.querySelector(".btn-confirm");
 
 bookBtn.addEventListener("click", (e) => {
