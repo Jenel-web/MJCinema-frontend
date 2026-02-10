@@ -189,9 +189,10 @@ function renderScheduleSelection(schedules) {
   container.appendChild(proceedBtn);
 }
 
+
 const nowShowing = document.getElementById("now-showing");
 const comingSoon = document.getElementById("coming-soon");
-
+const cinema = document.getElementById("cinema");
 //its loaded the moment the browser is opened.
 if (nowShowing) {
   nowShowing.addEventListener("click", (e) => {
@@ -207,7 +208,14 @@ if (comingSoon) {
     loadMovies("http://localhost:8080/schedule/coming-soon", "soon"); //this is where the typex comes from
   });
 }
+if(cinema){
+  cinema.addEventListener("click", (e) =>{
+    e.preventDefault();
 
+    //const response = await fetch("http://localhost:8080/cinema/movies/")
+    
+  })
+}
 window.ClickedCardHandler = ClickedCardHandler;
 window.closeModal = closeModal;
 window.loadMovies = loadMovies;
