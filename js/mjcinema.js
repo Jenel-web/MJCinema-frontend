@@ -1,5 +1,5 @@
-import { UI } from "./ui.js";
-import { Auth } from "./auth.js";
+import { UI } from "../../ui.js";
+import { Auth } from "../auth.js";
 
 const authApp = new Auth(); //automatically does what the function sayss
 const ui = new UI(); //imports UI and instantiates
