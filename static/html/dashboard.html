@@ -41,6 +41,25 @@
 
     <div id="movie-modal" style="display:none;">
     </div>
+
+    <!-- Cinema Section -->
+<div id="cinema-tab-section" class="tab-container">
+    <div id="cinema-grid-view">
+        <h2 class="section-title">Select a Cinema</h2>
+        <div id="cinema-squares" class="cinema-grid">
+            </div>
+    </div>
+
+    <div id="cinema-detail-view" class="hidden">
+        <div class="breadcrumb">
+            <span onclick="backToCinemas()" class="back-link">← All Cinemas</span> 
+            <span id="active-cinema-name">/ Cinema Name</span>
+        </div>
+        
+        <div id="cinema-movies-grid" class="movie-grid">
+            </div>
+    </div>
+</div>
 <script type = "module" src = "../js/mjcinema.js"></script>
 </body>
 </html>

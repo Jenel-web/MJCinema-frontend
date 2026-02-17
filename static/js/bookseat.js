@@ -15,6 +15,8 @@ async function initBooking() {
 
   // 2. Setup the Grid based on Cinema dimensions
   const cinema = schedule.cinema;
+
+  console.log("Cinema Layout String:", cinema ? cinema.seatLayout : "NO CINEMA DATA");
   if (schedule && schedule.movie) {
     document.getElementById("movie-title").innerText = schedule.movie.title;
   } else {
@@ -61,7 +63,7 @@ function renderBlueprint(rows, cols, layoutString, occupiedSeats = []) {
     let seatNumberInRow = 1; // Reset for every new row (A, B, C...)
 
     for (let i = 0; i < layoutString.length; i++) {
-      //this takes the length of the layout String which counts the S and the Blank
+      //this takes the length  of the layout String which counts the S and the Blank
       const char = layoutString[i]; //takes the character in the layoutString to verify
 
       if (char === "_") {
@@ -189,7 +191,8 @@ function showStatus(isSuccess, title, message) {
 
   modal.style.display = "flex";
 
-  okBtn.onclick = () => { //does this when the button is clicked
+  okBtn.onclick = () => {
+    //does this when the button is clicked
     modal.style.display = "none";
     // Redirect logic remains
     if (isSuccess) window.location.href = "dashboard.html";

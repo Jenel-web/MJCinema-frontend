@@ -146,6 +146,12 @@ async function proceedToBooking(movieId) {
     }
   }
 }
+
+async function getCinemas() {
+  const response = await fetch("http://localhost:8080/cinema/all");
+
+  return response;
+}
 function renderScheduleSelection(schedules) {
   const container = document.getElementById("schedule-container"); //parent div which should be in the html
   container.innerHTML = `<h3>Select a Showtime</h3>`;
@@ -188,6 +194,78 @@ function renderScheduleSelection(schedules) {
   container.appendChild(select);
   container.appendChild(proceedBtn);
 }
+// Function to show the Cinema Tab
+async function loadCinemaTab() {
+  const squaresContainer = document.getElementById("cinema-squares");
+
+  try {
+    const response = await fetch("http://localhost:8080/cinema/all");
+    const cinemas = await response.json();
+
+    // Map through your cinemas and turn them into HTML cards
+    squaresContainer.innerHTML = cinemas
+      .map(
+        (c) => `
+            <div class="cinema-card" onclick="showMoviesInCinema(${c.cinemaId}, '${c.location}')">
+                <div class="cinema-icon">🎬</div>
+                <h3>${c.cinemaId}</h3>
+                <p>${c.location}</p>
+            </div>
+        `
+      )
+      .join("");
+  } catch (err) {
+    squaresContainer.innerHTML = `<p>Error connecting to MJCinema server.</p>`;
+  }
+}
+
+// Function to show movies for a specific cinema
+async function showMoviesInCinema(cinemaId, location) {
+  const gridView = document.getElementById("cinema-grid-view");
+  const detailView = document.getElementById("cinema-detail-view");
+  const movieGrid = document.getElementById("cinema-movies-grid");
+
+  document.getElementById("active-cinema-name").innerText = ` / ${location}`;
+
+  try {
+    const response = await fetch(
+      `http://localhost:8080/cinema/movies/${cinemaId}`
+    );
+    const movies = await response.json();
+
+    gridView.classList.add("hidden");
+    detailView.classList.remove("hidden");
+
+    if (movies.length === 0) {
+      movieGrid.innerHTML = `<p style="grid-column: 1/-1; text-align: center;">No movies currently playing here.</p>`;
+      return;
+    }
+
+    const imageBaseUrl = "https://image.tmdb.org/t/p/w500";
+    movieGrid.innerHTML = movies
+      .map(
+        (m) => `
+            <div class="movie-card" onclick="ClickedCardHandler(${
+              m.movieId
+            }, 'now')">
+                <img src="${imageBaseUrl + m.poster}" alt="${m.title}">
+                <div class="card-info">
+                    <h3>${m.title}</h3>
+                    <p>⭐ ${m.rating} / 10</p>
+                </div>
+            </div>
+        `
+      )
+      .join("");
+  } catch (err) {
+    console.error("Error loading movies:", err);
+  }
+}
+
+function backToCinemas() {
+  document.getElementById("cinema-grid-view").classList.remove("hidden");
+  document.getElementById("cinema-detail-view").classList.add("hidden");
+}
 
 const nowShowing = document.getElementById("now-showing");
 const comingSoon = document.getElementById("coming-soon");
@@ -208,14 +286,17 @@ if (comingSoon) {
   });
 }
 if (cinema) {
-  cinema.addEventListener("click", (e) => {
+  cinema.addEventListener("click", async (e) => {
     e.preventDefault();
-
-    //const response = await fetch("http://localhost:8080/cinema/movies/")
+    loadCinemaTab();
   });
 }
+
 window.ClickedCardHandler = ClickedCardHandler;
 window.closeModal = closeModal;
 window.loadMovies = loadMovies;
 // Add this at the very bottom of your file
 window.proceedToBooking = proceedToBooking;
+window.loadCinemaTab = loadCinemaTab;
+window.showMoviesInCinema = showMoviesInCinema;
+window.backToCinemas = backToCinemas;
