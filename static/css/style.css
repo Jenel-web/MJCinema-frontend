@@ -277,7 +277,7 @@ nav{
     text-decoration: none;
     font-size: 15px;
     font-weight: bold;
-    color: var(-);
+    color: var(--navy);
     text-transform: uppercase;
     transition: all 0.3s ease;
     position: relative;
