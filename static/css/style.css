@@ -1063,11 +1063,25 @@ nav{
     to { transform: translateY(0); opacity: 1; }
 }
 
+
+
 .cinema-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
     padding: 20px;
+}
+
+#cinema-movies-grid{
+    display: grid;
+    /* This creates the responsive grid: squares will be at least 200px wide */
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    padding: 20px 5%;
+    /* Remove all the horizontal scroll/swipe properties */
+    overflow-x: visible;
+    scroll-snap-type: none;
+    width: 100%;
 }
 
 .cinema-card {
@@ -1168,3 +1182,15 @@ nav{
 }
 
 .back-link:hover { color: #fff; }
+
+.status-movie {
+    display: inline-block;
+    padding: 4px 8px;
+    background-color: #e50914; /* Cinema Red */
+    color: white;
+    border-radius: 4px;
+    font-size: 1rem;
+    text-transform: uppercase; /* Makes it look like a badge */
+    font-weight: bold;
+    margin-top: 8px;
+}
