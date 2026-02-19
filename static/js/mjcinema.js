@@ -1,22 +1,22 @@
-  import { UI } from "./ui.js";
-  import { Auth } from "./auth.js";
+import { UI } from "./ui.js";
+import { Auth } from "./auth.js";
+const baseUrl = "http://localhost:8080";
+const authApp = new Auth(); //automatically does what the function sayss
+const ui = new UI(); //imports UI and instantiates
 
-  const authApp = new Auth(); //automatically does what the function sayss
-  const ui = new UI(); //imports UI and instantiates
+//for movie booking
+function openMovieDetails(movie, type) {
+  const modal = document.getElementById("movie-modal"); //gets id
+  const imageBaseUrl = "https://image.tmdb.org/t/p/w500";
 
-  //for movie booking
-  function openMovieDetails(movie, type) {
-    const modal = document.getElementById("movie-modal"); //gets id
-    const imageBaseUrl = "https://image.tmdb.org/t/p/w500";
-
-    //html that will be shown when the movie is clicked
-    modal.innerHTML = `
+  //html that will be shown when the movie is clicked
+  modal.innerHTML = `
           <div class="modal-content">
               <span class="close" onclick="closeModal()">&times;</span>
               
               <img src="${imageBaseUrl + movie.poster}" alt="${
-      movie.title
-    }" style="width: 250px; border-radius: 10px;">
+    movie.title
+  }" style="width: 250px; border-radius: 10px;">
               
               <div class="modal-info">
                   <div class="modal-header">
@@ -38,39 +38,42 @@
           </div>
       `;
 
-    modal.style.display = "flex";
-    document.body.style.overflow = "hidden";
-  }
+  modal.style.display = "flex";
+  document.body.style.overflow = "hidden";
+}
 
-  //this is used to show the movies in grid form
-  async function loadMovies(url, type) {
-    try {
-      const movieGrid = document.getElementById("movie-grid");
-      const cinemaGrid = document.getElementById("cinema-tab-section");
-      cinemaGrid.classList.add("hidden");
-      movieGrid.classList.remove("hidden");
-      const response = await fetch(url);
-      const data = await response.json();
+//this is used to show the movies in grid form
+async function loadMovies(url, type) {
+  try {
+    const movieGrid = document.getElementById("movie-grid");
+    const cinemaGrid = document.getElementById("cinema-tab-section");
+    cinemaGrid.classList.add("hidden");
+    movieGrid.classList.remove("hidden");
+    const response = await fetch(url);
+    const data = await response.json();
 
-      // Force it onto the window object explicitly
-      window.allMovies = Array.from(data);
-      console.log(
-        "Data successfully saved to window.allMovies:",
-        window.allMovies
-      ); //saves all the movies here so that ClickedCardHandler can use it later.
-      const grid = document.getElementById("movie-grid");
+    const movies = await fetch(`${baseUrl}/movie/show`);//use backticks 
+    const allMovies = await movies.json();
 
-      if (!Array.isArray(data)) {
-        console.error("Backend sent an object instead of a list:", data);
-        grid.innerHTML = "<p>Unexpected data format from server.</p>";
-        return; //checks the data send by the backend
-      }
-      // We use .map().join('') here because it's faster than innerHTML += in a loop
-      const imageBaseUrl = "https://image.tmdb.org/t/p/w500";
+    // Force it onto the window object explicitly
+    window.allMovies = Array.from(allMovies);//saves all the movies in the db
+    console.log(
+      "Data successfully saved to window.allMovies:",
+      window.allMovies
+    ); //saves all the movies here so that ClickedCardHandler can use it later.
+    const grid = document.getElementById("movie-grid");
 
-      grid.innerHTML = data
-        .map(
-          (movie) => `
+    if (!Array.isArray(data)) {
+      console.error("Backend sent an object instead of a list:", data);
+      grid.innerHTML = "<p>Unexpected data format from server.</p>";
+      return; //checks the data send by the backend
+    }
+    // We use .map().join('') here because it's faster than innerHTML += in a loop
+    const imageBaseUrl = "https://image.tmdb.org/t/p/w500";
+
+    grid.innerHTML = data
+      .map(
+        (movie) => `
         <div class="movie-card" onclick = "ClickedCardHandler(${
           movie.movieId
         }, '${type}')"> 
@@ -89,167 +92,168 @@
             </div>
         </div>
       `
-        )
-        .join("");
-    } catch (error) {
-      console.error("The cinema is closed!", error);
-      document.getElementById("movie-grid").innerHTML =
-        "<p>Failed to load movies.</p>";
-    }
+      )
+      .join("");
+  } catch (error) {
+    console.error("The cinema is closed!", error);
+    document.getElementById("movie-grid").innerHTML =
+      "<p>Failed to load movies.</p>";
   }
+}
 
-  function ClickedCardHandler(movieId, type) {
-    const idFinder = Number(movieId);
-    const allMovies = window.allMovies;
-    const movie = window.allMovies.find((m) => Number(m.movieId) === idFinder); //finds the movieId
+function ClickedCardHandler(movieId, type) {
+  const idFinder = Number(movieId);
+  const allMovies = window.allMovies;
+  const movie = window.allMovies.find((m) => Number(m.movieId) === idFinder); //finds the movieId
 
-    if (!movie) {
-      console.error(
-        "Search failed! Checked " +
-          window.allMovies.length +
-          " movies but couldn't find ID: " +
-          idFinder
-      );
-      console.log("Current Array Data:", window.allMovies);
-      return;
-      //only shows the HTML
-    }
-    openMovieDetails(movie, type);
-    localStorage.setItem("movieId", movieId);
+  if (!movie) {
+    console.error(
+      "Search failed! Checked " +
+        window.allMovies.length +
+        " movies but couldn't find ID: " +
+        idFinder
+    );
+    console.log("Current Array Data:", window.allMovies);
+    return;
+    //only shows the HTML
   }
+  openMovieDetails(movie, type);
+  localStorage.setItem("movieId", movieId);
+}
 
-  function closeModal() {
-    const modal = document.getElementById("movie-modal");
-    if (modal) {
-      modal.style.display = "none";
-      document.body.style.overflow = "auto"; // Re-enable background scrolling
-    }
-  } // this is for closing the popup.
-
-  const movieId = localStorage.getItem("movieId"); //should use quotation marks for the fetching of variable
-
-  //for booking
-  async function proceedToBooking(movieId) {
-    const baseUrl = "http://localhost:8080"; //makes the base url thank can be accessed within the function
-    const bookBtn = document.querySelector(".book-btn-modal"); //button class
-    if (bookBtn) {
-      try {
-        const response = await fetch(
-          `${baseUrl}/schedule/movieSchedules/${movieId}` //use backticks for the string
-        );
-
-        if (!response.ok) {
-          console.log("unable to fetch schedules");
-        }
-
-        const schedules = await response.json(); //make the response in json form
-        bookBtn.style.display = "none";
-        renderScheduleSelection(schedules); //function to show schedules in html form
-      } catch (e) {
-        console.error("Error:", e);
-      }
-    }
+function closeModal() {
+  const modal = document.getElementById("movie-modal");
+  if (modal) {
+    modal.style.display = "none";
+    document.body.style.overflow = "auto"; // Re-enable background scrolling
   }
+} // this is for closing the popup.
 
+const movieId = localStorage.getItem("movieId"); //should use quotation marks for the fetching of variable
 
-  function renderScheduleSelection(schedules) {
-    const container = document.getElementById("schedule-container"); //parent div which should be in the html
-    container.innerHTML = `<h3>Select a Showtime</h3>`;
-
-    // 1. Create the dropdown (select) element
-    const select = document.createElement("select"); //creates element
-    select.id = "showtime-dropdown"; //initalized the class and id of the new element
-    select.className = "schedule-dropdown";
-
-    // 2. Add a default "Choose" option
-    const defaultOpt = document.createElement("option");
-    defaultOpt.text = "-- Choose a showtime --";
-    defaultOpt.value = "";
-    select.appendChild(defaultOpt); //adds this new variable to select
-
-    // 3. Fill the dropdown with schedules
-    schedules.forEach((sched) => {
-      const option = document.createElement("option");
-      option.value = sched.scheduleId; // The ID we need for booking (scheduleId)
-      option.text = `${sched.showDate} | ${sched.startTime} - ${sched.cinema.location}`; //takes the data from the json
-      select.appendChild(option); //appends to select
-    });
-
-    // 4. Create a "Proceed" button
-    const proceedBtn = document.createElement("button"); //creates the button
-    proceedBtn.innerText = "Select Seats";
-    proceedBtn.className = "confirm-sched-btn";
-
-    proceedBtn.onclick = () => {
-      const selectedId = select.value; //the schedId of the value from the option
-      if (!selectedId) {
-        alert("Please select a time slot first!"); //checks if the user selects a schedule
-        return;
-      }
-      // Save and redirect
-      localStorage.setItem("selectedScheduleId", selectedId); //takes the selected scheduleId and saves it
-      window.location.href = "bookseat.html"; //redirected to booking
-    };
-
-    container.appendChild(select);
-    container.appendChild(proceedBtn);
-  }
-  // Function to show the Cinema Tab
-  async function loadCinemaTab() {
-    const cinemaSection = document.getElementById("cinema-tab-section");
-    const squaresContainer = document.getElementById("cinema-squares"); //gets the element
-    const moviesGrid = document.getElementById("movie-grid");
-
-    cinemaSection.classList.remove("hidden")
-    moviesGrid.classList.add("hidden")
+//for booking
+async function proceedToBooking(movieId) {
+  const baseUrl = "http://localhost:8080"; //makes the base url thank can be accessed within the function
+  const bookBtn = document.querySelector(".book-btn-modal"); //button class
+  if (bookBtn) {
     try {
-      const response = await fetch("http://localhost:8080/cinema/all"); //takes all the cinema
-      const cinemas = await response.json(); //jsonify
+      const response = await fetch(
+        `${baseUrl}/schedule/movieSchedules/${movieId}` //use backticks for the string
+      );
 
-      // Map through your cinemas and turn them into HTML cards
-      squaresContainer.innerHTML = cinemas
-        .map(
-          (c) => `
+      if (!response.ok) {
+        console.log("unable to fetch schedules");
+      }
+
+      const schedules = await response.json(); //make the response in json form
+      bookBtn.style.display = "none";
+      renderScheduleSelection(schedules); //function to show schedules in html form
+    } catch (e) {
+      console.error("Error:", e);
+    }
+  }
+}
+
+function renderScheduleSelection(schedules) {
+  const container = document.getElementById("schedule-container"); //parent div which should be in the html
+  container.innerHTML = `<h3>Select a Showtime</h3>`;
+
+  // 1. Create the dropdown (select) element
+  const select = document.createElement("select"); //creates element
+  select.id = "showtime-dropdown"; //initalized the class and id of the new element
+  select.className = "schedule-dropdown";
+
+  // 2. Add a default "Choose" option
+  const defaultOpt = document.createElement("option");
+  defaultOpt.text = "-- Choose a showtime --";
+  defaultOpt.value = "";
+  select.appendChild(defaultOpt); //adds this new variable to select
+
+  // 3. Fill the dropdown with schedules
+  schedules.forEach((sched) => {
+    const option = document.createElement("option");
+    option.value = sched.scheduleId; // The ID we need for booking (scheduleId)
+    option.text = `${sched.showDate} | ${sched.startTime} - ${sched.cinema.location}`; //takes the data from the json
+    select.appendChild(option); //appends to select
+  });
+
+  // 4. Create a "Proceed" button
+  const proceedBtn = document.createElement("button"); //creates the button
+  proceedBtn.innerText = "Select Seats";
+  proceedBtn.className = "confirm-sched-btn";
+
+  proceedBtn.onclick = () => {
+    const selectedId = select.value; //the schedId of the value from the option
+    if (!selectedId) {
+      alert("Please select a time slot first!"); //checks if the user selects a schedule
+      return;
+    }
+    // Save and redirect
+    localStorage.setItem("selectedScheduleId", selectedId); //takes the selected scheduleId and saves it
+    window.location.href = "bookseat.html"; //redirected to booking
+  };
+
+  container.appendChild(select);
+  container.appendChild(proceedBtn);
+}
+// Function to show the Cinema Tab
+async function loadCinemaTab() {
+  const cinemaSection = document.getElementById("cinema-tab-section");
+  const squaresContainer = document.getElementById("cinema-squares"); //gets the element
+  const moviesGrid = document.getElementById("movie-grid");
+  const cinemaMovies = document.getElementById("cinema-movies-grid");
+
+  cinemaMovies.classList.add("hidden");
+  cinemaSection.classList.remove("hidden");
+  moviesGrid.classList.add("hidden");
+  try {
+    const response = await fetch("http://localhost:8080/cinema/all"); //takes all the cinema
+    const cinemas = await response.json(); //jsonify
+
+    // Map through your cinemas and turn them into HTML cards
+    squaresContainer.innerHTML = cinemas
+      .map(
+        (c) => `
               <div class="cinema-card" onclick="showMoviesInCinema(${c.cinemaId}, '${c.location}')">
                   <div class="cinema-icon">🎬</div>
                   <h3>${c.cinemaId}</h3>
                   <p>${c.location}</p>
               </div>
           `
-        )
-        .join(""); //joins them
-    } catch (err) {
-      squaresContainer.innerHTML = `<p>Error connecting to MJCinema server.</p>`;
-    }
+      )
+      .join(""); //joins them
+  } catch (err) {
+    squaresContainer.innerHTML = `<p>Error connecting to MJCinema server.</p>`;
   }
+}
 
-  // Function to show movies for a specific cinema
-  async function showMoviesInCinema(cinemaId, location) {
-    const gridView = document.getElementById("cinema-grid-view");
-    const detailView = document.getElementById("cinema-detail-view");
-    const movieGrid = document.getElementById("cinema-movies-grid");
+// Function to show movies for a specific cinema
+async function showMoviesInCinema(cinemaId, location) {
+  const gridView = document.getElementById("cinema-grid-view");
+  const detailView = document.getElementById("cinema-detail-view");
+  const movieGrid = document.getElementById("cinema-movies-grid");
 
-    document.getElementById("active-cinema-name").innerText = ` / ${location}`;
+  document.getElementById("active-cinema-name").innerText = ` / ${location}`;
 
-    try {
-      const response = await fetch(
-        `http://localhost:8080/cinema/movies/${cinemaId}`
-      );
-      const movies = await response.json();
+  try {
+    const response = await fetch(
+      `http://localhost:8080/cinema/movies/${cinemaId}`
+    );
+    const movies = await response.json();
 
-      gridView.classList.add("hidden"); //hides the cinema grid
-      detailView.classList.remove("hidden");//shows the movie grid
+    gridView.classList.add("hidden"); //hides the cinema grid
+    detailView.classList.remove("hidden"); //shows the movie grid
 
-      if (movies.length === 0) {
-        movieGrid.innerHTML = `<p style="grid-column: 1/-1; text-align: center;">No movies currently playing here.</p>`;
-        return;
-      } //sends a message if there are no movies
+    if (movies.length === 0) {
+      movieGrid.innerHTML = `<p style="grid-column: 1/-1; text-align: center;">No movies currently playing here.</p>`;
+      return;
+    } //sends a message if there are no movies
 
-      const imageBaseUrl = "https://image.tmdb.org/t/p/w500";
-      movieGrid.innerHTML = movies
-        .map(
-          (m) => 
-            `
+    const imageBaseUrl = "https://image.tmdb.org/t/p/w500";
+    movieGrid.innerHTML = movies
+      .map(
+        (m) =>
+          `
               <div class="movie-card" onclick="ClickedCardHandler(${
                 m.movieId
               }, 'soon')">
@@ -257,52 +261,55 @@
                   <div class="card-info">
                       <h3>${m.title}</h3>
                       <p>⭐ ${m.rating} / 10</p>
-                      <p class = "status-movie">${m.status.replaceAll("_", " ")}</p>
+                      <p class = "status-movie">${m.status.replaceAll(
+                        "_",
+                        " "
+                      )}</p>
                   </div>
               </div>
           `
-        )
-        .join("");
-    } catch (err) {
-      console.error("Error loading movies:", err);
-    }
+      )
+      .join("");
+  } catch (err) {
+    console.error("Error loading movies:", err);
   }
+}
 
-  function backToCinemas() {
-    document.getElementById("cinema-grid-view").classList.remove("hidden");
-    document.getElementById("cinema-detail-view").classList.add("hidden");
-  }
+function backToCinemas() {
+  document.getElementById("cinema-grid-view").classList.remove("hidden");
+  document.getElementById("cinema-detail-view").classList.add("hidden");
+}
 
-  const nowShowing = document.getElementById("now-showing");
-  const comingSoon = document.getElementById("coming-soon");
-  const cinema = document.getElementById("cinema");
-  //its loaded the moment the browser is opened.
-  if (nowShowing) {
-    nowShowing.addEventListener("click", (e) => {
-      e.preventDefault();
-      const movie = document.getElementById("movieCard");
-      loadMovies("http://localhost:8080/schedule/now-showing", "now");
-      //uses the movie as a parameter
-    });
-  } //if the nav button now showing is tapped. it will show the now showing movies html
-  if (comingSoon) {
-    comingSoon.addEventListener("click", (e) => {
-      e.preventDefault();
-      loadMovies("http://localhost:8080/schedule/coming-soon", "soon"); //this is where the typex comes from
-    });
-  }
-  if (cinema) {
-    cinema.addEventListener("click", async (e) => {
-      e.preventDefault();
-      loadCinemaTab();
-    });
-  }
+const nowShowing = document.getElementById("now-showing");
+const comingSoon = document.getElementById("coming-soon");
+const cinema = document.getElementById("cinema");
+//its loaded the moment the browser is opened.
+if (nowShowing) {
+  nowShowing.addEventListener("click", (e) => {
+    e.preventDefault();
+    const movie = document.getElementById("movieCard");
+    loadMovies("http://localhost:8080/schedule/now-showing", "now");
+    //uses the movie as a parameter
+  });
+} //if the nav button now showing is tapped. it will show the now showing movies html
+if (comingSoon) {
+  comingSoon.addEventListener("click", (e) => {
+    e.preventDefault();
+    loadMovies("http://localhost:8080/schedule/coming-soon", "soon"); //this is where the typex comes from
+  });
+}
+if (cinema) {
+  cinema.addEventListener("click", async (e) => {
+    e.preventDefault();
+    loadCinemaTab();
+  });
+}
 
-  window.ClickedCardHandler = ClickedCardHandler;
-  window.closeModal = closeModal;
-  window.loadMovies = loadMovies;
-  // Add this at the very bottom of your file
-  window.proceedToBooking = proceedToBooking;
-  window.loadCinemaTab = loadCinemaTab;
-  window.showMoviesInCinema = showMoviesInCinema;
-  window.backToCinemas = backToCinemas;
+window.ClickedCardHandler = ClickedCardHandler;
+window.closeModal = closeModal;
+window.loadMovies = loadMovies;
+// Add this at the very bottom of your file
+window.proceedToBooking = proceedToBooking;
+window.loadCinemaTab = loadCinemaTab;
+window.showMoviesInCinema = showMoviesInCinema;
+window.backToCinemas = backToCinemas;

@@ -1165,8 +1165,6 @@ nav{
     color: #888;
 }
 
-/* Navigation & Visibility */
-.hidden { display: none; }
 
 .breadcrumb {
     margin-bottom: 30px;
