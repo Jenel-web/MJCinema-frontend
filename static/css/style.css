@@ -1158,6 +1158,7 @@ nav{
     margin: 5px 0;
     font-size: 1.2rem;
     color: #fff;
+    text-align: center;
 }
 
 .cinema-card p {
@@ -1170,8 +1171,12 @@ nav{
     justify-content: space-between; /* Distributes items to left, center, and right */
     align-items: center;
     width: 100%;
-    margin-bottom: 40px;
-    padding: 10px 20px;
+   /* Remove top padding entirely, keep side padding */
+    padding: 0 20px 10px 20px; 
+    
+    /* Reduce this if the gap is still too big */
+    margin-top: -70px; /* Optional: Pulls the element UP towards the nav */
+    margin-bottom: 20px;
     position: relative; /* Useful for alignment */
 }
 
@@ -1183,13 +1188,20 @@ nav{
 
 /* 2. The Cinema Name (The Center) */
 #active-cinema-name {
-    flex: 2; /* Takes up more space to stay centered */
+    margin-left: -200px;    
+    flex: 2;
     text-align: center;
-    font-size: 1.8rem;
-    font-weight: 800;
+    font-size: 2.2rem; /* Slightly larger */
+    font-weight: 900;
     color: #fff;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 4px; /* Wider spacing for a premium feel */
+    
+    /* The Magic: Subtle Red/White Glow */
+    text-shadow: 0 0 10px rgba(229, 9, 20, 0.5), 0 0 20px rgba(229, 9, 20, 0.2);
+    background: linear-gradient(to bottom, #fff 0%, #ccc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .back-link {

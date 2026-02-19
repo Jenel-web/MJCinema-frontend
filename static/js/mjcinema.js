@@ -4,6 +4,11 @@ const baseUrl = "http://localhost:8080";
 const authApp = new Auth(); //automatically does what the function sayss
 const ui = new UI(); //imports UI and instantiates
 
+const movies = await fetch(`${baseUrl}/movie/show`); //use backticks
+    const allMovies = await movies.json();
+
+    // Force it onto the window object explicitly
+    window.allMovies = Array.from(allMovies); //saves all the movies in the db
 //for movie booking
 function openMovieDetails(movie, type) {
   const modal = document.getElementById("movie-modal"); //gets id
@@ -52,11 +57,6 @@ async function loadMovies(url, type) {
     const response = await fetch(url);
     const data = await response.json();
 
-    const movies = await fetch(`${baseUrl}/movie/show`); //use backticks
-    const allMovies = await movies.json();
-
-    // Force it onto the window object explicitly
-    window.allMovies = Array.from(allMovies); //saves all the movies in the db
     console.log(
       "Data successfully saved to window.allMovies:",
       window.allMovies
@@ -214,9 +214,9 @@ async function loadCinemaTab() {
     squaresContainer.innerHTML = cinemas
       .map(
         (c) => `
-              <div class="cinema-card" onclick="showMoviesInCinema(${c.cinemaId}, '${c.location}')">
+              <div class="cinema-card" onclick="showMoviesInCinema(${c.cinemaId}, '${c.location}', '${c.cinemaName}')">
                   <div class="cinema-icon">🎬</div>
-                  <h3>${c.cinemaId}</h3>
+                  <h3>${c.cinemaName}</h3>
                   <p>${c.location}</p>
               </div>
           `
@@ -228,12 +228,12 @@ async function loadCinemaTab() {
 }
 
 // Function to show movies for a specific cinema
-async function showMoviesInCinema(cinemaId, location) {
+async function showMoviesInCinema(cinemaId, location, cinemaName) {
   const gridView = document.getElementById("cinema-grid-view");
   const detailView = document.getElementById("cinema-detail-view");
   const movieGrid = document.getElementById("cinema-movies-grid");
 
-  document.getElementById("active-cinema-name").innerText = ` ${location}`;
+  document.getElementById("active-cinema-name").innerText = ` ${cinemaName}`;
 
   try {
     const response = await fetch(
