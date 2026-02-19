@@ -52,11 +52,11 @@ async function loadMovies(url, type) {
     const response = await fetch(url);
     const data = await response.json();
 
-    const movies = await fetch(`${baseUrl}/movie/show`);//use backticks 
+    const movies = await fetch(`${baseUrl}/movie/show`); //use backticks
     const allMovies = await movies.json();
 
     // Force it onto the window object explicitly
-    window.allMovies = Array.from(allMovies);//saves all the movies in the db
+    window.allMovies = Array.from(allMovies); //saves all the movies in the db
     console.log(
       "Data successfully saved to window.allMovies:",
       window.allMovies
@@ -233,7 +233,7 @@ async function showMoviesInCinema(cinemaId, location) {
   const detailView = document.getElementById("cinema-detail-view");
   const movieGrid = document.getElementById("cinema-movies-grid");
 
-  document.getElementById("active-cinema-name").innerText = ` / ${location}`;
+  document.getElementById("active-cinema-name").innerText = ` ${location}`;
 
   try {
     const response = await fetch(
@@ -308,7 +308,6 @@ if (cinema) {
 window.ClickedCardHandler = ClickedCardHandler;
 window.closeModal = closeModal;
 window.loadMovies = loadMovies;
-// Add this at the very bottom of your file
 window.proceedToBooking = proceedToBooking;
 window.loadCinemaTab = loadCinemaTab;
 window.showMoviesInCinema = showMoviesInCinema;

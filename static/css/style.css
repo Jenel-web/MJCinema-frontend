@@ -1165,21 +1165,60 @@ nav{
     color: #888;
 }
 
-
 .breadcrumb {
-    margin-bottom: 30px;
-    font-size: 1.1rem;
-    color: #888;
+    display: flex;
+    justify-content: space-between; /* Distributes items to left, center, and right */
+    align-items: center;
+    width: 100%;
+    margin-bottom: 40px;
+    padding: 10px 20px;
+    position: relative; /* Useful for alignment */
+}
+
+/* 1. This creates an empty space on the left to balance the back button on the right */
+.breadcrumb::before {
+    content: "";
+    flex: 1;
+}
+
+/* 2. The Cinema Name (The Center) */
+#active-cinema-name {
+    flex: 2; /* Takes up more space to stay centered */
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
 .back-link {
+    flex: 1; 
+    text-align: right;
     cursor: pointer;
-    color: #e50914;
+    /* Red Background Styling */
+    background-color: #e50914; 
+    color : #fff;               
+    padding: 10px 20px;
+    border-radius: 6px;
     font-weight: bold;
-    transition: color 0.2s;
+    text-decoration: none;
+    display: inline-block;  
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    
+    /* Limits button size so it doesn't stretch too wide */
+    max-width: fit-content;
+    margin-left: auto;         /* Keeps it pushed to the right side */
 }
 
-.back-link:hover { color: #fff; }
+.back-link:hover { /* Darker red on hover */
+    transform: scale(1.05);    /* Subtle pop effect */
+    color: #fff;
+}
+
+.back-link:active {
+    transform: scale(0.98);    /* "Pressed" effect when clicked */
+}
 
 .status-movie {
     display: inline-block;
