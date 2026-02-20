@@ -280,6 +280,24 @@ function backToCinemas() {
   document.getElementById("cinema-detail-view").classList.add("hidden");
 }
 
+function toggleProfile() {
+  const popup = document.getElementById("profile-popup");
+  popup.classList.toggle("hidden");
+}
+
+
+
+// Optional: Close the popup if you click anywhere else on the screen
+window.addEventListener("click", function (e) {
+  const popup = document.getElementById("profile-popup");
+  const profileBtn = document.querySelector(".profile-trigger"); // Change to your actual profile button class
+
+  if (!profileBtn.contains(e.target) && !popup.contains(e.target)) {
+    popup.classList.add("hidden");
+  }
+});
+
+const profile = document.getElementById("profile-popup")
 const nowShowing = document.getElementById("now-showing");
 const comingSoon = document.getElementById("coming-soon");
 const cinema = document.getElementById("cinema");
@@ -303,6 +321,13 @@ if (cinema) {
     e.preventDefault();
     loadCinemaTab();
   });
+}
+if(profile){
+  profile.addEventListener("click", (e) =>
+  {
+    e.preventDefault();
+    toggleProfile();
+  })
 }
 
 window.ClickedCardHandler = ClickedCardHandler;
