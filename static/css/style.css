@@ -1248,16 +1248,45 @@ nav{
     position: relative;
 }
 
+
+/* profile pop up */
+/* The White Pop-up Box */
 .profile-section {
     position: absolute;
-    top: 50px; /* Adjust based on your nav bar height */
-    right: 0;
-    background: #1a1a1a;
-    border: 1px solid #333;
-    border-radius: 8px;
-    width: 180px;
-    z-index: 1000; /* Ensures it stays on top of movie cards */
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    top: 40px;          /* Positions it below the navbar */
+    right: 0;           /* Aligns to the right edge of the icon */
+    background: #fff;
+    width: 160px;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    border: 1px solid #ddd;
+    z-index: 9999;      /* Ensures it floats above movie cards */
+}
+
+/* The List Items */
+.profile-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.profile-links li {
+    padding: 12px 15px;
+    color: #333;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    transition: background 0.2s;
+}
+
+.profile-links li:last-child {
+    border-bottom: none;
+}
+
+/* Hover State */
+.profile-links li:hover {
+    background-color: #f8f8f8;
+    color: #e50914; /* Cinema Red accent */
 }
 
 .hidden {

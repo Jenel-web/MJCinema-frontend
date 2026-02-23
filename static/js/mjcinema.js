@@ -280,20 +280,23 @@ function backToCinemas() {
   document.getElementById("cinema-detail-view").classList.add("hidden");
 }
 
-function toggleProfile() {
+// 1. This handles opening and closing when you click the "Account" button
+export function toggleProfile(event) {
+  event.stopPropagation(); // Stops the 'Window' from hearing this click
   const popup = document.getElementById("profile-popup");
   popup.classList.toggle("hidden");
 }
 
-
-
-// Optional: Close the popup if you click anywhere else on the screen
+// 2. This handles closing when you click AWAY from the menu
 window.addEventListener("click", function (e) {
   const popup = document.getElementById("profile-popup");
-  const profileBtn = document.querySelector(".profile-trigger"); // Change to your actual profile button class
+  const profileBtn = document.querySelector(".profile-trigger");
 
-  if (!profileBtn.contains(e.target) && !popup.contains(e.target)) {
-    popup.classList.add("hidden");
+  // If the menu is open AND you clicked outside both the button and the menu
+  if (!popup.classList.contains("hidden")) {
+    if (!profileBtn.contains(e.target) && !popup.contains(e.target)) {
+      popup.classList.add("hidden");
+    }
   }
 });
 
@@ -326,7 +329,7 @@ if(profile){
   profile.addEventListener("click", (e) =>
   {
     e.preventDefault();
-    toggleProfile();
+    toggleProfile(e);
   })
 }
 
@@ -337,3 +340,4 @@ window.proceedToBooking = proceedToBooking;
 window.loadCinemaTab = loadCinemaTab;
 window.showMoviesInCinema = showMoviesInCinema;
 window.backToCinemas = backToCinemas;
+window.toggleProfile = toggleProfile;

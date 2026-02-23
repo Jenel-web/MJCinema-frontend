@@ -18,8 +18,17 @@
                 <li> <a href = "#now-showing" id="now-showing">Now Showing</a></li>
                 <li> <a href = "#coming-soon" id ="coming-soon">Coming Soon</a></li>
                 <li> <a href = "#cinema" id = "cinema">Cinema</a></li>
-                <li> <a href = "#profile" id = "profile">Profile</a></li>
+                <li> <a href = "#profile" id = "profile" class="profile-trigger" onclick="toggleProfile(event)">👤</a></li>
             </ul>
+
+            <div id="profile-popup" class="profile-section hidden">
+        <ul class="profile-links">
+            <li onclick="showBookings()">My Bookings</li>
+            <li>Profile</li>
+            <li onclick="handleLogout()">Logout</li>
+        </ul>
+    </div>
+
         </div>
     </div>
     
@@ -61,12 +70,8 @@
 </div>
 
 <!-- Profile Section -->
- <div id="profile-popup" class="profile-section hidden">
-    <ul class="profile-links">
-        <li onclick="showBookings()">My Bookings</li>
-        <li>Profile</li>
-        <li onclick="handleLogout()">Logout</li>
-    </ul>
+<div class="profile-container">
+
 </div>
 <script type = "module" src = "../js/mjcinema.js"></script>
 </body>
