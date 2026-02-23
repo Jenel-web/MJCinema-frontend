@@ -26,7 +26,7 @@ body {
   padding: 0;
   padding-top: 80px;
 }
- 
+ /* Authentication  */
 .login-container {
     background-color: var(--white); 
     color: var(--navy);            
@@ -108,9 +108,10 @@ body {
   gap: 8px; /* This is the "magic" property that controls the space between box and text */
 }
 
-.checkbox-group input {
-  cursor: pointer;
-  width: auto; /* Prevents the checkbox from stretching */
+.input-box input[type="text"], 
+.input-box input[type="password"] {
+    width: 100% !important; /* Force it to fill the 310px .input-box */
+    box-sizing: border-box; /* Ensures padding doesn't add to the width */
 }
 
 .remember-container a {
@@ -1253,10 +1254,10 @@ nav{
 /* The White Pop-up Box */
 .profile-section {
     position: absolute;
-    top: 40px;          /* Positions it below the navbar */
-    right: 0;           /* Aligns to the right edge of the icon */
+    top: 60px;          /* Positions it below the navbar */
+    right: 20px;           /* Aligns to the right edge of the icon */
     background: #fff;
-    width: 160px;
+    width: 140px;
     border-radius: 4px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     border: 1px solid #ddd;
@@ -1266,14 +1267,14 @@ nav{
 /* The List Items */
 .profile-links {
     list-style: none;
-    padding: 0;
+    padding-right: 20px;
     margin: 0;
 }
 
 .profile-links li {
     padding: 12px 15px;
     color: #333;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     cursor: pointer;
     border-bottom: 1px solid #eee;
     transition: background 0.2s;

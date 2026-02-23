@@ -5,10 +5,10 @@ const authApp = new Auth(); //automatically does what the function sayss
 const ui = new UI(); //imports UI and instantiates
 
 const movies = await fetch(`${baseUrl}/movie/show`); //use backticks
-    const allMovies = await movies.json();
+const allMovies = await movies.json();
 
-    // Force it onto the window object explicitly
-    window.allMovies = Array.from(allMovies); //saves all the movies in the db
+// Force it onto the window object explicitly
+window.allMovies = Array.from(allMovies); //saves all the movies in the db
 //for movie booking
 function openMovieDetails(movie, type) {
   const modal = document.getElementById("movie-modal"); //gets id
@@ -300,7 +300,11 @@ window.addEventListener("click", function (e) {
   }
 });
 
-const profile = document.getElementById("profile-popup")
+export function handleLogout() {
+  window.location.href = "index.html";
+  localStorage.clear();
+}
+const profile = document.getElementById("profile-popup");
 const nowShowing = document.getElementById("now-showing");
 const comingSoon = document.getElementById("coming-soon");
 const cinema = document.getElementById("cinema");
@@ -325,12 +329,11 @@ if (cinema) {
     loadCinemaTab();
   });
 }
-if(profile){
-  profile.addEventListener("click", (e) =>
-  {
+if (profile) {
+  profile.addEventListener("click", (e) => {
     e.preventDefault();
     toggleProfile(e);
-  })
+  });
 }
 
 window.ClickedCardHandler = ClickedCardHandler;
@@ -341,3 +344,4 @@ window.loadCinemaTab = loadCinemaTab;
 window.showMoviesInCinema = showMoviesInCinema;
 window.backToCinemas = backToCinemas;
 window.toggleProfile = toggleProfile;
+window.handleLogout = handleLogout;
