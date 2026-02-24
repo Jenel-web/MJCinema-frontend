@@ -293,10 +293,8 @@ window.addEventListener("click", function (e) {
   const profileBtn = document.querySelector(".profile-trigger");
 
   // If the menu is open AND you clicked outside both the button and the menu
-  if (!popup.classList.contains("hidden")) {
-    if (!profileBtn.contains(e.target) && !popup.contains(e.target)) {
-      popup.classList.add("hidden");
-    }
+  if (popup) {
+    popup.classList.toggle("hidden");
   }
 });
 
@@ -304,6 +302,126 @@ export function handleLogout() {
   window.location.href = "index.html";
   localStorage.clear();
 }
+window.filterByStatus = function (status) {
+  // 1. Get all the schedule cards we rendered
+  const allCards = document.querySelectorAll(".schedule-card");
+
+  // 2. Loop through them
+  allCards.forEach((card) => {
+    // If the card matches the status (e.g. "ACTIVE"), show it.
+    // Otherwise, hide it.
+    if (card.getAttribute("data-status") === status) {
+      card.style.display = "block";
+    } else {
+      card.style.display = "none";
+    }
+  });
+
+  // 3. (Optional) Update the active button styling
+  document.querySelectorAll(".tab-btn").forEach((btn) => {
+    btn.classList.remove("active");
+    if (btn.innerText.toUpperCase() === status) {
+      btn.classList.add("active");
+    }
+  });
+};
+export function showBookings() {
+  window.location.href = "tickets.html";
+}
+function groupTicketsBySchedule(tickets) {
+  return tickets.reduce((groups, ticket) => {
+    // Create a unique key for the specific showtime
+    const key = `${ticket.title}-${ticket.showDate}-${ticket.startTime}`;
+
+    if (!groups[key]) {
+      groups[key] = {
+        title: ticket.title,
+        date: ticket.showDate,
+        time: ticket.startTime,
+        location: ticket.location,
+        status: ticket.ticketStatus,
+        seats: [],
+      };
+    }
+    // Add the seat info to this specific schedule
+    groups[key].seats.push({
+      num: ticket.seatNumber,
+      cat: ticket.seatCategory,
+      code: ticket.ticketCode,
+    });
+    return groups;
+  }, {});
+}
+function renderGroupedTickets(groupedData) {
+  const container = document.getElementById("tickets-container");
+  if (!container) return;
+  container.innerHTML = "";
+
+  Object.values(groupedData).forEach((group) => {
+    const scheduleHTML = `
+            <div class="schedule-card" data-status="${group.status}">
+                <div class="schedule-header" onclick="this.parentElement.classList.toggle('open')">
+                    <div class="info">
+                        <span class="status-dot ${group.status.toLowerCase()}"></span>
+                        <strong>${group.title}</strong>
+                        <small>📍 ${group.location} | ${group.date} at ${
+      group.time
+    }</small>
+                    </div>
+                    <div class="count">
+                        ${group.seats.length} Seats <i class="arrow-icon">▼</i>
+                    </div>
+                </div>
+                
+                <div class="seats-drawer">
+                    ${group.seats
+                      .map(
+                        (seat) => `
+                        <div class="seat-row">
+                            <span>💺 Seat ${seat.num} (${seat.cat})</span>
+                            <span class="ticket-code">${seat.code}</span>
+                        </div>
+                    `
+                      )
+                      .join("")}
+                    
+                    ${
+                      group.status === "ACTIVE"
+                        ? `<button class="cancel-btn" onclick="cancelBooking('${group.title}')">Cancel All</button>`
+                        : ""
+                    }
+                </div>
+            </div>
+        `;
+    container.insertAdjacentHTML("beforeend", scheduleHTML);
+  });
+}
+export async function loadUserTickets() {
+  const container = document.getElementById("tickets-container");
+  const id = localStorage.getItem("userId");
+  const response = await fetch(`${baseUrl}/ticket/mytickets?userId=${id}`);
+  if (!id) {
+    //check if the user is logged in.
+    container.innerHTML = "<p>Please log in to view your tickets.</p>";
+    return;
+  }
+  try {
+    if (!response.ok) {
+      throw new Error("Failed to fetch tickets");
+    }
+    const allTickets = await response.json(); //all tickets booke by user.
+
+    const groupedData = groupTicketsBySchedule(allTickets);
+
+    renderGroupedTickets(groupedData);
+  } catch (error) {
+    console.error("Error: ", error);
+    if (container)
+      container.innerHTML =
+        "<p>Error loading tickets. Please try again later.</p>";
+  }
+}
+
 const profile = document.getElementById("profile-popup");
 const nowShowing = document.getElementById("now-showing");
 const comingSoon = document.getElementById("coming-soon");
@@ -335,7 +453,9 @@ if (profile) {
     toggleProfile(e);
   });
 }
-
+if (document.getElementById("tickets-container")) {
+  loadUserTickets();
+}
 window.ClickedCardHandler = ClickedCardHandler;
 window.closeModal = closeModal;
 window.loadMovies = loadMovies;
@@ -345,3 +465,7 @@ window.showMoviesInCinema = showMoviesInCinema;
 window.backToCinemas = backToCinemas;
 window.toggleProfile = toggleProfile;
 window.handleLogout = handleLogout;
+window.groupTicketsBySchedule = groupTicketsBySchedule;
+window.renderGroupedTickets = renderGroupedTickets;
+window.loadUserTickets = loadUserTickets;
+window.showBookings = showBookings;
