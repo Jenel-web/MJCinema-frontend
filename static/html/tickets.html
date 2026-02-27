@@ -8,18 +8,21 @@
   </head>
   <body>
     <section id="bookings-view" class="bookings-container">
-      <div class="booking-tabs">
-        <button class="tab-btn active" onclick="filterByStatus('BOOKED')">
-          Active
-        </button>
-        <button class="tab-btn" onclick="filterByStatus('COMPLETED')">
-          History
-        </button>
-        <button class="tab-btn" onclick="filterByStatus('CANCELLED')">
-          Cancelled
-        </button>
-      </div>
 
+      <div class="booking-sidebar">
+        <h2 class = "user-name">Username</h2>
+
+        <ul>
+          <li class="tab-btn active" onclick="filterByStatus('BOOKED')">ACTIVE</li>
+          <li class= "tab-btn" onclick="filterByStatus('COMPLETED')">HISTORY</li>
+          <li class="tab-btn" onclick="filterByStatus('CANCELLED')">CANCELLED</li>
+        </ul>
+
+        <div class="user-balance">
+          <h2>Balance : </h2>
+          <h3>P 500.00 </h3>
+        </div>
+    
       <div id="tickets-container">
         <p class="loading-text">Loading your tickets...</p>
       </div>
