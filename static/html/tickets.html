@@ -5,9 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tickets Gallery</title>
     <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/tickets.css" />
   </head>
   <body>
-    <section id="bookings-view" class="bookings-container">
+    <div id="bookings-view" class="bookings-container">
 
       <div class="booking-sidebar">
         <h2 class = "user-name">Username</h2>
@@ -19,14 +20,15 @@
         </ul>
 
         <div class="user-balance">
-          <h2>Balance : </h2>
-          <h3>P 500.00 </h3>
+          <h2>Balance</h2>
+          <h3>₱500.00 </h3>
         </div>
-    
+    </div>
       <div id="tickets-container">
         <p class="loading-text">Loading your tickets...</p>
+
+        <button class = "btn-back" >Back</button>
       </div>
-    </section>
     <script type="module" src="../js/mjcinema.js"></script>
   </body>
 </html>

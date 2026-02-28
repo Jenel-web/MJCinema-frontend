@@ -1,0 +1,109 @@
+/* bookings.css */
+body {
+    margin: 0;
+    padding: 0;
+    display: block; /* If your main CSS uses flex on body, this turns it off */
+}
+
+:root {
+  /* The Boutique Palette */
+  --navy: #001f3f;       /* Background */
+  --white: #ffffff;      /* Cards/Text */
+  --bronze: #8B4513;     /* Buttons/Highlights */
+  --soft-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.bookings-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Showing Tickets Section */
+/* Container */
+.bookings-container{
+    background-color: var(--bronze);
+    min-height: 100vh;
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: stretch; /* spans the whole line*/
+    background-color: var(--navy);
+    margin-left: 0 !important;
+    padding-left: 0 !important;
+    top: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100vw;
+    position: relative;
+}
+.booking-sidebar{
+    width: 200px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: #EDEADE;
+    min-height: 100vh;
+    position: relative;
+    position: fixed;
+}
+
+.booking-sidebar ul{
+    color: var(--navy);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.user-name{
+    margin-top: 20px;
+    font-size: 32px;
+    margin-bottom: 100px;
+    color: var(--navy);
+    margin-left: 1rem;
+}
+
+.tab-btn{
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.1rem;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 2px solid black;
+    padding: 10px;
+    padding-left: 20px;
+}
+
+.tab-btn:hover{
+    text-decoration-color: aqua;
+}
+
+.user-balance{
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+    padding: 20px;
+  
+    background-color: rgb(43, 41, 41);
+    margin-top: auto; /* pushes the div to the bottom */
+}
+.user-balance h2 {
+    color: #8B5A2B; /* A lighter bronze for the "Balance:" label */
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin-bottom: 5px;
+}
+
+.user-balance h3 {
+    color: #996515; /* The Deep Gold for the actual amount */
+    font-size: 1.6rem;
+    font-weight: 800;
+    font-family: 'Courier New', Courier, monospace; /* Keeps your ticket theme */
+}
+
+#tickets-container{
+    margin-left: 200px; /* makes it go to the left*/
+    width: calc(100vw - 200px);
+    position: relative;
+}
+
+.btn-back{
+    background-color: white;
+}
