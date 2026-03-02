@@ -11,11 +11,11 @@
     <div id="bookings-view" class="bookings-container">
 
       <div class="booking-sidebar">
-        <h2 class = "user-name">Username</h2>
+        <h2 class = "user-name">👤Username</h2>
 
         <ul>
-          <li class="tab-btn active" onclick="filterByStatus('BOOKED')">ACTIVE</li>
-          <li class= "tab-btn" onclick="filterByStatus('COMPLETED')">HISTORY</li>
+          <li class="tab-btn active" onclick="filterByStatus('ACTIVE')">ACTIVE</li>
+          <li class= "tab-btn" onclick="filterByStatus('COMPLETED')">COMPLETED</li>
           <li class="tab-btn" onclick="filterByStatus('CANCELLED')">CANCELLED</li>
         </ul>
 
@@ -27,7 +27,7 @@
       <div id="tickets-container">
         <p class="loading-text">Loading your tickets...</p>
 
-        <button class = "btn-back" >Back</button>
+        <button class = "btn-back" onclick="history.back()">Back</button>
       </div>
     <script type="module" src="../js/mjcinema.js"></script>
   </body>

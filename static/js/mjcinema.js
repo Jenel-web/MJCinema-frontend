@@ -293,8 +293,16 @@ window.addEventListener("click", function (e) {
   const profileBtn = document.querySelector(".profile-trigger");
 
   // If the menu is open AND you clicked outside both the button and the menu
-  if (popup) {
-    popup.classList.toggle("hidden");
+  // Check: Is the popup currently visible?
+  const isVisible = !popup.classList.contains("hidden");
+
+  // Check: Did the user click somewhere OTHER than the popup or the button?
+  if (
+    isVisible &&
+    !popup.contains(e.target) &&
+    !profileBtn.contains(e.target)
+  ) {
+    popup.classList.add("hidden"); // Explicitly hide it, don't toggle
   }
 });
 
@@ -315,12 +323,13 @@ window.filterByStatus = function (status) {
     } else {
       card.style.display = "none";
     }
-  });
+  }); //filters the schedules and decides where each will fall in the nav bar
 
   // 3. (Optional) Update the active button styling
   document.querySelectorAll(".tab-btn").forEach((btn) => {
     btn.classList.remove("active");
-    if (btn.innerText.toUpperCase() === status) {
+
+    if (btn.innerText.trim().toUpperCase() === status.toUpperCase()) {
       btn.classList.add("active");
     }
   });
@@ -328,6 +337,7 @@ window.filterByStatus = function (status) {
 export function showBookings() {
   window.location.href = "tickets.html";
 }
+
 function groupTicketsBySchedule(tickets) {
   return tickets.reduce((groups, ticket) => {
     // Create a unique key for the specific showtime
@@ -350,7 +360,7 @@ function groupTicketsBySchedule(tickets) {
       code: ticket.ticketCode,
     });
     return groups;
-  }, {});
+  }, {}); //groups the ticket by schedule to be shown in frontend
 }
 function renderGroupedTickets(groupedData) {
   const container = document.getElementById("tickets-container");
@@ -362,7 +372,6 @@ function renderGroupedTickets(groupedData) {
             <div class="schedule-card" data-status="${group.status}">
                 <div class="schedule-header" onclick="this.parentElement.classList.toggle('open')">
                     <div class="info">
-                        <span class="status-dot ${group.status.toLowerCase()}"></span>
                         <strong>${group.title}</strong>
                         <small>📍 ${group.location} | ${group.date} at ${
       group.time
@@ -391,21 +400,20 @@ function renderGroupedTickets(groupedData) {
                         : ""
                     }
                 </div>
-            </div>
-        `;
+            </div>`;
     container.insertAdjacentHTML("beforeend", scheduleHTML);
   });
 }
 export async function loadUserTickets() {
   const container = document.getElementById("tickets-container");
   const id = localStorage.getItem("userId");
-  const response = await fetch(`${baseUrl}/ticket/mytickets?userId=${id}`);
   if (!id) {
     //check if the user is logged in.
     container.innerHTML = "<p>Please log in to view your tickets.</p>";
     return;
   }
   try {
+    const response = await fetch(`${baseUrl}/ticket/mytickets?userId=${id}`);
     if (!response.ok) {
       throw new Error("Failed to fetch tickets");
     }
@@ -422,7 +430,20 @@ export async function loadUserTickets() {
   }
 }
 
-const profile = document.getElementById("profile-popup");
+export async function getUserDetails() {
+  userID = localStorage.getItem("userId");
+
+  const response = await fetch(`${baseUrl}/user/getUser?userId=${userID}`);
+
+  if (!response.ok) {
+    throw new error("Error fetching user Details");
+  }
+  result = response.json();
+
+  return result;
+}
+
+const profile = document.getElementById("profile");
 const nowShowing = document.getElementById("now-showing");
 const comingSoon = document.getElementById("coming-soon");
 const cinema = document.getElementById("cinema");
@@ -469,3 +490,4 @@ window.groupTicketsBySchedule = groupTicketsBySchedule;
 window.renderGroupedTickets = renderGroupedTickets;
 window.loadUserTickets = loadUserTickets;
 window.showBookings = showBookings;
+window.getUserDetails = getUserDetails;

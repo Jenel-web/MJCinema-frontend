@@ -54,22 +54,30 @@ body {
 }
 .user-name{
     margin-top: 20px;
-    font-size: 32px;
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+    font-family: 'Courier New', Courier, monospace;
     margin-bottom: 100px;
     color: var(--navy);
     margin-left: 1rem;
 }
 
 .tab-btn{
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 1.1rem;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; /* Cleaner than Courier for menus */
+    font-size: 0.9rem;
     align-items: center;
     justify-content: center;
     border-bottom: 2px solid black;
     padding: 10px;
     padding-left: 20px;
+    border-left: 4px solid transparent;
 }
-
+.tab-btn .active {
+    color: var(--navy);
+    background-color: rgba(0, 31, 63, 0.05); /* Very subtle highlight */
+    border-left: 4px solid var(--bronze); /* The "Boutique" indicator */
+    font-weight: bold;
+}
 .tab-btn:hover{
     text-decoration-color: aqua;
 }
@@ -102,8 +110,51 @@ body {
     margin-left: 200px; /* makes it go to the left*/
     width: calc(100vw - 200px);
     position: relative;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
 }
 
 .btn-back{
-    background-color: white;
+    background-color: red;
+    position: absolute;  /* Breaks out of the normal flow */
+    bottom: 20px;       /* 20px from the bottom edge */
+    right: 20px;        /* 20px from the right edge */
+    border-radius: 14%;
+}
+
+
+.schedule-card{
+    padding:20px;
+    background-color: var(--white);
+    color: var(--bronze);
+    border: 1px solid;
+    height: 150px;
+    margin: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.schedule-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--navy); /* Your bronze color */
+}
+.seats-drawer{
+    display: none;
+    background-color: var(--bronze);
+    padding: 15px;
+    border: 1px solid white;
+}
+
+.schedule-card.open .seats-drawer{
+    display: block;
+}
+
+.schedule-card.open .arrow-icon {
+    transform: rotate(180deg);
+    display: inline-block;
+}
+
+.arrow-icon {
+    transition: transform 0.1s ease;
 }
