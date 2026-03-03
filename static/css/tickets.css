@@ -106,6 +106,7 @@ body {
     font-family: 'Courier New', Courier, monospace; /* Keeps your ticket theme */
 }
 
+/* Tickets Container */
 #tickets-container{
     margin-left: 200px; /* makes it go to the left*/
     width: calc(100vw - 200px);
@@ -128,6 +129,7 @@ body {
     background-color: var(--white);
     color: var(--bronze);
     border: 1px solid;
+    border-radius: 5%;
     height: 150px;
     margin: 10px;
     display: flex;
@@ -136,8 +138,8 @@ body {
 }
 
 .schedule-card:hover {
-    transform: translateY(-3px);
-    border-color: var(--navy); /* Your bronze color */
+    border: 10px solid;
+     border-color: var(--white); /* Your bronze color */
 }
 .seats-drawer{
     display: none;
