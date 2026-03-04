@@ -293,6 +293,8 @@ window.addEventListener("click", function (e) {
   const profileBtn = document.querySelector(".profile-trigger");
 
   // If the menu is open AND you clicked outside both the button and the menu
+  
+  if (!popup) return;
   // Check: Is the popup currently visible?
   const isVisible = !popup.classList.contains("hidden");
 
@@ -386,23 +388,65 @@ function renderGroupedTickets(groupedData) {
                     ${group.seats
                       .map(
                         (seat) => `
-                        <div class="seat-row">
-                            <span>💺 Seat ${seat.num} (${seat.cat})</span>
-                            <span class="ticket-code">${seat.code}</span>
-                        </div>
+                        <div class="seat-row clickable-ticket" 
+         onclick="${
+           group.status === "ACTIVE" ? `handleTicketTap('${seat.code}')` : ""
+         }">
+        <div class="seat-main-info">
+            <span>💺 Seat ${seat.num} (${seat.cat})</span>
+            <span class="ticket-code">${seat.code}</span>
+        </div>
+        ${
+          group.status === "ACTIVE"
+            ? `<span class="tap-to-cancel">Tap to cancel</span>`
+            : ""
+        }
+    </div>
                     `
                       )
                       .join("")}
-                    
-                    ${
-                      group.status === "ACTIVE"
-                        ? `<button class="cancel-btn" onclick="cancelBooking('${group.title}')">Cancel All</button>`
-                        : ""
-                    }
                 </div>
             </div>`;
     container.insertAdjacentHTML("beforeend", scheduleHTML);
   });
+}
+
+window.handleTicketTap = function (seatCode) {
+  // You can use a custom Modal here, but for now, let's keep it robust with a confirm dialog
+  const userConfirmed = confirm(
+    `Ticket: ${seatCode}\n\nDo you wish to cancel this booking? This action cannot be undone.`
+  );
+
+  if (userConfirmed) {
+    cancelTicket(seatCode);
+  }
+};
+
+export async function cancelTicket(seatCode) {
+//if (!confirm(`Are you sure you want to cancel ticket ${ticketCode}?`)) return;
+
+  try {
+    const response = await fetch(`${baseUrl}/ticket/cancel`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({
+        ticketCode: seatCode,
+      }),
+    });
+    if (response.ok) {
+      alert("Ticket cancelled successfully.");
+      loadUserTickets(); // Refresh the UI to show the new status
+    } else {
+      const errorData = await response.json();
+      console.log("Full Error From Backend:", errorData); // Look for "message" or "errors"
+      alert(`Error: ${errorData.message || "Failed to cancel"}`);
+    }
+  } catch (Error) {
+    throw new error("Unable to cancel ticket.");
+  }
 }
 export async function loadUserTickets() {
   const container = document.getElementById("tickets-container");
@@ -491,3 +535,4 @@ window.renderGroupedTickets = renderGroupedTickets;
 window.loadUserTickets = loadUserTickets;
 window.showBookings = showBookings;
 window.getUserDetails = getUserDetails;
+window.cancelTicket = cancelTicket;

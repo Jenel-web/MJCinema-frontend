@@ -107,12 +107,44 @@ body {
 }
 
 /* Tickets Container */
-#tickets-container{
-    margin-left: 200px; /* makes it go to the left*/
+#tickets-container {
+    margin-left: 200px; /* Sidebar width */
     width: calc(100vw - 200px);
-    position: relative;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 25px; /* Space between cards */
+    
+    /* THE FIXES: */
+    padding: 30px;           /* Pushes cards away from the edges */
+    box-sizing: border-box;  /* Ensures padding stays inside the width */
+    overflow-x: hidden;      /* Prevents horizontal scrolling */
+}
+@media (max-width: 900px) {
+    .booking-sidebar {
+        width: 70px; /* Shrink sidebar to just icons/minimal view */
+    }
+    #tickets-container {
+        margin-left: 70px;
+        width: calc(100vw - 70px);
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+    .user-name, .user-balance h2, .user-balance h3 {
+        display: none; /* Hide text in sidebar to save space */
+    }
+}
+/* hides the sidebar when the screen is too thin */
+@media (max-width: 600px) {
+    .booking-sidebar {
+        display: none; /* Hide sidebar entirely on mobile */
+    }
+    #tickets-container {
+        margin-left: 0;
+        width: 100vw;
+        grid-template-columns: 1fr; /* Stack cards vertically */
+    }
+    .user-balance h2{
+        font-size: 0.3rem;
+    }
 }
 
 .btn-back{
@@ -123,29 +155,76 @@ body {
     border-radius: 14%;
 }
 
-
-.schedule-card{
-    padding:20px;
-    background-color: var(--white);
-    color: var(--bronze);
-    border: 1px solid;
-    border-radius: 5%;
-    height: 150px;
-    margin: 10px;
+/* Update your .seat-row to be more robust */
+.seat-row {
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    align-items: center;      /* Vertically centers everything */
+    justify-content: space-between; 
+    width: 100%;              /* Take full width of the drawer */
+    min-height: 50px;         /* Standardizes height across all tabs */
+    padding: 10px 15px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    background: #ffffff;
+    border: 1px solid #eee;
+    box-sizing: border-box;
+}
+
+/* Fix the card height issue */
+.schedule-card {
+    /* Remove the 'margin: 10px' to let the Grid Gap handle it */
+    margin: 0; 
+    
+    width: 100%; /* Ensure it fills the grid cell */
+    padding: 24px;
+    background-color:var(--white
+    );
+    border-radius: 12px;
+    box-shadow: var(--soft-shadow);
+    color: var(--navy);
+    /* ... rest of your styles */
+}
+
+/* Make sure the drawer doesn't push things off-screen */
+.seats-drawer {
+    display: none;
+    width: 100%;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed var(--bronze);
 }
 
 .schedule-card:hover {
-    border: 10px solid;
-     border-color: var(--white); /* Your bronze color */
+    border: 3px solid;
+     border-color: var(--bronze); /* Your bronze color */
 }
-.seats-drawer{
-    display: none;
-    background-color: var(--bronze);
-    padding: 15px;
-    border: 1px solid white;
+.seat-row.clickable-ticket {
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+}
+
+.seat-row.clickable-ticket:hover {
+    background-color: rgba(139, 69, 19, 0.1); /* Subtle bronze tint */
+    border-color: var(--bronze);
+    transform: scale(1.02);
+}
+
+.tap-to-cancel {
+    font-size: 0.7rem;
+    color: #cc0000;
+    text-transform: uppercase;
+    font-weight: bold;
+    opacity: 0.6;
+}
+
+.seat-row.clickable-ticket:hover .tap-to-cancel {
+    opacity: 1;
 }
 
 .schedule-card.open .seats-drawer{
