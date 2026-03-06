@@ -313,36 +313,56 @@ export function handleLogout() {
   localStorage.clear();
 }
 window.filterByStatus = function (status) {
-  // 1. Get all the schedule cards we rendered
   const allCards = document.querySelectorAll(".schedule-card");
 
-  // 2. Loop through them
   allCards.forEach((card) => {
-    // If the card matches the status (e.g. "ACTIVE"), show it.
-    // Otherwise, hide it.
-    if (card.getAttribute("data-status") === status) {
-      card.style.display = "block";
-    } else {
-      card.style.display = "none";
-    }
-  }); //filters the schedules and decides where each will fall in the nav bar
+    const hasActive = card.getAttribute("data-has-active") === "true";
+    const hasCancelled = card.getAttribute("data-has-cancelled") === "true";
 
-  // 3. (Optional) Update the active button styling
-  document.querySelectorAll(".tab-btn").forEach((btn) => {
-    btn.classList.remove("active");
+    // Step A: Decide if the card should be visible in this tab
+    let showCard = false;
+    if (status === "ACTIVE" && hasActive) showCard = true;
+    if (status === "CANCELLED" && hasCancelled) showCard = true;
+    if(status === "COMPLETED") showCard = true;
+    card.style.display = showCard ? "block" : "none";
 
-    if (btn.innerText.trim().toUpperCase() === status.toUpperCase()) {
-      btn.classList.add("active");
+    // Step B: Filter individual rows inside the visible card
+    if (showCard) {
+      const rows = card.querySelectorAll(".seat-row");
+      let visibleSeatCount = 0;
+
+      rows.forEach((row) => {
+        if (row.getAttribute("data-seat-status") === status) {
+          row.style.display = "flex";
+          visibleSeatCount++;
+        } else {
+          row.style.display = "none";
+        }
+      });
+
+      // Step C: Update header text to reflect the current tab's count
+      const countDisplay = card.querySelector(".count");
+      countDisplay.innerHTML = `${visibleSeatCount} ${
+        status === "ACTIVE" ? "Active" : "Cancelled"
+      } Seats <i class="arrow-icon">▼</i>`;
     }
   });
+
+  // UI: Update tab button active states
+  document.querySelectorAll(".tab-btn").forEach((btn) => {
+    btn.classList.toggle(
+      "active",
+      btn.innerText.trim().toUpperCase() === status
+    );
+  });
 };
+
 export function showBookings() {
   window.location.href = "tickets.html";
 }
 
 function groupTicketsBySchedule(tickets) {
   return tickets.reduce((groups, ticket) => {
-    // Create a unique key for the specific showtime
     const key = `${ticket.title}-${ticket.showDate}-${ticket.startTime}`;
 
     if (!groups[key]) {
@@ -351,18 +371,24 @@ function groupTicketsBySchedule(tickets) {
         date: ticket.showDate,
         time: ticket.startTime,
         location: ticket.location,
+        hasActive: false, // Track if any are active
+        hasCancelled: false, // Track if any are cancelled
         seats: [],
       };
     }
-    // Add the seat info to this specific schedule
+
     groups[key].seats.push({
       num: ticket.seatNumber,
       cat: ticket.seatCategory,
       code: ticket.ticketCode,
       status: ticket.ticketStatus,
     });
+
+    if (ticket.ticketStatus === "ACTIVE") groups[key].hasActive = true;
+    if (ticket.ticketStatus === "CANCELLED") groups[key].hasCancelled = true;
+
     return groups;
-  }, {}); //groups the ticket by schedule to be shown in frontend
+  }, {});
 }
 function renderGroupedTickets(groupedData) {
   const container = document.getElementById("tickets-container");
@@ -371,46 +397,47 @@ function renderGroupedTickets(groupedData) {
 
   Object.values(groupedData).forEach((group) => {
     const scheduleHTML = `
-            <div class="schedule-card" data-status="${group.status}">
-                <div class="schedule-header" onclick="this.parentElement.classList.toggle('open')">
-                    <div class="info">
-                        <strong>${group.title}</strong>
-                        <small>📍 ${group.location} | ${group.date} at ${
+    <div class="schedule-card" 
+         data-has-active="${group.hasActive}" 
+         data-has-cancelled="${group.hasCancelled}">
+        
+        <div class="schedule-header" onclick="this.parentElement.classList.toggle('open')">
+            <div class="info">
+                <strong>${group.title}</strong>
+                <small>📍 ${group.location} | ${group.date} at ${
       group.time
     }</small>
-                    </div>
-                    <div class="count">
-                        ${group.seats.length} Seats <i class="arrow-icon">▼</i>
-                    </div>
+            </div>
+            <div class="count">
                 </div>
-                
-                <div class="seats-drawer">
-                    ${group.seats
-                      .map(
-                        (seat) => `
-                        <div class="seat-row clickable-ticket" 
-         onclick="${
-           group.status === "ACTIVE" ? `handleTicketTap('${seat.code}')` : ""
-         }">
-        <div class="seat-main-info">
-            <span>💺 Seat ${seat.num} (${seat.cat})</span>
-            <span class="ticket-code">${seat.code}</span>
         </div>
-        ${
-          group.status === "ACTIVE"
-            ? `<span class="tap-to-cancel">Tap to cancel</span>`
-            : ""
-        }
-    </div>
-                    `
-                      )
-                      .join("")}
+        
+        <div class="seats-drawer">
+            ${group.seats
+              .map(
+                (seat) => `
+                <div class="seat-row" data-seat-status="${seat.status}">
+                    <div class="seat-main-info">
+                        <span>💺 Seat ${seat.num} (${seat.cat})</span>
+                        <span class="ticket-code">${seat.code}</span>
+                    </div>
+                    ${
+                      seat.status === "ACTIVE"
+                        ? `<button class="cancel-link" onclick="handleTicketTap('${seat.code}')">Cancel</button>`
+                        : `<span class="status-tag">CANCELLED</span>`
+                    }
                 </div>
-            </div>`;
+            `
+              )
+              .join("")}
+        </div>
+    </div>`;
     container.insertAdjacentHTML("beforeend", scheduleHTML);
   });
-}
 
+  // Initial run to show ACTIVE tickets by default
+  window.filterByStatus("ACTIVE");
+}
 window.handleTicketTap = function (seatCode) {
   // You can use a custom Modal here, but for now, let's keep it robust with a confirm dialog
   const userConfirmed = confirm(
