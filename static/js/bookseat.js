@@ -3,7 +3,7 @@ let selectedSeats = []; //initialized the selected seats which is empty at first
 
 async function initBooking() {
   const scheduleId = localStorage.getItem("selectedScheduleId");
-
+  const token = localStorage.getItem("token");
   if (!scheduleId) {
     console.error("No Schedule ID found! Redirecting to home...");
     window.location.href = "index.html";
@@ -43,8 +43,16 @@ async function initBooking() {
 }
 
 async function getOccupiedSeats(scheduleId) {
+  const token = localStorage.getItem("token");
   const response = await fetch(
-    `http://localhost:8080/seat/occupied/${scheduleId}`
+    `http://localhost:8080/seat/occupied/${scheduleId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, //this is the token for auth
+      },
+    }
   );
 
   const occupiedSeats = await response.json();
@@ -129,6 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
 async function bookTicket(selectedSeats = []) {
   const id = localStorage.getItem("selectedScheduleId");
   const user = localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
   const data = {
     userId: Number(user),
     scheduleId: Number(id), //its a string when received in the localStorage
@@ -141,6 +150,7 @@ async function bookTicket(selectedSeats = []) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, //this is the token for auth
       },
       body: JSON.stringify(data),
       credentials: "include",

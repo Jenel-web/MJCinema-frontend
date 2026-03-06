@@ -95,6 +95,7 @@ export class Auth {
     if (result.success) {
       localStorage.setItem("userId", result.data.userId);
       localStorage.setItem("username", result.data.username);
+      localStorage.setItem("token", result.data.jwtToken);
       ui.showPopup("Login successful!", "green");
       window.location.href = "dashboard.html";
     } else {

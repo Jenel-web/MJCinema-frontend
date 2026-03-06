@@ -293,7 +293,7 @@ window.addEventListener("click", function (e) {
   const profileBtn = document.querySelector(".profile-trigger");
 
   // If the menu is open AND you clicked outside both the button and the menu
-  
+
   if (!popup) return;
   // Check: Is the popup currently visible?
   const isVisible = !popup.classList.contains("hidden");
@@ -351,7 +351,6 @@ function groupTicketsBySchedule(tickets) {
         date: ticket.showDate,
         time: ticket.startTime,
         location: ticket.location,
-        status: ticket.ticketStatus,
         seats: [],
       };
     }
@@ -360,6 +359,7 @@ function groupTicketsBySchedule(tickets) {
       num: ticket.seatNumber,
       cat: ticket.seatCategory,
       code: ticket.ticketCode,
+      status: ticket.ticketStatus,
     });
     return groups;
   }, {}); //groups the ticket by schedule to be shown in frontend
@@ -423,13 +423,14 @@ window.handleTicketTap = function (seatCode) {
 };
 
 export async function cancelTicket(seatCode) {
-//if (!confirm(`Are you sure you want to cancel ticket ${ticketCode}?`)) return;
-
+  //if (!confirm(`Are you sure you want to cancel ticket ${ticketCode}?`)) return;
+  const token = localStorage.getItem("token");
   try {
     const response = await fetch(`${baseUrl}/ticket/cancel`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, //this is the token for auth
       },
       credentials: "include",
       body: JSON.stringify({
@@ -444,11 +445,12 @@ export async function cancelTicket(seatCode) {
       console.log("Full Error From Backend:", errorData); // Look for "message" or "errors"
       alert(`Error: ${errorData.message || "Failed to cancel"}`);
     }
-  } catch (Error) {
-    throw new error("Unable to cancel ticket.");
+  } catch (err) {
+    console.error(err); // 2. Good practice to log the actual error
   }
 }
 export async function loadUserTickets() {
+  const token = localStorage.getItem("token");
   const container = document.getElementById("tickets-container");
   const id = localStorage.getItem("userId");
   if (!id) {
@@ -457,7 +459,13 @@ export async function loadUserTickets() {
     return;
   }
   try {
-    const response = await fetch(`${baseUrl}/ticket/mytickets?userId=${id}`);
+    const response = await fetch(`${baseUrl}/ticket/mytickets?userId=${id}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`, // 2. Add the token here!
+        "Content-Type": "application/json",
+      },
+    });
     if (!response.ok) {
       throw new Error("Failed to fetch tickets");
     }
