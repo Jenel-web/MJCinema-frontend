@@ -343,7 +343,11 @@ window.filterByStatus = function (status) {
       // Step C: Update header text to reflect the current tab's count
       const countDisplay = card.querySelector(".count");
       countDisplay.innerHTML = `${visibleSeatCount} ${
-        status === "ACTIVE" ? "Active" : "Cancelled"
+        status === "ACTIVE"
+          ? "Active"
+          : status === "CANCELLED"
+          ? "Cancelled"
+          : "Completed"
       } Seats <i class="arrow-icon">▼</i>`;
     }
   });
@@ -423,8 +427,9 @@ function renderGroupedTickets(groupedData) {
                     </div>
                     ${
                       seat.status === "ACTIVE"
-                        ? `<button class="cancel-link" onclick="handleTicketTap('${seat.code}')">Cancel</button>`
-                        : `<span class="status-tag">CANCELLED</span>`
+                        ? `<button class="tap-to-cancel" onclick="handleTicketTap('${seat.code}')">Cancel</button>`
+                        : seat.status ===
+                          "CANCELLED"? `<span class="status-tag">CANCELLED</span>` : `<span class="status-tag">COMPLETED</span>`
                     }
                 </div>
             `

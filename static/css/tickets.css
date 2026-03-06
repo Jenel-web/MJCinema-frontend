@@ -35,64 +35,81 @@ body {
     width: 100vw;
     position: relative;
 }
-.booking-sidebar{
+.booking-sidebar {
     width: 200px;
     position: relative;
     display: flex;
     flex-direction: column;
-    background-color: #EDEADE;
+    /* Use a rich cream/parchment color for a boutique feel */
+    background-color: #fdfaf5; 
     min-height: 100vh;
-    position: relative;
     position: fixed;
+    border-right: 1px solid rgba(139, 69, 19, 0.1);
 }
 
-.booking-sidebar ul{
+.booking-sidebar ul {
     color: var(--navy);
     list-style: none;
     padding: 0;
     margin: 0;
 }
-.user-name{
+
+.user-name {
     margin-top: 20px;
     font-size: 1.5rem;
     letter-spacing: 1px;
-    font-family: 'Courier New', Courier, monospace;
+    /* Serif font for a sophisticated boutique branding */
+    font-family: 'Playfair Display', 'Times New Roman', serif;
     margin-bottom: 100px;
     color: var(--navy);
     margin-left: 1rem;
+    text-transform: uppercase;
 }
 
-.tab-btn{
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; /* Cleaner than Courier for menus */
+.tab-btn {
+    /* Using Montserrat or a clean Sans-Serif for a modern luxury feel */
+    font-family: 'Montserrat', 'Segoe UI', sans-serif;
     font-size: 0.9rem;
     align-items: center;
     justify-content: center;
-    border-bottom: 2px solid black;
+    /* Changed from black to a subtle bronze divider */
+    border-bottom: 1px solid rgba(139, 69, 19, 0.1); 
     padding: 10px;
     padding-left: 20px;
     border-left: 4px solid transparent;
-}
-.tab-btn .active {
-    color: var(--navy);
-    background-color: rgba(0, 31, 63, 0.05); /* Very subtle highlight */
-    border-left: 4px solid var(--bronze); /* The "Boutique" indicator */
-    font-weight: bold;
-}
-.tab-btn:hover{
-    text-decoration-color: aqua;
+    color: #444;
+    background: transparent;
+    transition: all 0.3s ease;
 }
 
-.user-balance{
+.tab-btn.active {
+    color: var(--navy);
+    /* Soft gold-tinted highlight instead of bright yellow */
+    background-color: rgba(212, 175, 55, 0.1); 
+    border-left: 4px solid var(--bronze);
+    font-weight: bold;
+}
+
+.tab-btn:hover {
+    /* Removed aqua; using a soft bronze underline effect */
+    color: var(--bronze);
+    background-color: rgba(212, 175, 55, 0.05);
+}
+
+.user-balance {
     display: flex;
     flex-direction: column;
     padding-left: 20px;
     padding: 20px;
-  
-    background-color: rgb(43, 41, 41);
-    margin-top: auto; /* pushes the div to the bottom */
+    /* Deep matte black/charcoal for the "vault" section */
+    background-color: #1a1a1a; 
+    margin-top: auto;
+    border-top: 2px solid var(--bronze);
 }
+
 .user-balance h2 {
-    color: #8B5A2B; /* A lighter bronze for the "Balance:" label */
+    /* Lighter metallic bronze for the label */
+    color: #c5a059; 
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 4px;
@@ -100,50 +117,43 @@ body {
 }
 
 .user-balance h3 {
-    color: #996515; /* The Deep Gold for the actual amount */
+    /* Brighter gold for the currency amount */
+    color: #f1c40f; 
     font-size: 1.6rem;
     font-weight: 800;
-    font-family: 'Courier New', Courier, monospace; /* Keeps your ticket theme */
+    /* Keeps the ticket/receipt feel but looks "premium" */
+    font-family: 'Courier New', Courier, monospace; 
 }
-
 /* Tickets Container */
 #tickets-container {
-    margin-left: 200px; /* Sidebar width */
+    margin-left: 200px;
     width: calc(100vw - 200px);
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 25px; /* Space between cards */
-    
-    /* THE FIXES: */
-    padding: 30px;           /* Pushes cards away from the edges */
-    box-sizing: border-box;  /* Ensures padding stays inside the width */
-    overflow-x: hidden;      /* Prevents horizontal scrolling */
+    padding: 30px;
+    box-sizing: border-box;
+
+    /* SWITCH FROM GRID TO COLUMNS */
+    column-count: 3; /* How many columns you want */
+    column-gap: 25px; /* Space between the vertical columns */
 }
-@media (max-width: 900px) {
-    .booking-sidebar {
-        width: 70px; /* Shrink sidebar to just icons/minimal view */
+@media (max-width: 1200px) {
+    #tickets-container {
+        column-count: 2; /* Two columns for medium screens */
     }
+}
+
+@media (max-width: 900px) {
     #tickets-container {
         margin-left: 70px;
         width: calc(100vw - 70px);
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    }
-    .user-name, .user-balance h2, .user-balance h3 {
-        display: none; /* Hide text in sidebar to save space */
+        column-count: 2;
     }
 }
-/* hides the sidebar when the screen is too thin */
+
 @media (max-width: 600px) {
-    .booking-sidebar {
-        display: none; /* Hide sidebar entirely on mobile */
-    }
     #tickets-container {
         margin-left: 0;
         width: 100vw;
-        grid-template-columns: 1fr; /* Stack cards vertically */
-    }
-    .user-balance h2{
-        font-size: 0.3rem;
+        column-count: 1; /* Single column for mobile */
     }
 }
 
@@ -158,31 +168,36 @@ body {
 /* Update your .seat-row to be more robust */
 .seat-row {
     display: flex;
-    align-items: center;      /* Vertically centers everything */
-    justify-content: space-between; 
-    width: 100%;              /* Take full width of the drawer */
-    min-height: 50px;         /* Standardizes height across all tabs */
-    padding: 10px 15px;
-    margin-bottom: 8px;
-    border-radius: 8px;
-    background: #ffffff;
-    border: 1px solid #eee;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 50px;
+    padding: 12px 18px;
+    margin-bottom: 10px;
+    
+    /* THE FIX: Solid Background and Border */
+    background-color: #fcfaf2; /* Light parchment color */
+    border: 1px solid rgba(139, 69, 19, 0.2); /* Faint Bronze border */
+    border-radius: 6px;
+    
     box-sizing: border-box;
+    transition: all 0.2s ease;
 }
 
 /* Fix the card height issue */
 .schedule-card {
-    /* Remove the 'margin: 10px' to let the Grid Gap handle it */
-    margin: 0; 
+    display: inline-block; /* Important for column layouts */
+    width: 100%;
+    margin-bottom: 25px; /* Vertical space between cards */
+    height: auto;
+    break-inside: avoid; /* Prevents card from breaking at the bottom of a column */
     
-    width: 100%; /* Ensure it fills the grid cell */
+    /* Keep your boutique styles */
     padding: 24px;
-    background-color:var(--white
-    );
+    background-color: var(--white);
     border-radius: 12px;
     box-shadow: var(--soft-shadow);
     color: var(--navy);
-    /* ... rest of your styles */
 }
 
 /* Make sure the drawer doesn't push things off-screen */
@@ -194,41 +209,62 @@ body {
     border-top: 1px dashed var(--bronze);
 }
 
-.schedule-card:hover {
-    border: 3px solid;
-     border-color: var(--bronze); /* Your bronze color */
-}
 .seat-row.clickable-ticket {
     cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid transparent;
+    border-left: 4px solid var(--bronze); /* Luxury accent on the left */
 }
 
 .seat-row.clickable-ticket:hover {
-    background-color: rgba(139, 69, 19, 0.1); /* Subtle bronze tint */
+    background-color: #ffffff;
     border-color: var(--bronze);
-    transform: scale(1.02);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+/* Specific styling for the Cancelled seats so they look "voided" */
+.seat-row.CANCELLED {
+    background-color: #f5f5f5;
+    border: 1px dashed #ccc;
+    opacity: 0.7;
 }
 
 .tap-to-cancel {
     font-size: 0.7rem;
-    color: #cc0000;
+    /* Use a deep, muted burgundy/wine color instead of bright red */
+    color: #800020; 
     text-transform: uppercase;
-    font-weight: bold;
-    opacity: 0.6;
+    letter-spacing: 1.2px; /* Adds that boutique/premium feel */
+    font-weight: 700;
+    opacity: 0; /* Hide it by default to keep the UI clean */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: translateX(10px); /* Slight offset for a slide-in effect */
 }
+
+/* Show the label only when hovering over the seat row */
+.seat-row.clickable-ticket:hover .tap-to-cancel {
+    opacity: 1;
+    transform: translateX(0); /* Slides into place */
+}
+
 
 .seat-row.clickable-ticket:hover .tap-to-cancel {
     opacity: 1;
 }
+.seats-drawer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out, padding 0.3s ease;
+    width: 100%;
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 1px dashed var(--bronze);
+    display: block; /* Always block, but height 0 hides it */
+}
 
-.schedule-card.open .seats-drawer{
-    display: block;
+.schedule-card.open .seats-drawer {
+    max-height: 1000px; /* Large enough to fit any number of seats */
+    margin-top: 15px;
+    padding-top: 15px;
 }
 
 .schedule-card.open .arrow-icon {
