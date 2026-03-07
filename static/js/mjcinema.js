@@ -428,18 +428,23 @@ function renderGroupedTickets(groupedData) {
                     ${
                       seat.status === "ACTIVE"
                         ? `<button class="tap-to-cancel" onclick="handleTicketTap('${seat.code}')">Cancel</button>`
-                        : seat.status ===
-                          "CANCELLED"? `<span class="status-tag">CANCELLED</span>` : `<span class="status-tag">COMPLETED</span>`
+                        : seat.status === "CANCELLED"
+                        ? `<span class="status-tag">CANCELLED</span>`
+                        : `<span class="status-tag">COMPLETED</span>`
                     }
-                </div>
-            `
-              )
-              .join("")}
+                </div>`).join("")}
         </div>
     </div>`;
-    container.insertAdjacentHTML("beforeend", scheduleHTML);
-  });
 
+    container.insertAdjacentHTML("beforeend", scheduleHTML);
+  })
+
+  //must be outside the loop
+  const backBtnHTML = `<button class="btn-back" onclick="history.back()">
+                       Back
+                     </button>`;
+
+  container.insertAdjacentHTML("beforeend", backBtnHTML); //draws the button
   // Initial run to show ACTIVE tickets by default
   window.filterByStatus("ACTIVE");
 }

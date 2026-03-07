@@ -24,7 +24,7 @@ body {
     background-color: var(--bronze);
     min-height: 100vh;
     display: flex !important;
-    justify-content: flex-start !important;
+   
     align-items: stretch; /* spans the whole line*/
     background-color: var(--navy);
     margin-left: 0 !important;
@@ -157,14 +157,6 @@ body {
     }
 }
 
-.btn-back{
-    background-color: red;
-    position: absolute;  /* Breaks out of the normal flow */
-    bottom: 20px;       /* 20px from the bottom edge */
-    right: 20px;        /* 20px from the right edge */
-    border-radius: 14%;
-}
-
 /* Update your .seat-row to be more robust */
 .seat-row {
     display: flex;
@@ -274,4 +266,29 @@ body {
 
 .arrow-icon {
     transition: transform 0.1s ease;
+}
+
+.btn-back {
+    display: block;          /* No longer absolute */
+    width: fit-content;      /* Only as wide as the text */
+    margin: 40px auto;       /* Centers it and adds space at the top/bottom */
+    background-color: rgb(214, 78, 78); /* Use your theme color instead of red */
+    color: white;
+    padding: 12px 30px;
+    margin-top: -5px;
+    border: none;
+    border-radius: 7px;      /* Slight curve for a premium look */
+    cursor: pointer;
+    font-weight: bold;
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    transition: background 0.3s ease;
+    
+    /* Ensure it doesn't get caught in columns */
+    column-span: all;        /* This is the magic line! */
+}
+
+.btn-back:hover{
+    background-color: red;
 }
