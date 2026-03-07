@@ -6,7 +6,7 @@ const ui = new UI(); //imports UI and instantiates
 
 const movies = await fetch(`${baseUrl}/movie/show`); //use backticks
 const allMovies = await movies.json();
-
+const token = localStorage.getItem("token");
 // Force it onto the window object explicitly
 window.allMovies = Array.from(allMovies); //saves all the movies in the db
 //for movie booking
@@ -515,18 +515,57 @@ export async function loadUserTickets() {
 }
 
 export async function getUserDetails() {
-  userID = localStorage.getItem("userId");
-
-  const response = await fetch(`${baseUrl}/user/getUser?userId=${userID}`);
-
+  const userID= localStorage.getItem("userId");
+  const token = localStorage.getItem("token");
+  try{
+  const response = await fetch(`${baseUrl}/user/getUser?userId=${userID}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`, // 2. Add the token here!
+      "Content-Type": "application/json",
+    },
+  });
   if (!response.ok) {
-    throw new error("Error fetching user Details");
+    throw new Error("Error fetching user Details");
   }
-  result = response.json();
+  const result = await response.json();
 
   return result;
-}
 
+}catch (err) {
+    console.error("Fetch Error:", err);
+    throw err;
+}
+}
+export async function updateSidebarUserInfo() {
+  try {
+    // 1. Fetch the data using your existing method
+    const userData = await getUserDetails();
+
+    // 2. Select the elements
+    const nameElement = document.getElementById("display-username");
+    const balanceElement = document.getElementById("display-balance");
+
+    if (userData) {
+      // 3. Update Username
+      // Use .name or .username depending on your Backend Entity field name
+      nameElement.innerText = `👤 ${userData.username}`;
+
+      // 4. Update Balance (formatted as Philippine Peso)
+      const balance = userData.balance || 0;
+      balanceElement.innerText = `₱${parseFloat(balance).toLocaleString(
+        undefined,
+        {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        }
+      )}`;
+    }
+  } catch (error) {
+    console.error("Failed to update sidebar:", error);
+    document.getElementById("display-username").innerText = "👤 Profile";
+  }
+}
 const profile = document.getElementById("profile");
 const nowShowing = document.getElementById("now-showing");
 const comingSoon = document.getElementById("coming-soon");
@@ -560,6 +599,11 @@ if (profile) {
 }
 if (document.getElementById("tickets-container")) {
   loadUserTickets();
+  updateSidebarUserInfo();
+}
+
+if(document.getElementById("booking-sidebar")){
+
 }
 window.ClickedCardHandler = ClickedCardHandler;
 window.closeModal = closeModal;
@@ -576,3 +620,4 @@ window.loadUserTickets = loadUserTickets;
 window.showBookings = showBookings;
 window.getUserDetails = getUserDetails;
 window.cancelTicket = cancelTicket;
+window.updateSidebarUserInfo = updateSidebarUserInfo;

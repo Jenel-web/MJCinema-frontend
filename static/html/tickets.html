@@ -10,8 +10,8 @@
   <body>
     <div id="bookings-view" class="bookings-container">
 
-      <div class="booking-sidebar">
-        <h2 class = "user-name">👤Username</h2>
+      <div class="booking-sidebar" id = "booking-sidebar">
+         <h2 class="user-name" id="display-username">👤 Loading...</h2>
 
         <ul>
           <li class="tab-btn active" onclick="filterByStatus('ACTIVE')">ACTIVE</li>
@@ -20,9 +20,9 @@
         </ul>
 
         <div class="user-balance">
-          <h2>Balance</h2>
-          <h3>₱500.00 </h3>
-        </div>
+        <h2>Balance</h2>
+        <h3 id="display-balance">₱0.00</h3>
+    </div>
     </div>
       <div id="tickets-container">
         <p class="loading-text">Loading your tickets...</p>
