@@ -97,7 +97,12 @@ export class Auth {
       localStorage.setItem("username", result.data.username);
       localStorage.setItem("token", result.data.jwtToken);
       ui.showPopup("Login successful!", "green");
-      window.location.href = "dashboard.html";
+      if (result.data.role === "USER") {
+        window.location.href = "dashboard.html";
+      } else {
+        console.log(result.data.role);
+        window.location.href = "admin.html";
+      }
     } else {
       const msg =
         result.message === "Server is offline. Try again later."
