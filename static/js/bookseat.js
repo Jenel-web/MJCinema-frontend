@@ -16,7 +16,10 @@ async function initBooking() {
   // 2. Setup the Grid based on Cinema dimensions
   const cinema = schedule.cinema;
 
-  console.log("Cinema Layout String:", cinema ? cinema.seatLayout : "NO CINEMA DATA");
+  console.log(
+    "Cinema Layout String:",
+    cinema ? cinema.seatLayout : "NO CINEMA DATA"
+  );
   if (schedule && schedule.movie) {
     document.getElementById("movie-title").innerText = schedule.movie.title;
   } else {
@@ -84,6 +87,7 @@ function renderBlueprint(rows, cols, layoutString, occupiedSeats = []) {
         const seatId = `${rowLetter}${seatNumberInRow}`; //assigns the seat Id
         const seat = document.createElement("div"); //creates an element div
         seat.className = "seat"; //configured and styled in css based on className
+        const safeOccupied = Array.isArray(occupiedSeats) ? occupiedSeats : [];
 
         if (occupiedSeats.includes(seatId)) {
           // checks from the data fetched if its already occupied

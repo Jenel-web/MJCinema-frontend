@@ -323,7 +323,7 @@ window.filterByStatus = function (status) {
     let showCard = false;
     if (status === "ACTIVE" && hasActive) showCard = true;
     if (status === "CANCELLED" && hasCancelled) showCard = true;
-    if(status === "COMPLETED") showCard = true;
+    if (status === "COMPLETED") showCard = true;
     card.style.display = showCard ? "block" : "none";
 
     // Step B: Filter individual rows inside the visible card
@@ -432,12 +432,14 @@ function renderGroupedTickets(groupedData) {
                         ? `<span class="status-tag">CANCELLED</span>`
                         : `<span class="status-tag">COMPLETED</span>`
                     }
-                </div>`).join("")}
+                </div>`
+              )
+              .join("")}
         </div>
     </div>`;
 
     container.insertAdjacentHTML("beforeend", scheduleHTML);
-  })
+  });
 
   //must be outside the loop
   const backBtnHTML = `<button class="btn-back" onclick="history.back()">
@@ -476,6 +478,8 @@ export async function cancelTicket(seatCode) {
     });
     if (response.ok) {
       alert("Ticket cancelled successfully.");
+      initBooking();
+
       loadUserTickets(); // Refresh the UI to show the new status
     } else {
       const errorData = await response.json();
@@ -520,27 +524,26 @@ export async function loadUserTickets() {
 }
 
 export async function getUserDetails() {
-  const userID= localStorage.getItem("userId");
+  const userID = localStorage.getItem("userId");
   const token = localStorage.getItem("token");
-  try{
-  const response = await fetch(`${baseUrl}/user/getUser?userId=${userID}`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`, // 2. Add the token here!
-      "Content-Type": "application/json",
-    },
-  });
-  if (!response.ok) {
-    throw new Error("Error fetching user Details");
-  }
-  const result = await response.json();
+  try {
+    const response = await fetch(`${baseUrl}/user/getUser?userId=${userID}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`, // 2. Add the token here!
+        "Content-Type": "application/json",
+      },
+    });
+    if (!response.ok) {
+      throw new Error("Error fetching user Details");
+    }
+    const result = await response.json();
 
-  return result;
-
-}catch (err) {
+    return result;
+  } catch (err) {
     console.error("Fetch Error:", err);
     throw err;
-}
+  }
 }
 export async function updateSidebarUserInfo() {
   try {
@@ -607,8 +610,7 @@ if (document.getElementById("tickets-container")) {
   updateSidebarUserInfo();
 }
 
-if(document.getElementById("booking-sidebar")){
-
+if (document.getElementById("booking-sidebar")) {
 }
 window.ClickedCardHandler = ClickedCardHandler;
 window.closeModal = closeModal;
