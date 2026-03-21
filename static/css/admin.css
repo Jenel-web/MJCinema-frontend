@@ -30,8 +30,10 @@
   .sidebar::before {
     content: '';
     position: absolute;
-    bottom: -80px; right: -80px;
-    width: 240px; height: 240px;
+    bottom: -80px; 
+    right: -80px;
+    width: 240px; 
+    height: 240px;
     background: radial-gradient(circle, rgba(139,94,60,0.18) 0%, transparent 70%);
     pointer-events: none;
   }
@@ -48,7 +50,8 @@
   }
  
   .logo-icon {
-    width: 44px; height: 44px;
+    width: 44px; 
+    height: 44px;
     background: var(--brown);
     border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
@@ -56,6 +59,34 @@
     flex-shrink: 0;
     box-shadow: 0 4px 12px rgba(139,94,60,0.4);
   }
+
+  /* Container to help with positioning in your Navbar or Sidebar */
+.logo-container {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo-icon {
+  width: 120px;             /* Adjust based on your logo size */
+  height: auto;             /* Keeps the aspect ratio perfect */
+  transition: transform 0.3s ease, filter 0.3s ease;
+  cursor: pointer;
+}
+
+/* Boutique Hover Effect: Logo glows slightly and lifts up */
+.logo-icon:hover {
+  transform: translateY(-3px);
+  filter: drop-shadow(0px 0px 8px rgba(255, 215, 0, 0.6)); /* Gold glow */
+}
+
+/* Remove default link styling */
+.logo-link {
+  text-decoration: none;
+  border: none;
+  outline: none;
+}
  
   .logo-text { line-height: 1.15; }
   .logo-text .name {
