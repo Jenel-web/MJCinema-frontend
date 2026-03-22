@@ -1,65 +1,80 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title> MJCinema Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/admin.css" />
-</head>
-<body>
- 
-<aside class="sidebar">
- 
-  <div class="logo-wrap">
-    <div class="logo">
-   <div class="logo-container">
-  <a href="index.html" class="logo-link">
-    <img src="../images/MJCinema logo.png" alt="MJCinema Logo" class="logo-icon">
-  </a>
-</div>
-      <div class="logo-text">
-        <div class="name">MJCinema</div>
-        <div class="sub">Boutique Cinema</div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MJCinema Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Jost:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/admin.css" />
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="logo-wrap">
+        <div class="logo">
+          <div class="logo-container">
+            <a href="index.html" class="logo-link">
+              <img
+                src="../images/MJCinema logo.png"
+                alt="MJCinema Logo"
+                class="logo-icon"
+              />
+            </a>
+          </div>
+          <div class="logo-text">
+            <div class="name">MJCinema</div>
+            <div class="sub">Boutique Cinema</div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <div class="nav-item active">
+          <span class="nav-icon" id="home">🏠</span> Home
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon" id="movies">🎥</span> Movies
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon" id="schedules">🗓️</span> Schedules
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon" id="bookings">🎟️</span> Bookings
+        </div>
+        <div class="nav-item">
+          <span class="nav-icon" id="users">👤</span> Users
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <span>⚙️ Settings</span>
+        <span>🚪 Logout</span>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+      <div class="sales-card">
+        <div class="sales-card-label">Total Sales</div>
+        <span id="totalSales">Loading...</span>
+        <div class="sales-card-sub">All time revenue</div>
+      </div>
+
+      <div class="sales-card">
+        <div class="sales-card-label">Total Bookings</div>
+        <span id="totalBookings">Loading...</span>
+        <div class="sales-card-sub">All time bookings</div>
+      </div>
+
+      <div class="sales-card">
+        <div class="sales-card-label">Total Users</div>
+        <span id="totalUsers">Loading...</span>
+        <div class="sales-card-sub">All time users</div>
       </div>
     </div>
-  </div>
- 
-  <nav class="nav">
-    <div class="nav-item active">
-      <span class="nav-icon">🏠</span> Home
-    </div>
-    <div class="nav-item">
-      <span class="nav-icon">🎥</span> Movies
-    </div>
-    <div class="nav-item">
-      <span class="nav-icon">🗓️</span> Schedules
-    </div>
-    <div class="nav-item">
-      <span class="nav-icon">🎟️</span> Bookings
-    </div>
-    <div class="nav-item">
-      <span class="nav-icon">👤</span> Users
-    </div>
-  </nav>
- 
-  <div class="sidebar-footer">
-    <span>⚙️ Settings</span>
-    <span>🚪 Logout</span>
-  </div>
- 
-</aside>
 
- <!-- MAIN CONTENT -->
-<div class="main-content">
-  <div class="sales-card">
-    <div class="sales-card-label">Total Sales</div>
-    <span id="totalSales">Loading...</span>
-    <div class="sales-card-sub">All time revenue</div>
-  </div>
-</div>
- 
- <script type="module" src="../js/admin.js"></script>
-</body>
+    <script type="module" src="../js/admin.js"></script>
+  </body>
 </html>
- 

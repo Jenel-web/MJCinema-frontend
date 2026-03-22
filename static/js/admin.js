@@ -1,7 +1,9 @@
 const baseUrl = "http://localhost:8080";
 
 async function loadHome() {
+  const bookingsEl = document.getElementById("totalBookings")
   const salesEl = document.getElementById("totalSales");
+  const usersEl = document.getElementById("totalUsers");
   salesEl.textContent = "Loading...";
   const token = localStorage.getItem("token");
   try {
@@ -22,28 +24,57 @@ async function loadHome() {
     salesEl.textContent = "N/A";
     console.error("Error fetching total sales:", err);
   }
+
+   try {
+     const res = await fetch(`${baseUrl}/ticket/showTotalBookings`, {
+       method: "GET",
+       headers: {
+         Authorization: `Bearer ${token}`,
+         "Content-Type": "application/json",
+       },
+     });
+
+     if (!res.ok) throw new Error("Failed to fetch");
+
+     const data = await res.json();
+     bookingsEl.textContent = Number(data).toLocaleString("en-PH");
+   } catch (err) {
+     bookingsEl.textContent = "N/A";
+     console.error("Error fetching total bookings:", err);
+   }
+
+    try {
+      const res = await fetch(`${baseUrl}/user/showTotalUsers`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch");
+
+      const data = await res.json();
+      usersEl.textContent = Number(data).toLocaleString("en-PH");
+    } catch (err) {
+      usersEl.textContent = "N/A";
+      console.error("Error fetching total users:", err);
+    }
 }
 
 // Nav click handlers
-document.querySelectorAll(".nav-item").forEach((item) => {
-  item.addEventListener("click", function () {
+document.getElementById("home").addEventListener("click", function () {
     document
       .querySelectorAll(".nav-item")
       .forEach((n) => n.classList.remove("active"));
     this.classList.add("active");
-
-    const label = this.textContent.trim();
-
-    if (label.includes("Home")) {
-      loadHome();
-    }
-
+        loadHome();
     // Add other nav handlers here as needed:
     // if (label.includes('Movies')) loadMovies();
     // if (label.includes('Schedules')) loadSchedules();
     // etc.
   });
-});
+;
 
 // Load home data on page start
 loadHome();
