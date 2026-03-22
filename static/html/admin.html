@@ -54,6 +54,7 @@
       </div>
     </aside>
 
+      
     <!-- MAIN CONTENT -->
     <div class="main-content">
       <div class="sales-card">
@@ -78,7 +79,21 @@
         <div class="sales-card-label">Today's Revenue</div>
         <span id="revenueToday">Loading...</span>
             </div>
+
+      <div class="chart-card">
+    <div class="chart-card-header">
+      <div class="chart-card-label">Weekly Sales Trend</div>
+      <div class="chart-card-sub">Bookings per week</div>
     </div>
+    <div class="chart-wrapper">
+      <canvas id="salesTrendChart"></canvas>
+    </div>
+  </div>
+</div>
+ 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </div>
+
 
     <script type="module" src="../js/admin.js"></script>
   </body>
