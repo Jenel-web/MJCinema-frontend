@@ -4,6 +4,7 @@ async function loadHome() {
   const bookingsEl = document.getElementById("totalBookings")
   const salesEl = document.getElementById("totalSales");
   const usersEl = document.getElementById("totalUsers");
+  const revenueEl = document.getElementById("revenueToday")
   salesEl.textContent = "Loading...";
   const token = localStorage.getItem("token");
   try {
@@ -60,6 +61,27 @@ async function loadHome() {
       usersEl.textContent = "N/A";
       console.error("Error fetching total users:", err);
     }
+
+    try {
+      const res = await fetch(`${baseUrl}/ticket/showRevenueToday`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch");
+
+      const data = await res.json();
+      revenueEl.textContent =
+        "₱" +
+        Number(data).toLocaleString("en-PH", { minimumFractionDigits: 2 });
+    } catch (err) {
+      revenueEl.textContent = "N/A";
+      console.error("Error fetching total sales:", err);
+    }
+
 }
 
 // Nav click handlers
