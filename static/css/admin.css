@@ -194,7 +194,8 @@
     border: 1px solid rgba(0,0,0,0.07);
     border-bottom: 4px solid var(--green);
     box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-    min-width: 240px;
+    min-width: 200px;
+    height: 160px;
     transition: transform 0.2s, box-shadow 0.2s;
 }
  
@@ -211,13 +212,14 @@
     color: var(--muted);
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
 }
  
 .sales-card-label::before {
     content: '';
     display: inline-block;
-    width: 8px; height: 8px;
+    width: 8px; 
+    height: 8px;
     background: var(--green);
     border-radius: 50%;
 }
@@ -237,6 +239,15 @@
 }
 
 #totalBookings {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--green);
+    line-height: 1;
+    letter-spacing: -0.5px;
+}
+
+#totalUsers {
     font-family: 'Playfair Display', serif;
     font-size: 36px;
     font-weight: 700;
