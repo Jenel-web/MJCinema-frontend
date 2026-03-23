@@ -230,7 +230,30 @@ async function loadMovieLeaderboard() {
   }
 }
  
+async function loadMovieCount() {
+  const token = localStorage.getItem("token")
+  const el = document.getElementById("movieCount");
+  el.textContent = "Loading...";
 
+  try {
+    const res = await fetch(`${baseUrl}/movie/showActiveCount`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch");
+
+    const data = await res.json();
+    el.textContent = `${data.activeCount}/${data.totalCount}`;
+  } catch (err) {
+    el.textContent = "N/A";
+    console.error("Error fetching movie count:", err);
+  }
+}
+ 
 
 // Nav click handlers
 // Nav click handlers
@@ -244,6 +267,7 @@ document.getElementById('movies').addEventListener('click', function () {
     setActiveNav(this);
     showSection('movies-content');
     loadMovieLeaderboard();
+    loadMovieCount();
 });
 
 document.getElementById('schedules').addEventListener('click', function () {
