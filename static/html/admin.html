@@ -94,18 +94,65 @@
   </div>
 
   <div id="movies-content" class="page-section" style="display:none;">
-      <div class="leaderboard-card">
+  <div class="movies-layout">
+
+    <!-- LEFT: Leaderboard -->
+    <div class="leaderboard-card">
       <div class="leaderboard-card-label">Top Movies</div>
       <div class="leaderboard-card-sub">Ranked by total revenue</div>
       <div id="movie-leaderboard"></div>
     </div>
-     <div class="sales-card">
+
+    <!-- RIGHT: 2x2 stat cards -->
+    <div class="movies-stats-grid">
+      <div class="sales-card">
         <div class="sales-card-label">Active / Total Movies</div>
         <span id="movieCount">Loading...</span>
         <div class="sales-card-sub">Currently active movies</div>
       </div>
-  </div>
+      <div class="sales-card placeholder-card">
+        <div class="sales-card-label">Stat 2</div>
+        <span>—</span>
+        <div class="sales-card-sub">Coming soon</div>
+      </div>
+      <div class="sales-card placeholder-card">
+        <div class="sales-card-label">Stat 3</div>
+        <span>—</span>
+        <div class="sales-card-sub">Coming soon</div>
+      </div>
+      <div class="sales-card placeholder-card">
+        <div class="sales-card-label">Stat 4</div>
+        <span>—</span>
+        <div class="sales-card-sub">Coming soon</div>
+      </div>
+    </div>
 
+  </div>
+   <!-- MOVIE TABLE -->
+    <div class="movie-table-card">
+      <div class="movie-table-header">
+        <div class="chart-card-label">All Movies</div>
+        <input id="movieSearchInput" type="text" placeholder="Search title…" class="table-search" oninput="filterMovieTable()" />
+      </div>
+      <div class="table-wrap">
+        <table id="movieTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Title</th>
+              <th>Rating</th>
+              <th>Release Date</th>
+              <th>Status</th>
+              <th>Revenue</th>
+            </tr>
+          </thead>
+          <tbody id="movieTableBody">
+            <tr><td colspan="6" class="table-loading">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+</div>
   <div id="schedules-content" class="page-section" style="display:none;">
 
   </div>

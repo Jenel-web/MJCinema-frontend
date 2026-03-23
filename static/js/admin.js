@@ -254,6 +254,93 @@ async function loadMovieCount() {
   }
 }
  
+let allMovies = [];
+
+async function loadMovieTable() {
+  const tbody = document.getElementById("movieTableBody");
+  const token = localStorage.getItem("token")
+  tbody.innerHTML =
+    '<tr><td colspan="6" class="table-loading">Loading...</td></tr>';
+
+  try {
+    const res = await fetch(`${baseUrl}/movie/showMovieTable`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch");
+
+    allMovies = await res.json();
+    renderMovieTable(allMovies);
+  } catch (err) {
+    tbody.innerHTML =
+      '<tr><td colspan="6" class="table-loading">Failed to load.</td></tr>';
+    console.error("Error fetching movie table:", err);
+  }
+}
+
+function renderMovieTable(movies) {
+  const tbody = document.getElementById("movieTableBody");
+
+  if (!movies.length) {
+    tbody.innerHTML =
+      '<tr><td colspan="6" class="table-loading">No movies found.</td></tr>';
+    return;
+  }
+
+  const statusMap = {
+    NOW_SHOWING: { label: "Now Showing", cls: "pill-now-showing" },
+    COMING_SOON: { label: "Coming Soon", cls: "pill-coming-soon" },
+    INACTIVE: { label: "Inactive", cls: "pill-inactive" },
+  };
+
+  tbody.innerHTML = movies
+    .map((m, i) => {
+      const status = statusMap[m.status] || {
+        label: m.status,
+        cls: "pill-inactive",
+      };
+      const rating = Number(m.rating).toFixed(1);
+      const revenue = Number(m.revenue).toLocaleString("en-PH", {
+        minimumFractionDigits: 2,
+      });
+      const date = new Date(m.releaseDate).toLocaleDateString("en-PH", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+
+      return `
+            <tr>
+                <td style="color: var(--muted); font-size: 12px;">${i + 1}</td>
+                <td style="font-weight: 500;">${m.title}</td>
+                <td>
+                    <div class="rating-stars">
+                        <span>★</span>
+                        <span style="color: var(--white); font-size: 13px;">${rating}</span>
+                    </div>
+                </td>
+                <td style="color: var(--muted); font-size: 12px;">${date}</td>
+                <td><span class="status-pill ${status.cls}">${
+        status.label
+      }</span></td>
+                <td style="font-family: 'Playfair Display', serif; font-weight: 600;">₱${revenue}</td>
+            </tr>
+        `;
+    })
+    .join("");
+}
+
+function filterMovieTable() {
+  const query = document.getElementById("movieSearchInput").value.toLowerCase();
+  const filtered = allMovies.filter((m) =>
+    m.title.toLowerCase().includes(query)
+  );
+  renderMovieTable(filtered);
+}
 
 // Nav click handlers
 // Nav click handlers
@@ -268,6 +355,7 @@ document.getElementById('movies').addEventListener('click', function () {
     showSection('movies-content');
     loadMovieLeaderboard();
     loadMovieCount();
+    loadMovieTable();
 });
 
 document.getElementById('schedules').addEventListener('click', function () {

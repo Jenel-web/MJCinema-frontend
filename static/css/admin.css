@@ -7,6 +7,7 @@
   --muted: #a0aec0;
   --border: rgba(139, 94, 60, 0.2);
   --green: green;
+  --gold: gold;
 }
 
 *,
@@ -30,8 +31,13 @@ body {
   background: var(--navy);
   display: flex;
   flex-direction: column;
-  position: relative;
   overflow: hidden;
+  height: 100vh;      /* Force it to fill the screen height */
+  position: fixed;    /* Fixes it to the viewport */
+  top: 0;
+  left: 0;
+  z-index: 1000;      /* Keeps it on top of other elements */
+  overflow-y: auto;   /* Allows the sidebar itself to scroll if you add too many links */
 }
 
 .sidebar::before {
@@ -201,6 +207,8 @@ body {
   flex: 1;
   padding: 36px 40px;
   overflow-y: auto;
+  margin-left: 260px; /* Must match the exact width of your sidebar */
+  width: calc(100% - 260px);
 }
 
 /* ── SALES CARD ── */
@@ -335,15 +343,61 @@ body {
   width: 100%;
 }
 
+/* ── MOVIES LAYOUT ── */
+.movies-layout {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    width: 100%;
+    justify-content: space-between;
+    margin-left: -20px;
+}
+ 
+.movies-layout .leaderboard-card {
+    flex-shrink: 0;
+    width: 380px;
+}
+ 
+.movies-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    flex: 1;
+    align-content: start;
+
+}
+ 
+.movies-stats-grid .sales-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: unset;
+    width: 100%;
+}
+ 
+.placeholder-card {
+    opacity: 0.5;
+}
+ 
+.placeholder-card span {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--muted);
+    line-height: 1;
+}
+ 
 /* ── LEADERBOARD CARD ── */
 .leaderboard-card {
     background: var(--navy);
     border-radius: 16px;
     padding: 28px 32px;
     border: 1px solid rgba(0,0,0,0.07);
-    border-bottom: 4px solid var(--brown);
+    border-bottom: 4px solid var(--green);
     box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-    max-width: 420px;
+    max-width: 520px;
+    min-width: 490px;
+    min-height: 335px ;
 }
  
 .leaderboard-card-label {
@@ -421,4 +475,114 @@ body {
     font-weight: 700;
     color: var(--white);
     white-space: nowrap;
+}
+
+/* ── MOVIE TABLE CARD ── */
+.movie-table-card {
+    background: var(--navy-light);
+    border-radius: 16px;
+    border: 1px solid rgba(0,0,0,0.07);
+    border-bottom: 4px solid var(--green);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    margin-top: 20px;
+    overflow: hidden;
+    margin-left: -20px;
+}
+ 
+.movie-table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+ 
+.table-search {
+    font-family: 'Jost', sans-serif;
+    font-size: 12px;
+    padding: 7px 14px;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 8px;
+    outline: none;
+    width: 200px;
+    background: var(--white);
+    color: var(--navy);
+    transition: border-color 0.15s;
+}
+ 
+.table-search:focus {
+    border-color: var(--brown);
+}
+ 
+.table-wrap {
+    overflow-x: auto;
+}
+ 
+.table-wrap table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+ 
+.table-wrap thead th {
+    text-align: left;
+    padding: 11px 16px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--white);
+    background: var(--navy-light);
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+    white-space: nowrap;
+}
+ 
+.table-wrap tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    color: var(--white);
+    vertical-align: middle;
+}
+ 
+.table-wrap tbody tr:last-child td {
+    border-bottom: none;
+}
+ 
+.table-wrap tbody tr:hover td {
+    background: rgba(139,94,60,0.04);
+}
+ 
+.table-loading {
+    text-align: center;
+    color: var(--white);
+    padding: 28px !important;
+    font-size: 13px;
+}
+ 
+/* Status pills */
+.status-pill {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+}
+ 
+.pill-now-showing  { background: #d1e7dd; color: #0f5132; }
+.pill-coming-soon  { background: #fff3cd; color: #856404; }
+.pill-inactive     { background: #f0f0f0; color: #6c757d; }
+ 
+/* Star rating */
+.rating-stars {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+}
+ 
+.rating-stars span {
+    font-size: 12px;
+    color: var(--gold);
 }
