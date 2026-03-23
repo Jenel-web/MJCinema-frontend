@@ -334,3 +334,91 @@ body {
   height: 260px;
   width: 100%;
 }
+
+/* ── LEADERBOARD CARD ── */
+.leaderboard-card {
+    background: var(--navy);
+    border-radius: 16px;
+    padding: 28px 32px;
+    border: 1px solid rgba(0,0,0,0.07);
+    border-bottom: 4px solid var(--brown);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+    max-width: 420px;
+}
+ 
+.leaderboard-card-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+ 
+.leaderboard-card-label::before {
+    content: '';
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: var(--brown);
+    border-radius: 50%;
+}
+ 
+.leaderboard-card-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 24px;
+}
+ 
+.leaderboard-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+ 
+.leaderboard-item:last-child { border-bottom: none; }
+ 
+.leaderboard-rank {
+    font-size: 26px;
+    width: 32px;
+    text-align: center;
+    flex-shrink: 0;
+}
+ 
+.leaderboard-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+ 
+.leaderboard-title {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--white);
+}
+ 
+.leaderboard-bar-wrap {
+    height: 5px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 10px;
+    overflow: hidden;
+}
+ 
+.leaderboard-bar {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.6s ease;
+}
+ 
+.leaderboard-revenue {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--white);
+    white-space: nowrap;
+}
