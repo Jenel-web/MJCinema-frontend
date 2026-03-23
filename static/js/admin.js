@@ -176,18 +176,60 @@ async function loadSalesTrend() {
     console.error("Error fetching sales trend:", err);
   }
 }
+
+
+
+
+
+
 // Nav click handlers
-document.getElementById("home").addEventListener("click", function () {
-  document
-    .querySelectorAll(".nav-item")
-    .forEach((n) => n.classList.remove("active"));
-  this.classList.add("active");
-  loadHome();
-  // Add other nav handlers here as needed:
-  // if (label.includes('Movies')) loadMovies();
-  // if (label.includes('Schedules')) loadSchedules();
-  // etc.
+// Nav click handlers
+document.getElementById('home').addEventListener('click', function () {
+    setActiveNav(this);
+    showSection('home-content');
+    loadHome();
 });
+
+document.getElementById('movies').addEventListener('click', function () {
+    setActiveNav(this);
+    showSection('movies-content');
+    // loadMovies();
+});
+
+document.getElementById('schedules').addEventListener('click', function () {
+    setActiveNav(this);
+    showSection('schedules-content');
+    // loadSchedules();
+});
+
+document.getElementById('bookings').addEventListener('click', function () {
+    setActiveNav(this);
+    showSection('bookings-content');
+    // loadBookings();
+});
+
+document.getElementById('users').addEventListener('click', function () {
+    setActiveNav(this);
+    showSection('users-content');
+    // loadUsers();
+});
+
+// Helpers
+function setActiveNav(el) {
+
+  if (!el) return;
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    el.classList.add('active');
+}
+
+function showSection(sectionId) {
+  if(!sectionId) return;
+    document.querySelectorAll('.page-section').forEach(s => s.style.display = 'none');
+    document.getElementById(sectionId).style.display = 'block';
+}
+
+
 // Load home data on page start
 loadHome();
 loadSalesTrend();
+showSection();

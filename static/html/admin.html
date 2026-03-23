@@ -31,19 +31,19 @@
       </div>
 
       <nav class="nav">
-        <div class="nav-item active">
+        <div class="nav-item active" id="home">
           <span class="nav-icon" id="home">🏠</span> Home
         </div>
-        <div class="nav-item">
+        <div class="nav-item" id="movies">
           <span class="nav-icon" id="movies">🎥</span> Movies
         </div>
-        <div class="nav-item">
-          <span class="nav-icon" id="schedules">🗓️</span> Schedules
+        <div class="nav-item" id="schedules">
+          <span class="nav-icon" >🗓️</span> Schedules
         </div>
-        <div class="nav-item">
+        <div class="nav-item" id="bookings">
           <span class="nav-icon" id="bookings">🎟️</span> Bookings
         </div>
-        <div class="nav-item">
+        <div class="nav-item" id="users">
           <span class="nav-icon" id="users">👤</span> Users
         </div>
       </nav>
@@ -55,8 +55,10 @@
     </aside>
 
       
-    <!-- MAIN CONTENT -->
+    <!-- HOME CONTENT -->
     <div class="main-content">
+
+      <div id="home-content" class="page-section">
       <div class="sales-card">
         <div class="sales-card-label">Total Sales</div>
         <span id="totalSales">Loading...</span>
@@ -88,6 +90,27 @@
     <div class="chart-wrapper">
       <canvas id="salesTrendChart"></canvas>
     </div>
+  </div>
+  </div>
+
+  <div id="movies-content" class="page-section" style="display:none;">
+      <div class="chart-card">
+    <div class="chart-card-header">
+      <div class="chart-card-label">Weekly Sales Trend</div>
+      <div class="chart-card-sub">Bookings per week</div>
+    </div>
+  </div>
+
+  <div id="schedules-content" class="page-section" style="display:none;">
+
+  </div>
+
+  <div id="bookings-content" class="page-section" style="display:none;">
+
+  </div>
+
+  <div id="users-content" class="page-section" style="display:none;">
+
   </div>
 </div>
  
