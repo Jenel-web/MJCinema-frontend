@@ -340,6 +340,7 @@ function filterMovieTable() {
   renderMovieTable(filtered);
 }
 
+// ── ADD MOVIE MODAL ──
 function openAddMovieModal() {
   document.getElementById("addMovieModal").style.display = "flex";
   document.getElementById("tmdbSearchInput").value = "";
@@ -362,6 +363,7 @@ document.addEventListener("keydown", (e) => {
 });
 
 async function searchTmdb() {
+  const token = localStorage.getItem("token");
   const query = document.getElementById("tmdbSearchInput").value.trim();
   const results = document.getElementById("tmdbResults");
 
@@ -375,7 +377,7 @@ async function searchTmdb() {
       {
         method: "GET",
         headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
       }
@@ -384,6 +386,9 @@ async function searchTmdb() {
     if (!res.ok) throw new Error("Search failed");
 
     const movies = await res.json();
+
+    console.log("First movie:", movies[0]);
+    console.log("posterPath value:", movies[0]?.posterPath);
 
     if (!movies.length) {
       results.innerHTML = '<p class="tmdb-empty">No results found.</p>';
@@ -396,11 +401,11 @@ async function searchTmdb() {
           ? new Date(m.release_date).getFullYear()
           : "—";
         const rating = m.vote_average ? Number(m.vote_average).toFixed(1) : "—";
-        const posterUrl = m.posterPath
-          ? `https://image.tmdb.org/t/p/w300${m.posterPath}`
+        const posterUrl = m.poster_path
+          ? `https://image.tmdb.org/t/p/w300${m.poster_path}`
           : null;
         const poster = posterUrl
-          ? `<img class="tmdb-poster" src="${posterUrl}" alt="${m.title}" loading="lazy" />`
+          ? `<img class="tmdb-poster" src="${posterUrl}" alt="${m.title}" loading="lazy" crossorigin="anonymous"  />`
           : `<div class="tmdb-poster-placeholder">🎬</div>`;
 
         return `
