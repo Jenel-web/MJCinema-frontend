@@ -177,10 +177,8 @@ async function loadSalesTrend() {
   }
 }
 
-
-
 async function loadMovieLeaderboard() {
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem("token");
   const container = document.getElementById("movie-leaderboard");
   container.innerHTML =
     '<p style="color: var(--muted); font-size: 13px;">Loading...</p>';
@@ -229,9 +227,9 @@ async function loadMovieLeaderboard() {
     console.error("Error fetching movie leaderboard:", err);
   }
 }
- 
+
 async function loadMovieCount() {
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token");
   const el = document.getElementById("movieCount");
   el.textContent = "Loading...";
 
@@ -253,12 +251,12 @@ async function loadMovieCount() {
     console.error("Error fetching movie count:", err);
   }
 }
- 
+
 let allMovies = [];
 
 async function loadMovieTable() {
   const tbody = document.getElementById("movieTableBody");
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token");
   tbody.innerHTML =
     '<tr><td colspan="6" class="table-loading">Loading...</td></tr>';
 
@@ -342,56 +340,153 @@ function filterMovieTable() {
   renderMovieTable(filtered);
 }
 
+function openAddMovieModal() {
+  document.getElementById("addMovieModal").style.display = "flex";
+  document.getElementById("tmdbSearchInput").value = "";
+  document.getElementById("tmdbResults").innerHTML =
+    '<p class="tmdb-empty">Search for a movie to get started.</p>';
+  setTimeout(() => document.getElementById("tmdbSearchInput").focus(), 100);
+}
+
+function closeAddMovieModal() {
+  document.getElementById("addMovieModal").style.display = "none";
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById("addMovieModal"))
+    closeAddMovieModal();
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeAddMovieModal();
+});
+
+async function searchTmdb() {
+  const query = document.getElementById("tmdbSearchInput").value.trim();
+  const results = document.getElementById("tmdbResults");
+
+  if (!query) return;
+
+  results.innerHTML = '<p class="tmdb-loading">Searching...</p>';
+
+  try {
+    const res = await fetch(
+      `${baseUrl}/movie/tmdb/search?name=${encodeURIComponent(query)}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!res.ok) throw new Error("Search failed");
+
+    const movies = await res.json();
+
+    if (!movies.length) {
+      results.innerHTML = '<p class="tmdb-empty">No results found.</p>';
+      return;
+    }
+
+    results.innerHTML = movies
+      .map((m) => {
+        const year = m.release_date
+          ? new Date(m.release_date).getFullYear()
+          : "—";
+        const rating = m.vote_average ? Number(m.vote_average).toFixed(1) : "—";
+        const posterUrl = m.posterPath
+          ? `https://image.tmdb.org/t/p/w300${m.posterPath}`
+          : null;
+        const poster = posterUrl
+          ? `<img class="tmdb-poster" src="${posterUrl}" alt="${m.title}" loading="lazy" />`
+          : `<div class="tmdb-poster-placeholder">🎬</div>`;
+
+        return `
+                <div class="tmdb-card" onclick="selectTmdbMovie(${m.id})">
+                    ${poster}
+                    <div class="tmdb-info">
+                        <div class="tmdb-info-title">${m.title}</div>
+                        <div class="tmdb-info-meta">
+                            <span>${year}</span>
+                            <div class="tmdb-info-rating">★ ${rating}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+      })
+      .join("");
+  } catch (err) {
+    results.innerHTML =
+      '<p class="tmdb-empty">Search failed. Please try again.</p>';
+    console.error("TMDB search error:", err);
+  }
+}
+
+function selectTmdbMovie(movieId) {
+  // Hook up your add-to-system logic here using movieId
+  console.log("Selected TMDB movie ID:", movieId);
+  closeAddMovieModal();
+}
 // Nav click handlers
 // Nav click handlers
-document.getElementById('home').addEventListener('click', function () {
-    setActiveNav(this);
-    showSection('home-content');
-    loadHome();
+document.getElementById("home").addEventListener("click", function () {
+  setActiveNav(this);
+  showSection("home-content");
+  loadHome();
 });
 
-document.getElementById('movies').addEventListener('click', function () {
-    setActiveNav(this);
-    showSection('movies-content');
-    loadMovieLeaderboard();
-    loadMovieCount();
-    loadMovieTable();
+document.getElementById("movies").addEventListener("click", function () {
+  setActiveNav(this);
+  showSection("movies-content");
+  loadMovieLeaderboard();
+  loadMovieCount();
+  loadMovieTable();
 });
 
-document.getElementById('schedules').addEventListener('click', function () {
-    setActiveNav(this);
-    showSection('schedules-content');
-    // loadSchedules();
+document.getElementById("schedules").addEventListener("click", function () {
+  setActiveNav(this);
+  showSection("schedules-content");
+  // loadSchedules();
 });
 
-document.getElementById('bookings').addEventListener('click', function () {
-    setActiveNav(this);
-    showSection('bookings-content');
-    // loadBookings();
+document.getElementById("bookings").addEventListener("click", function () {
+  setActiveNav(this);
+  showSection("bookings-content");
+  // loadBookings();
 });
 
-document.getElementById('users').addEventListener('click', function () {
-    setActiveNav(this);
-    showSection('users-content');
-    // loadUsers();
+document.getElementById("users").addEventListener("click", function () {
+  setActiveNav(this);
+  showSection("users-content");
+  // loadUsers();
 });
 
 // Helpers
 function setActiveNav(el) {
-
   if (!el) return;
-    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-    el.classList.add('active');
+  document
+    .querySelectorAll(".nav-item")
+    .forEach((n) => n.classList.remove("active"));
+  el.classList.add("active");
 }
 
 function showSection(sectionId) {
-  if(!sectionId) return;
-    document.querySelectorAll('.page-section').forEach(s => s.style.display = 'none');
-    document.getElementById(sectionId).style.display = 'block';
+  if (!sectionId) return;
+  document
+    .querySelectorAll(".page-section")
+    .forEach((s) => (s.style.display = "none"));
+  document.getElementById(sectionId).style.display = "block";
 }
-
 
 // Load home data on page start
 loadHome();
 loadSalesTrend();
 showSection();
+
+// make this public for html
+window.openAddMovieModal = openAddMovieModal;
+window.closeAddMovieModal = closeAddMovieModal;
+window.searchTmdb = searchTmdb;
+window.handleOverlayClick = handleOverlayClick;

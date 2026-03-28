@@ -133,6 +133,7 @@
       <div class="movie-table-header">
         <div class="chart-card-label">All Movies</div>
         <input id="movieSearchInput" type="text" placeholder="Search title…" class="table-search" oninput="filterMovieTable()" />
+         <button class="add-movie-btn" onclick="openAddMovieModal()">+ Add Movie</button>
       </div>
       <div class="table-wrap">
         <table id="movieTable">
@@ -163,6 +164,22 @@
 
   <div id="users-content" class="page-section" style="display:none;">
 
+  </div>
+</div>
+
+<!-- ADD MOVIE MODAL -->
+<div id="addMovieModal" class="modal-overlay" style="display:none;" onclick="handleOverlayClick(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">Add Movie</div>
+      <button class="modal-close" onclick="closeAddMovieModal()">✕</button>
+    </div>
+    <div class="modal-search-row">
+      <input id="tmdbSearchInput" type="text" placeholder="Search movie title…" class="table-search" style="flex:1; width:unset;"
+        onkeydown="if(event.key==='Enter') searchTmdb()" />
+      <button class="add-movie-btn" onclick="searchTmdb()">Search</button>
+    </div>
+    <div id="tmdbResults" class="tmdb-results"></div>
   </div>
 </div>
  
