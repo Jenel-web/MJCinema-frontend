@@ -293,6 +293,7 @@ function renderMovieTable(movies) {
     NOW_SHOWING: { label: "Now Showing", cls: "pill-now-showing" },
     COMING_SOON: { label: "Coming Soon", cls: "pill-coming-soon" },
     INACTIVE: { label: "Inactive", cls: "pill-inactive" },
+    NEW: {label: "New", cls: "pill-new"}, 
   };
 
   tbody.innerHTML = movies
@@ -426,10 +427,56 @@ async function searchTmdb() {
   }
 }
 
-function selectTmdbMovie(movieId) {
-  // Hook up your add-to-system logic here using movieId
-  console.log("Selected TMDB movie ID:", movieId);
-  closeAddMovieModal();
+async function selectTmdbMovie(movieId) {
+  const token = localStorage.getItem("token")
+  const data = {
+    id: movieId
+  }
+  try {
+    const res = await fetch(`${baseUrl}/movie/add`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    const message = await res.text();
+    closeAddMovieModal();
+    showToast(res.ok ? "success" : "error", message);
+
+    if (res.ok) {
+      loadMovieTable();
+      loadMovieCount();
+      loadMovieLeaderboard();
+    }
+  } catch (err) {
+    closeAddMovieModal();
+    showToast("error", "Something went wrong. Please try again.");
+    console.error("Add movie error:", err);
+  }
+}
+
+function showToast(type, message) {
+  const existing = document.getElementById("toastPopup");
+  if (existing) existing.remove();
+
+  const icon = type === "success" ? "✅" : "❌";
+  const toast = document.createElement("div");
+  toast.id = "toastPopup";
+  toast.className = `toast toast-${type}`;
+  toast.innerHTML = `
+        <span class="toast-icon">${icon}</span>
+        <span class="toast-message">${message}</span>
+        <button class="toast-close" onclick="this.parentElement.remove()">✕</button>
+    `;
+  document.body.appendChild(toast);
+
+  // Auto dismiss after 4 seconds
+  setTimeout(() => {
+    if (toast.parentElement) toast.remove();
+  }, 4000);
 }
 // Nav click handlers
 // Nav click handlers
@@ -472,7 +519,7 @@ function setActiveNav(el) {
     .querySelectorAll(".nav-item")
     .forEach((n) => n.classList.remove("active"));
   el.classList.add("active");
-}
+} //shows which nav is active
 
 function showSection(sectionId) {
   if (!sectionId) return;

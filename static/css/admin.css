@@ -573,6 +573,7 @@ body {
 .pill-now-showing  { background: #0cee88; color: var(--green); }
 .pill-coming-soon  { background: #e9b407; color: #e7e3d7; }
 .pill-inactive     { background: #f0f0f0; color: #3a3e42; }
+.pill-new {background: rgb(73, 159, 170); color:rgb(19, 19, 129);}
  
 /* Star rating */
 .rating-stars {
@@ -769,4 +770,58 @@ body {
     font-size: 13px;
     padding: 32px 0;
 }
+
+/* ── TOAST ── */
+.toast {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    box-shadow: 0 8px 28px rgba(0,0,0,0.15);
+    font-family: 'Jost', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    max-width: 380px;
+    animation: toastIn 0.3s ease;
+}
+ 
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+ 
+.toast-success {
+    background: #ffffff;
+    border-left: 4px solid var(--green);
+    color: var(--navy);
+}
+ 
+.toast-error {
+    background: #ffffff;
+    border-left: 4px solid #c0392b;
+    color: var(--navy);
+}
+ 
+.toast-icon { font-size: 16px; flex-shrink: 0; }
+ 
+.toast-message { flex: 1; line-height: 1.4; }
+ 
+.toast-close {
+    background: none;
+    border: none;
+    font-size: 13px;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 0 2px;
+    flex-shrink: 0;
+    transition: color 0.15s;
+}
+ 
+.toast-close:hover { color: var(--navy); }
+
  
