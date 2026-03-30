@@ -667,11 +667,12 @@ body {
 }
  
 /* ── TMDB RESULTS GRID ── */
+/* ── TMDB RESULTS GRID ── */
 .tmdb-results {
     overflow-y: auto;
     padding: 20px 28px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 16px;
     align-content: start;
 }
@@ -688,6 +689,7 @@ body {
     background: var(--white);
     display: flex;
     flex-direction: column;
+    min-height: 330px;
 }
  
 .tmdb-card:hover {
@@ -697,16 +699,15 @@ body {
  
 .tmdb-poster {
     width: 100%;
-    height: 240px;
-    object-fit: cover;
-    object-position: top;
+    aspect-ratio: 2/3;
+    object-fit: fill;
     display: block;
     background: var(--navy-light);
 }
  
 .tmdb-poster-placeholder {
     width: 100%;
-    height: 240px;
+    aspect-ratio: 2/3;
     background: var(--navy-light);
     display: flex;
     align-items: center;
@@ -720,6 +721,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    min-height: 60px;
 }
  
 .tmdb-info-title {
@@ -767,3 +769,4 @@ body {
     font-size: 13px;
     padding: 32px 0;
 }
+ 
