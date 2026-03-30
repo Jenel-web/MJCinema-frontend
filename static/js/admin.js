@@ -478,6 +478,62 @@ function showToast(type, message) {
     if (toast.parentElement) toast.remove();
   }, 4000);
 }
+
+async function loadShowtimeLeaderboard() {
+  const token = localStorage.getItem("token")
+  const container = document.getElementById("showtime-leaderboard");
+  container.innerHTML =
+    '<p style="color: var(--muted); font-size: 13px;">Loading...</p>';
+
+  try {
+    const res = await fetch(`${baseUrl}/schedule/bestShowtime`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch");
+
+    const data = await res.json();
+
+    const medals = ["🥇", "🥈", "🥉"];
+    const colors = ["#c9973d", "#a0aec0", "#b07d55"];
+    const slotIcons = { MORNING: "🌅", AFTERNOON: "☀️", EVENING: "🌙" };
+
+    container.innerHTML = data
+      .map(
+        (item, i) => `
+            <div class="leaderboard-item">
+                <div class="leaderboard-rank" style="color: ${colors[i]}">${
+          medals[i]
+        }</div>
+                <div class="leaderboard-info">
+                    <div class="leaderboard-title">
+                        ${slotIcons[item.slot] || "🎬"} ${
+          item.slot.charAt(0) + item.slot.slice(1).toLowerCase()
+        }
+                    </div>
+                    <div class="leaderboard-bar-wrap">
+                        <div class="leaderboard-bar" style="width: ${
+                          (item.averageRevenue / data[0].averageRevenue) * 100
+                        }%; background: ${colors[i]}"></div>
+                    </div>
+                </div>
+                <div class="leaderboard-revenue">₱${Number(
+                  item.averageRevenue
+                ).toLocaleString("en-PH", { minimumFractionDigits: 2 })}</div>
+            </div>
+        `
+      )
+      .join("");
+  } catch (err) {
+    container.innerHTML =
+      '<p style="color: var(--muted); font-size: 13px;">Failed to load.</p>';
+    console.error("Error fetching showtime leaderboard:", err);
+  }
+}
 // Nav click handlers
 // Nav click handlers
 document.getElementById("home").addEventListener("click", function () {
@@ -497,6 +553,7 @@ document.getElementById("movies").addEventListener("click", function () {
 document.getElementById("schedules").addEventListener("click", function () {
   setActiveNav(this);
   showSection("schedules-content");
+  loadShowtimeLeaderboard();
   // loadSchedules();
 });
 
