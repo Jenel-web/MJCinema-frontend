@@ -534,6 +534,31 @@ async function loadShowtimeLeaderboard() {
     console.error("Error fetching showtime leaderboard:", err);
   }
 }
+
+async function loadScheduleCount() {
+  const token = localStorage.getItem("token")
+  const el = document.getElementById("scheduleCount");
+  el.textContent = "Loading...";
+
+  try {
+    const res = await fetch(`${baseUrl}/schedule/showScheduleCount`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch");
+
+    const data = await res.json();
+    el.textContent = Number(data).toLocaleString("en-PH");
+  } catch (err) {
+    el.textContent = "N/A";
+    console.error("Error fetching schedule count:", err);
+  }
+}
+ 
 // Nav click handlers
 // Nav click handlers
 document.getElementById("home").addEventListener("click", function () {
@@ -554,6 +579,7 @@ document.getElementById("schedules").addEventListener("click", function () {
   setActiveNav(this);
   showSection("schedules-content");
   loadShowtimeLeaderboard();
+  loadScheduleCount();
   // loadSchedules();
 });
 

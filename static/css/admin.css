@@ -253,7 +253,7 @@ body {
   border-radius: 50%;
 }
 
-#totalSales, #movieCount {
+#totalSales, #movieCount , #scheduleCount{
   font-family: "Playfair Display", serif;
   font-size: 36px;
   font-weight: 700;
