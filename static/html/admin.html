@@ -155,18 +155,66 @@
     </div>
 </div>
   <div id="schedules-content" class="page-section" style="display:none;">
-    <div class="leaderboard-card">
-      <div class="leaderboard-card-label">Best Showtimes</div>
-      <div class="leaderboard-card-sub">Ranked by average revenue per slot</div>
-      <div id="showtime-leaderboard"></div>
+     <div class="movies-layout">
+ 
+      <!-- LEFT: Showtime Leaderboard -->
+      <div class="leaderboard-card">
+        <div class="leaderboard-card-label">Best Showtimes</div>
+        <div class="leaderboard-card-sub">Ranked by average revenue per slot</div>
+        <div id="showtime-leaderboard"></div>
+      </div>
+ 
+      <!-- RIGHT: 2x2 stat cards -->
+      <div class="movies-stats-grid">
+        <div class="sales-card">
+          <div class="sales-card-label">Total Schedules</div>
+          <span id="scheduleCount">Loading...</span>
+          <div class="sales-card-sub">All created schedules</div>
+        </div>
+        <div class="sales-card">
+          <div class="sales-card-label">Avg. Revenue / Schedule</div>
+          <span id="avgRevenuePerSchedule">Loading.dd..</span>
+          <div class="sales-card-sub">Average per schedule</div>
+        </div>
+        <div class="sales-card placeholder-card">
+          <div class="sales-card-label">Stat 3</div>
+          <span>—</span>
+          <div class="sales-card-sub">Coming soon</div>
+        </div>
+        <div class="sales-card placeholder-card">
+          <div class="sales-card-label">Stat 4</div>
+          <span>—</span>
+          <div class="sales-card-sub">Coming soon</div>
+        </div>
+      </div>
+ 
     </div>
 
-    <div class="cards-row" style="margin-bottom: 24px;">
-      <div class="sales-card">
-        <div class="sales-card-label">Total Schedules</div>
-        <span id="scheduleCount">Loading...</span>
-        <div class="sales-card-sub">All created schedules</div>
+     <!-- SEAT STATS TABLE -->
+    <div class="movie-table-card">
+      <div class="movie-table-header">
+        <div class="chart-card-label">Active Schedule Seat Stats</div>
+        <div class="chart-card-sub">Live occupancy for today's schedules</div>
       </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Cinema</th>
+              <th>Show Date</th>
+              <th>Slot</th>
+              <th style="text-align:center;">Occupied</th>
+              <th style="text-align:center;">Available</th>
+              <th>Occupancy</th>
+            </tr>
+          </thead>
+          <tbody id="seatStatsBody">
+            <tr><td colspan="7" class="table-loading">Loading...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
   <div id="bookings-content" class="page-section" style="display:none;">

@@ -535,6 +535,8 @@ async function loadShowtimeLeaderboard() {
   }
 }
 
+
+// Schedule Section
 async function loadScheduleCount() {
   const token = localStorage.getItem("token")
   const el = document.getElementById("scheduleCount");
@@ -559,7 +561,33 @@ async function loadScheduleCount() {
   }
 }
  
-// Nav click handlers
+
+async function loadAvgRevenuePerSchedule() {
+  const el = document.getElementById("avgRevenuePerSchedule");
+  const token = localStorage.getItem("token")
+  el.textContent = "Loading...";
+
+  try {
+    const res = await fetch(`${baseUrl}/schedule/showAverageRevenue`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch");
+
+    const data = await res.json();
+    el.textContent =
+      "₱" + Number(data).toLocaleString("en-PH", { minimumFractionDigits: 2 });
+  } catch (err) {
+    el.textContent = "N/A";
+    console.error("Error fetching average revenue per schedule:", err);
+  }
+}
+
+
 // Nav click handlers
 document.getElementById("home").addEventListener("click", function () {
   setActiveNav(this);
@@ -580,6 +608,7 @@ document.getElementById("schedules").addEventListener("click", function () {
   showSection("schedules-content");
   loadShowtimeLeaderboard();
   loadScheduleCount();
+  loadAvgRevenuePerSchedule();
   // loadSchedules();
 });
 
@@ -623,3 +652,4 @@ window.closeAddMovieModal = closeAddMovieModal;
 window.searchTmdb = searchTmdb;
 window.handleOverlayClick = handleOverlayClick;
 window.selectTmdbMovie = selectTmdbMovie;
+window.loadAvgRevenuePerSchedule = loadAvgRevenuePerSchedule;
