@@ -653,6 +653,122 @@ async function loadSeatStats() {
     }
 }
 
+// ── ADD SCHEDULE MODAL ──
+async function openAddScheduleModal() {
+    document.getElementById('addScheduleModal').style.display = 'flex';
+    await Promise.all([fetchMoviesForSchedule(), fetchCinemasForSchedule(), fetchSlotsForSchedule()]);
+}
+ 
+function closeAddScheduleModal() {
+    document.getElementById('addScheduleModal').style.display = 'none';
+    document.getElementById('schedShowDate').value = '';
+    document.getElementById('schedVipPrice').value = '';
+    document.getElementById('schedRegPrice').value = '';
+    document.getElementById('schedBalPrice').value = '';
+}
+ 
+function handleScheduleOverlayClick(e) {
+    if (e.target === document.getElementById('addScheduleModal')) closeAddScheduleModal();
+}
+ 
+async function fetchMoviesForSchedule() {
+    const select = document.getElementById('schedMovieSelect');
+    select.innerHTML = '<option value="">Loading...</option>';
+    try {
+        const res = await fetch(`${baseUrl}/movie/show`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const movies = await res.json();
+        select.innerHTML = '<option value="">Select a movie</option>' +
+            movies.map(m => `<option value="${m.id}">${m.title}</option>`).join('');
+    } catch {
+        select.innerHTML = '<option value="">Failed to load</option>';
+    }
+}
+ 
+async function fetchCinemasForSchedule() {
+    const select = document.getElementById('schedCinemaSelect');
+    select.innerHTML = '<option value="">Loading...</option>';
+    try {
+        const res = await fetch(`${baseUrl}/cinema/all`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const cinemas = await res.json();
+        select.innerHTML = '<option value="">Select a cinema</option>' +
+            cinemas.map(c => `<option value="${c.id}">${c.cinemaName} — ${c.location}</option>`).join('');
+    } catch {
+        select.innerHTML = '<option value="">Failed to load</option>';
+    }
+}
+ 
+async function fetchSlotsForSchedule() {
+    const select = document.getElementById('schedSlotSelect');
+    select.innerHTML = '<option value="">Loading...</option>';
+    const slotIcons = { MORNING: '🌅', MIDDAY: '🌤️', AFTERNOON: '☀️', EVENING: '🌆', NIGHT: '🌙', MIDNIGHT: '🌃' };
+    try {
+        const res = await fetch(`${baseUrl}/schedule/showSlots`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const slots = await res.json();
+        select.innerHTML = '<option value="">Select a slot</option>' +
+            slots.map(s => {
+                const icon = slotIcons[s] || '🎬';
+                const label = s.charAt(0) + s.slice(1).toLowerCase();
+                return `<option value="${s}">${icon} ${label}</option>`;
+            }).join('');
+    } catch {
+        select.innerHTML = '<option value="">Failed to load</option>';
+    }
+}
+ 
+async function submitAddSchedule() {
+    const movieId    = document.getElementById('schedMovieSelect').value;
+    const cinemaId   = document.getElementById('schedCinemaSelect').value;
+    const showDate   = document.getElementById('schedShowDate').value;
+    const slot       = document.getElementById('schedSlotSelect').value;
+    const vipPrice   = document.getElementById('schedVipPrice').value;
+    const regPrice   = document.getElementById('schedRegPrice').value;
+    const balPrice   = document.getElementById('schedBalPrice').value;
+ 
+    if (!movieId || !cinemaId || !showDate || !slot || !vipPrice || !regPrice || !balPrice) {
+        showToast('error', 'Please fill in all fields before submitting.');
+        return;
+    }
+ 
+    try {
+        const res = await fetch(`${baseUrl}/schedule/add`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                movieId:  Number(movieId),
+                cinemaId: Number(cinemaId),
+                showDate,
+                slot,
+                vipPrice: String(vipPrice),
+                regPrice: String(regPrice),
+                balPrice: Number(balPrice)
+            })
+        });
+ 
+        const message = await res.text();
+        closeAddScheduleModal();
+        showToast(res.ok ? 'success' : 'error', message);
+ 
+        if (res.ok) {
+            loadSeatStats();
+            loadScheduleCount();
+            loadAvgRevenuePerSchedule();
+            loadShowtimeLeaderboard();
+        }
+ 
+    } catch (err) {
+        showToast('error', 'Something went wrong. Please try again.');
+        console.error('Add schedule error:', err);
+    }
+}
 // Nav click handlers
 document.getElementById("home").addEventListener("click", function () {
   setActiveNav(this);
@@ -719,3 +835,4 @@ window.searchTmdb = searchTmdb;
 window.handleOverlayClick = handleOverlayClick;
 window.selectTmdbMovie = selectTmdbMovie;
 window.loadAvgRevenuePerSchedule = loadAvgRevenuePerSchedule;
+window.openAddScheduleModal = openAddScheduleModal;
