@@ -587,6 +587,71 @@ async function loadAvgRevenuePerSchedule() {
   }
 }
 
+async function loadSeatStats() {
+    const token = localStorage.getItem("token")
+    const tbody = document.getElementById('seatStatsBody');
+    tbody.innerHTML = '<tr><td colspan="8" class="table-loading">Loading...</td></tr>';
+ 
+    try {
+        const res = await fetch(`${baseUrl}/schedule/seatStats`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+ 
+        if (!res.ok) throw new Error('Failed to fetch');
+ 
+        const data = await res.json();
+ 
+        if (!data.length) {
+            tbody.innerHTML = '<tr><td colspan="8" class="table-loading">No active schedules found.</td></tr>';
+            return;
+        }
+ 
+        const slotIcons = {
+            MORNING:   '🌅',
+            MIDDAY:    '🌤️',
+            AFTERNOON: '☀️',
+            EVENING:   '🌆',
+            NIGHT:     '🌙',
+            MIDNIGHT:  '🌃'
+        };
+ 
+        tbody.innerHTML = data.map((s, i) => {
+            const pct = Number(s.percentage).toFixed(1);
+            const barColor = s.percentage >= 75 ? '#27ae60' : s.percentage >= 40 ? '#c9973d' : '#a0aec0';
+            const date = new Date(s.showDate).toLocaleDateString('en-PH', { year: 'numeric', month: 'short', day: 'numeric' });
+            const slotLabel = s.slot.charAt(0) + s.slot.slice(1).toLowerCase();
+            const icon = slotIcons[s.slot] || '🎬';
+ 
+            return `
+                <tr>
+                    <td style="color:var(--muted);font-size:12px;">${i + 1}</td>
+                    <td style="font-weight:500;">${s.title}</td>
+                    <td style="color:var(--muted);font-size:12px;">${s.cinemaName}</td>
+                    <td style="color:var(--muted);font-size:12px;">${date}</td>
+                    <td>${icon} ${slotLabel}</td>
+                    <td style="text-align:center;">${s.occupiedSeats}</td>
+                    <td style="text-align:center;">${s.availableSeats}</td>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:8px;">
+                            <div style="flex:1;height:6px;background:rgba(0,0,0,0.08);border-radius:10px;overflow:hidden;">
+                                <div style="height:100%;width:${pct}%;background:${barColor};border-radius:10px;transition:width 0.5s;"></div>
+                            </div>
+                            <span style="font-size:11px;font-weight:600;color:${barColor};min-width:36px;">${pct}%</span>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+ 
+    } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="8" class="table-loading">Failed to load.</td></tr>';
+        console.error('Error fetching seat stats:', err);
+    }
+}
 
 // Nav click handlers
 document.getElementById("home").addEventListener("click", function () {
@@ -609,6 +674,7 @@ document.getElementById("schedules").addEventListener("click", function () {
   loadShowtimeLeaderboard();
   loadScheduleCount();
   loadAvgRevenuePerSchedule();
+  loadSeatStats();
   // loadSchedules();
 });
 
