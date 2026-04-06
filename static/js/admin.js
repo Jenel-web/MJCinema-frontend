@@ -293,7 +293,7 @@ function renderMovieTable(movies) {
     NOW_SHOWING: { label: "Now Showing", cls: "pill-now-showing" },
     COMING_SOON: { label: "Coming Soon", cls: "pill-coming-soon" },
     INACTIVE: { label: "Inactive", cls: "pill-inactive" },
-    NEW: {label: "New", cls: "pill-new"}, 
+    NEW: { label: "New", cls: "pill-new" },
   };
 
   tbody.innerHTML = movies
@@ -428,10 +428,10 @@ async function searchTmdb() {
 }
 
 async function selectTmdbMovie(movieId) {
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token");
   const data = {
-    id: movieId
-  }
+    id: movieId,
+  };
   try {
     const res = await fetch(`${baseUrl}/movie/add`, {
       method: "POST",
@@ -480,7 +480,7 @@ function showToast(type, message) {
 }
 
 async function loadShowtimeLeaderboard() {
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token");
   const container = document.getElementById("showtime-leaderboard");
   container.innerHTML =
     '<p style="color: var(--muted); font-size: 13px;">Loading...</p>';
@@ -535,10 +535,9 @@ async function loadShowtimeLeaderboard() {
   }
 }
 
-
 // Schedule Section
 async function loadScheduleCount() {
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token");
   const el = document.getElementById("scheduleCount");
   el.textContent = "Loading...";
 
@@ -560,11 +559,10 @@ async function loadScheduleCount() {
     console.error("Error fetching schedule count:", err);
   }
 }
- 
 
 async function loadAvgRevenuePerSchedule() {
   const el = document.getElementById("avgRevenuePerSchedule");
-  const token = localStorage.getItem("token")
+  const token = localStorage.getItem("token");
   el.textContent = "Loading...";
 
   try {
@@ -588,49 +586,63 @@ async function loadAvgRevenuePerSchedule() {
 }
 
 async function loadSeatStats() {
-    const token = localStorage.getItem("token")
-    const tbody = document.getElementById('seatStatsBody');
-    tbody.innerHTML = '<tr><td colspan="8" class="table-loading">Loading...</td></tr>';
- 
-    try {
-        const res = await fetch(`${baseUrl}/schedule/seatStats`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
+  const token = localStorage.getItem("token");
+  const tbody = document.getElementById("seatStatsBody");
+  tbody.innerHTML =
+    '<tr><td colspan="8" class="table-loading">Loading...</td></tr>';
+
+  try {
+    const res = await fetch(`${baseUrl}/schedule/seatStats`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch");
+
+    const data = await res.json();
+
+    if (!data.length) {
+      tbody.innerHTML =
+        '<tr><td colspan="8" class="table-loading">No active schedules found.</td></tr>';
+      return;
+    }
+
+    const slotIcons = {
+      MORNING: "🌅",
+      MIDDAY: "🌤️",
+      AFTERNOON: "☀️",
+      EVENING: "🌆",
+      NIGHT: "🌙",
+      MIDNIGHT: "🌃",
+    };
+
+    tbody.innerHTML = data
+      .map((s, i) => {
+        const pct = Number(s.percentage).toFixed(1);
+        const barColor =
+          s.percentage >= 75
+            ? "#27ae60"
+            : s.percentage >= 40
+            ? "#c9973d"
+            : "#a0aec0";
+        const date = new Date(s.showDate).toLocaleDateString("en-PH", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
         });
- 
-        if (!res.ok) throw new Error('Failed to fetch');
- 
-        const data = await res.json();
- 
-        if (!data.length) {
-            tbody.innerHTML = '<tr><td colspan="8" class="table-loading">No active schedules found.</td></tr>';
-            return;
-        }
- 
-        const slotIcons = {
-            MORNING:   '🌅',
-            MIDDAY:    '🌤️',
-            AFTERNOON: '☀️',
-            EVENING:   '🌆',
-            NIGHT:     '🌙',
-            MIDNIGHT:  '🌃'
-        };
- 
-        tbody.innerHTML = data.map((s, i) => {
-            const pct = Number(s.percentage).toFixed(1);
-            const barColor = s.percentage >= 75 ? '#27ae60' : s.percentage >= 40 ? '#c9973d' : '#a0aec0';
-            const date = new Date(s.showDate).toLocaleDateString('en-PH', { year: 'numeric', month: 'short', day: 'numeric' });
-            const slotLabel = s.slot.charAt(0) + s.slot.slice(1).toLowerCase();
-            const icon = slotIcons[s.slot] || '🎬';
- 
-            return `
+        const slotLabel = s.slot.charAt(0) + s.slot.slice(1).toLowerCase();
+        const icon = slotIcons[s.slot] || "🎬";
+
+        return `
                 <tr>
                     <td style="color:var(--muted);font-size:12px;">${i + 1}</td>
                     <td style="font-weight:500;">${s.title}</td>
-                    <td style="color:var(--muted);font-size:12px;">${s.cinemaName}</td>
+                    <td style="color:var(--muted);font-size:12px;">${
+                      s.cinemaName
+                    }</td>
                     <td style="color:var(--muted);font-size:12px;">${date}</td>
                     <td>${icon} ${slotLabel}</td>
                     <td style="text-align:center;">${s.occupiedSeats}</td>
@@ -645,132 +657,165 @@ async function loadSeatStats() {
                     </td>
                 </tr>
             `;
-        }).join('');
- 
-    } catch (err) {
-        tbody.innerHTML = '<tr><td colspan="8" class="table-loading">Failed to load.</td></tr>';
-        console.error('Error fetching seat stats:', err);
-    }
+      })
+      .join("");
+  } catch (err) {
+    tbody.innerHTML =
+      '<tr><td colspan="8" class="table-loading">Failed to load.</td></tr>';
+    console.error("Error fetching seat stats:", err);
+  }
 }
 
 // ── ADD SCHEDULE MODAL ──
 async function openAddScheduleModal() {
-    document.getElementById('addScheduleModal').style.display = 'flex';
-    await Promise.all([fetchMoviesForSchedule(), fetchCinemasForSchedule(), fetchSlotsForSchedule()]);
+  document.getElementById("addScheduleModal").style.display = "flex";
+  await Promise.all([
+    fetchMoviesForSchedule(),
+    fetchCinemasForSchedule(),
+    fetchSlotsForSchedule(),
+  ]);
 }
- 
+
 function closeAddScheduleModal() {
-    document.getElementById('addScheduleModal').style.display = 'none';
-    document.getElementById('schedShowDate').value = '';
-    document.getElementById('schedVipPrice').value = '';
-    document.getElementById('schedRegPrice').value = '';
-    document.getElementById('schedBalPrice').value = '';
+  document.getElementById("addScheduleModal").style.display = "none";
+  document.getElementById("schedShowDate").value = "";
+  document.getElementById("schedVipPrice").value = "";
+  document.getElementById("schedRegPrice").value = "";
+  document.getElementById("schedBalPrice").value = "";
 }
- 
+
 function handleScheduleOverlayClick(e) {
-    if (e.target === document.getElementById('addScheduleModal')) closeAddScheduleModal();
+  if (e.target === document.getElementById("addScheduleModal"))
+    closeAddScheduleModal();
 }
- 
+
 async function fetchMoviesForSchedule() {
-    const token = localStorage.getItem("token")
-    const select = document.getElementById('schedMovieSelect');
-    select.innerHTML = '<option value="">Loading...</option>';
-    try {
-        const res = await fetch(`${baseUrl}/movie/show`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const movies = await res.json();
-        select.innerHTML = '<option value="">Select a movie</option>' +
-            movies.map(m => `<option value="${m.id}">${m.title}</option>`).join('');
-    } catch {
-        select.innerHTML = '<option value="">Failed to load</option>';
-    }
+  const token = localStorage.getItem("token");
+  const select = document.getElementById("schedMovieSelect");
+  select.innerHTML = '<option value="">Loading...</option>';
+  try {
+    const res = await fetch(`${baseUrl}/movie/show`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const movies = await res.json();
+    select.innerHTML =
+      '<option value="">Select a movie</option>' +
+      movies
+        .map((m) => `<option value="${m.movieId}">${m.title}</option>`)
+        .join("");
+  } catch {
+    select.innerHTML = '<option value="">Failed to load</option>';
+  }
 }
- 
+
 async function fetchCinemasForSchedule() {
-    const token = localStorage.getItem("token")
-    const select = document.getElementById('schedCinemaSelect');
-    select.innerHTML = '<option value="">Loading...</option>';
-    try {
-        const res = await fetch(`${baseUrl}/cinema/all`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const cinemas = await res.json();
-        select.innerHTML = '<option value="">Select a cinema</option>' +
-            cinemas.map(c => `<option value="${c.id}">${c.cinemaName} — ${c.location}</option>`).join('');
-    } catch {
-        select.innerHTML = '<option value="">Failed to load</option>';
-    }
+  const token = localStorage.getItem("token");
+  const select = document.getElementById("schedCinemaSelect");
+  select.innerHTML = '<option value="">Loading...</option>';
+  try {
+    const res = await fetch(`${baseUrl}/cinema/all`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const cinemas = await res.json();
+    select.innerHTML =
+      '<option value="">Select a cinema</option>' +
+      cinemas
+        .map(
+          (c) =>
+            `<option value="${c.cinemaId}">${c.cinemaName} — ${c.location}</option>`
+        )
+        .join("");
+  } catch {
+    select.innerHTML = '<option value="">Failed to load</option>';
+  }
 }
- 
+
 async function fetchSlotsForSchedule() {
-    const select = document.getElementById('schedSlotSelect');
-    select.innerHTML = '<option value="">Loading...</option>';
-    const slotIcons = { MORNING: '🌅', MIDDAY: '🌤️', AFTERNOON: '☀️', EVENING: '🌆', NIGHT: '🌙', MIDNIGHT: '🌃' };
-    try {
-        const res = await fetch(`${baseUrl}/schedule/showSlots`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const slots = await res.json();
-        select.innerHTML = '<option value="">Select a slot</option>' +
-            slots.map(s => {
-                const icon = slotIcons[s] || '🎬';
-                const label = s.charAt(0) + s.slice(1).toLowerCase();
-                return `<option value="${s}">${icon} ${label}</option>`;
-            }).join('');
-    } catch {
-        select.innerHTML = '<option value="">Failed to load</option>';
-    }
+  const token = localStorage.getItem("token");
+  const select = document.getElementById("schedSlotSelect");
+  select.innerHTML = '<option value="">Loading...</option>';
+  const slotIcons = {
+    MORNING: "🌅",
+    MIDDAY: "🌤️",
+    AFTERNOON: "☀️",
+    EVENING: "🌆",
+    NIGHT: "🌙",
+    MIDNIGHT: "🌃",
+  };
+  try {
+    const res = await fetch(`${baseUrl}/schedule/showSlots`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    const slots = await res.json();
+    select.innerHTML =
+      '<option value="">Select a slot</option>' +
+      slots
+        .map((s) => {
+          const icon = slotIcons[s] || "🎬";
+          const label = s.charAt(0) + s.slice(1).toLowerCase();
+          return `<option value="${s}">${icon} ${label}</option>`;
+        })
+        .join("");
+  } catch {
+    select.innerHTML = '<option value="">Failed to load</option>';
+  }
 }
- 
+
 async function submitAddSchedule() {
-    const token = localStorage.getItem("token")
-    const movieId    = document.getElementById('schedMovieSelect').value;
-    const cinemaId   = document.getElementById('schedCinemaSelect').value;
-    const showDate   = document.getElementById('schedShowDate').value;
-    const slot       = document.getElementById('schedSlotSelect').value;
-    const vipPrice   = document.getElementById('schedVipPrice').value;
-    const regPrice   = document.getElementById('schedRegPrice').value;
-    const balPrice   = document.getElementById('schedBalPrice').value;
- 
-    if (!movieId || !cinemaId || !showDate || !slot || !vipPrice || !regPrice || !balPrice) {
-        showToast('error', 'Please fill in all fields before submitting.');
-        return;
+  const token = localStorage.getItem("token");
+  const movieId = document.getElementById("schedMovieSelect").value;
+  const cinemaId = document.getElementById("schedCinemaSelect").value;
+  const showDate = document.getElementById("schedShowDate").value;
+  const slot = document.getElementById("schedSlotSelect").value;
+  const vipPrice = document.getElementById("schedVipPrice").value;
+  const regPrice = document.getElementById("schedRegPrice").value;
+  const balPrice = document.getElementById("schedBalPrice").value;
+
+  if (
+    !movieId ||
+    !cinemaId ||
+    !showDate ||
+    !slot ||
+    !vipPrice ||
+    !regPrice ||
+    !balPrice
+  ) {
+    showToast("error", "Please fill in all fields before submitting.");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${baseUrl}/schedule/add`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        movieId: Number(movieId),
+        cinemaId: Number(cinemaId),
+        showDate,
+        slot,
+        vipPrice: Number(vipPrice),
+        regPrice: Number(regPrice),
+        balPrice: Number(balPrice),
+      }),
+    });
+
+    const message = await res.text();
+    closeAddScheduleModal();
+    showToast(res.ok ? "success" : "error", message);
+
+    if (res.ok) {
+      loadSeatStats();
+      loadScheduleCount();
+      loadAvgRevenuePerSchedule();
+      loadShowtimeLeaderboard();
     }
- 
-    try {
-        const res = await fetch(`${baseUrl}/schedule/add`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                movieId:  Number(movieId),
-                cinemaId: Number(cinemaId),
-                showDate,
-                slot,
-                vipPrice: Number(vipPrice),
-                regPrice: Number(regPrice),
-                balPrice: Number(balPrice)
-            })
-        });
- 
-        const message = await res.text();
-        closeAddScheduleModal();
-        showToast(res.ok ? 'success' : 'error', message);
- 
-        if (res.ok) {
-            loadSeatStats();
-            loadScheduleCount();
-            loadAvgRevenuePerSchedule();
-            loadShowtimeLeaderboard();
-        }
- 
-    } catch (err) {
-        showToast('error', 'Something went wrong. Please try again.');
-        console.error('Add schedule error:', err);
-    }
+  } catch (err) {
+    showToast("error", "Something went wrong. Please try again.");
+    console.error("Add schedule error:", err);
+  }
 }
 // Nav click handlers
 document.getElementById("home").addEventListener("click", function () {
@@ -839,3 +884,5 @@ window.handleOverlayClick = handleOverlayClick;
 window.selectTmdbMovie = selectTmdbMovie;
 window.loadAvgRevenuePerSchedule = loadAvgRevenuePerSchedule;
 window.openAddScheduleModal = openAddScheduleModal;
+window.submitAddSchedule = submitAddSchedule;
+window.handleScheduleOverlayClick = handleScheduleOverlayClick;
