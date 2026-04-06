@@ -672,6 +672,7 @@ function handleScheduleOverlayClick(e) {
 }
  
 async function fetchMoviesForSchedule() {
+    const token = localStorage.getItem("token")
     const select = document.getElementById('schedMovieSelect');
     select.innerHTML = '<option value="">Loading...</option>';
     try {
@@ -687,6 +688,7 @@ async function fetchMoviesForSchedule() {
 }
  
 async function fetchCinemasForSchedule() {
+    const token = localStorage.getItem("token")
     const select = document.getElementById('schedCinemaSelect');
     select.innerHTML = '<option value="">Loading...</option>';
     try {
@@ -722,6 +724,7 @@ async function fetchSlotsForSchedule() {
 }
  
 async function submitAddSchedule() {
+    const token = localStorage.getItem("token")
     const movieId    = document.getElementById('schedMovieSelect').value;
     const cinemaId   = document.getElementById('schedCinemaSelect').value;
     const showDate   = document.getElementById('schedShowDate').value;
@@ -747,8 +750,8 @@ async function submitAddSchedule() {
                 cinemaId: Number(cinemaId),
                 showDate,
                 slot,
-                vipPrice: String(vipPrice),
-                regPrice: String(regPrice),
+                vipPrice: Number(vipPrice),
+                regPrice: Number(regPrice),
                 balPrice: Number(balPrice)
             })
         });

@@ -247,8 +247,68 @@
  
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     </div>
-
-
+    <!-- ADD SCHEDULE MODAL -->
+<div id="addScheduleModal" class="modal-overlay" style="display:none;" onclick="handleScheduleOverlayClick(event)">
+  <div class="modal-box schedule-modal-box">
+    <div class="modal-header">
+      <div class="modal-title">Add Schedule</div>
+      <button class="modal-close" onclick="closeAddScheduleModal()">✕</button>
+    </div>
+    <div class="schedule-form">
+ 
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Movie</label>
+          <select id="schedMovieSelect" class="form-select">
+            <option value="">Loading movies...</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Cinema</label>
+          <select id="schedCinemaSelect" class="form-select">
+            <option value="">Loading cinemas...</option>
+          </select>
+        </div>
+      </div>
+ 
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Show Date</label>
+          <input type="date" id="schedShowDate" class="form-input" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Slot</label>
+          <select id="schedSlotSelect" class="form-select">
+            <option value="">Loading slots...</option>
+          </select>
+        </div>
+      </div>
+ 
+      <div class="form-divider">Pricing</div>
+ 
+      <div class="form-row form-row-3">
+        <div class="form-group">
+          <label class="form-label">VIP Price (₱)</label>
+          <input type="number" id="schedVipPrice" class="form-input" placeholder="e.g. 720" min="0" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Regular Price (₱)</label>
+          <input type="number" id="schedRegPrice" class="form-input" placeholder="e.g. 500" min="0" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Balcony Price (₱)</label>
+          <input type="number" id="schedBalPrice" class="form-input" placeholder="e.g. 420" min="0" />
+        </div>
+      </div>
+ 
+      <div class="form-actions">
+        <button class="form-cancel-btn" onclick="closeAddScheduleModal()">Cancel</button>
+        <button class="form-submit-btn" onclick="submitAddSchedule()">Add Schedule</button>
+      </div>
+ 
+    </div>
+  </div>
+</div>
     <script type="module" src="../js/admin.js"></script>
   </body>
 </html>
