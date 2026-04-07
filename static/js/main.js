@@ -61,7 +61,7 @@ class CinemaApp {
 
         if (result.success) {
           this.ui.showPopup(result.message, "green");
-          window.location.href = "dashboard.html";
+          window.location.href = "./html/dashboard.html";
         } else if (result.message === "Server is offline. Try again later.") {
           this.ui.showPopup("Server is offline. Try again later.", "red");
         } else {
