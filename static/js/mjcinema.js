@@ -133,7 +133,7 @@ const movieId = localStorage.getItem("movieId"); //should use quotation marks fo
 
 //for booking
 async function proceedToBooking(movieId) {
-  const baseUrl = "mjcinema-backend-production.up.railway.app"; //makes the base url thank can be accessed within the function
+ //makes the base url thank can be accessed within the function
   const bookBtn = document.querySelector(".book-btn-modal"); //button class
   if (bookBtn) {
     try {
