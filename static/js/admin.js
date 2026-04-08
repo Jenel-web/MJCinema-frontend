@@ -1,4 +1,4 @@
-const baseUrl = "http://localhost:8080";
+const baseUrl = "https://mjcinema-backend-production.up.railway.app";
 
 async function loadHome() {
   const bookingsEl = document.getElementById("totalBookings");
