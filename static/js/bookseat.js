@@ -1,6 +1,6 @@
 let priceList = {}; //pricelist where the data we fetched will go
 let selectedSeats = []; //initialized the selected seats which is empty at first
-
+const baseUrl = "mjcinema-backend-production.up.railway.app";
 async function initBooking() {
   const scheduleId = localStorage.getItem("selectedScheduleId");
   const token = localStorage.getItem("token");
@@ -10,7 +10,7 @@ async function initBooking() {
     return;
   }
   // 1. Fetch Schedule (including Cinema layout)
-  const response = await fetch(`http://localhost:8080/schedule/${scheduleId}`);
+  const response = await fetch(`${baseUrl}/schedule/${scheduleId}`);
   const schedule = await response.json();
 
   // 2. Setup the Grid based on Cinema dimensions
@@ -27,9 +27,7 @@ async function initBooking() {
     document.getElementById("movie-title").innerText = "Title Unavailable";
   }
   //get the prices
-  const result = await fetch(
-    `http://localhost:8080/schedule/schedPrice/${scheduleId}`
-  );
+  const result = await fetch(`${baseUrl}/schedule/schedPrice/${scheduleId}`);
   const prices = await result.json();
   const selected = await getOccupiedSeats(scheduleId); //makes the array of strings of selected seats
 
@@ -47,16 +45,13 @@ async function initBooking() {
 
 async function getOccupiedSeats(scheduleId) {
   const token = localStorage.getItem("token");
-  const response = await fetch(
-    `http://localhost:8080/seat/occupied/${scheduleId}`,
-    {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, //this is the token for auth
-      },
-    }
-  );
+  const response = await fetch(`${baseUrl}/seat/occupied/${scheduleId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`, //this is the token for auth
+    },
+  });
 
   const occupiedSeats = await response.json();
 
@@ -150,7 +145,7 @@ async function bookTicket(selectedSeats = []) {
 
   console.log("Sending Data:", JSON.stringify(data));
   try {
-    const response = await fetch("http://localhost:8080/ticket/book", {
+    const response = await fetch(`${baseUrl}/ticket/book`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

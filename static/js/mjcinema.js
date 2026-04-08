@@ -1,6 +1,6 @@
 import { UI } from "./ui.js";
 import { Auth } from "./auth.js";
-const baseUrl = "http://localhost:8080";
+const baseUrl = "mjcinema-backend-production.up.railway.app";
 const authApp = new Auth(); //automatically does what the function sayss
 const ui = new UI(); //imports UI and instantiates
 
@@ -133,7 +133,7 @@ const movieId = localStorage.getItem("movieId"); //should use quotation marks fo
 
 //for booking
 async function proceedToBooking(movieId) {
-  const baseUrl = "http://localhost:8080"; //makes the base url thank can be accessed within the function
+  const baseUrl = "mjcinema-backend-production.up.railway.app"; //makes the base url thank can be accessed within the function
   const bookBtn = document.querySelector(".book-btn-modal"); //button class
   if (bookBtn) {
     try {
@@ -207,7 +207,7 @@ async function loadCinemaTab() {
   cinemaSection.classList.remove("hidden");
   moviesGrid.classList.add("hidden");
   try {
-    const response = await fetch("http://localhost:8080/cinema/all"); //takes all the cinema
+    const response = await fetch(`${baseUrl}/cinema/all`); //takes all the cinema
     const cinemas = await response.json(); //jsonify
 
     // Map through your cinemas and turn them into HTML cards
@@ -236,9 +236,7 @@ async function showMoviesInCinema(cinemaId, location, cinemaName) {
   document.getElementById("active-cinema-name").innerText = ` ${cinemaName}`;
 
   try {
-    const response = await fetch(
-      `http://localhost:8080/cinema/movies/${cinemaId}`
-    );
+    const response = await fetch(`${baseUrl}/cinema/movies/${cinemaId}`);
     const movies = await response.json();
 
     gridView.classList.add("hidden"); //hides the cinema grid
@@ -583,14 +581,14 @@ if (nowShowing) {
   nowShowing.addEventListener("click", (e) => {
     e.preventDefault();
     const movie = document.getElementById("movieCard");
-    loadMovies("http://localhost:8080/schedule/now-showing", "now");
+    loadMovies(`${baseUrl}/schedule/now-showing`, "now");
     //uses the movie as a parameter
   });
 } //if the nav button now showing is tapped. it will show the now showing movies html
 if (comingSoon) {
   comingSoon.addEventListener("click", (e) => {
     e.preventDefault();
-    loadMovies("http://localhost:8080/schedule/coming-soon", "soon"); //this is where the typex comes from
+    loadMovies(`${baseUrl}/schedule/coming-soon`, "soon"); //this is where the typex comes from
   });
 }
 if (cinema) {
