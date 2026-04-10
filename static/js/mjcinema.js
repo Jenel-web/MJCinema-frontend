@@ -1,6 +1,6 @@
 import { UI } from "./ui.js";
 import { Auth } from "./auth.js";
-//const baseUrl = "https://mjcinema-backend-production.up.railway.app";
+const baseUrl = "https://mjcinema-backend-production.up.railway.app";
 const authApp = new Auth(); //automatically does what the function sayss
 const ui = new UI(); //imports UI and instantiates
 
