@@ -1,6 +1,6 @@
 import { UI } from "./ui.js";
 import { Auth } from "./auth.js";
-const baseUrl = "https://mjcinema-backend-production.up.railway.app";
+//const baseUrl = "https://mjcinema-backend-production.up.railway.app";
 const authApp = new Auth(); //automatically does what the function sayss
 const ui = new UI(); //imports UI and instantiates
 
@@ -577,6 +577,18 @@ const nowShowing = document.getElementById("now-showing");
 const comingSoon = document.getElementById("coming-soon");
 const cinema = document.getElementById("cinema");
 //its loaded the moment the browser is opened.
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const response = await fetch(`${baseUrl}/movie/show`);
+    if (!response.ok) throw new Error("Backend is sleepy");
+    const allMovies = await response.json();
+    window.allMovies = Array.from(allMovies);
+    // Then call your load function
+    loadMovies(`${baseUrl}/schedule/now-showing`, "now");
+  } catch (err) {
+    console.error("Initial load failed:", err);
+  }
+});
 if (nowShowing) {
   nowShowing.addEventListener("click", (e) => {
     e.preventDefault();
