@@ -307,7 +307,7 @@ window.addEventListener("click", function (e) {
 });
 
 export function handleLogout() {
-  window.location.href = "index.html";
+  window.location.href = "../index.html";
   localStorage.clear();
 }
 window.filterByStatus = function (status) {

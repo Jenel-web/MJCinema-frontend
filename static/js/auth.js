@@ -101,7 +101,7 @@ export class Auth {
         window.location.href = "./html/dashboard.html";
       } else {
         console.log(result.data.role);
-        window.location.href = "./html/admin.html";
+        window.location.href = "../html/admin.html";
       }
     } else {
       const msg =
