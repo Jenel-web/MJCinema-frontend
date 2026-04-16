@@ -1,4 +1,9 @@
 {
-  "outputDirectory": ".",
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/js/(.*)", "destination": "/public/js/$1" },
+    { "source": "/css/(.*)", "destination": "/public/css/$1" },
+    { "source": "/html/(.*)", "destination": "/public/html/$1" }
+  ]
 }
