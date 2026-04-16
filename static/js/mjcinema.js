@@ -360,7 +360,7 @@ window.filterByStatus = function (status) {
 };
 
 export function showBookings() {
-  window.location.href = "tickets.html";
+  window.location.href = "/html/tickets.html";
 }
 
 function groupTicketsBySchedule(tickets) {
@@ -638,3 +638,4 @@ window.showBookings = showBookings;
 window.getUserDetails = getUserDetails;
 window.cancelTicket = cancelTicket;
 window.updateSidebarUserInfo = updateSidebarUserInfo;
+window.initBooking = initBooking;
