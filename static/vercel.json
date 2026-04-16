@@ -2,8 +2,8 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/js/(.*)", "destination": "/public/js/$1" },
-    { "source": "/css/(.*)", "destination": "/public/css/$1" },
-    { "source": "/html/(.*)", "destination": "/public/html/$1" }
+    { "source": "/js/(.*)", "destination": "/static/public/js/$1" },
+    { "source": "/css/(.*)", "destination": "/static/public/css/$1" },
+    { "source": "/html/(.*)", "destination": "/static/public/html/$1" }
   ]
 }
