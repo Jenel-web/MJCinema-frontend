@@ -11,6 +11,7 @@ const ui = new UI(); //imports UI and instantiates
 // const movies = await fetch(`${baseUrl}/movie/show`); 
 // const allMovies = await movies.json();
 
+let allMovies = [];
 document.addEventListener("DOMContentLoaded", async () => {
   try {
     // Only fetch movies if we are on the dashboard (where movie-grid exists)
@@ -20,9 +21,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       const data = await response.json();
       window.allMovies = Array.from(data);
       loadMovies(`${baseUrl}/schedule/now-showing`, "now");
-      loadMovies(`${baseUrl}/schedule/coming-soon`, "soon");
     }
-    //this makes it able to see the my bookings without having to book a ticket.
+    //this makes it able to see the my bookings without having to book
     // This is the part that fixes the "Direct Access" bug
     if (document.getElementById("tickets-container")) {
       console.log("Tickets page detected, loading tickets...");
