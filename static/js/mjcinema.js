@@ -190,7 +190,7 @@ function renderScheduleSelection(schedules) {
     }
     // Save and redirect
     localStorage.setItem("selectedScheduleId", selectedId); //takes the selected scheduleId and saves it
-    window.location.href = "bookseat.html"; //redirected to booking
+    window.location.href = "/html/bookseat.html"; //redirected to booking
   };
 
   container.appendChild(select);
@@ -307,7 +307,7 @@ window.addEventListener("click", function (e) {
 });
 
 export function handleLogout() {
-  window.location.href = "../index.html";
+  window.location.href = "/index.html";
   localStorage.clear();
 }
 window.filterByStatus = function (status) {
@@ -360,7 +360,7 @@ window.filterByStatus = function (status) {
 };
 
 export function showBookings() {
-  window.location.href = "tickets.html";
+  window.location.href = "/html/tickets.html";
 }
 
 function groupTicketsBySchedule(tickets) {
