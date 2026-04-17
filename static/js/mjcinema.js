@@ -4,8 +4,34 @@ const baseUrl = "https://mjcinema-backend-production.up.railway.app";
 const authApp = new Auth(); //automatically does what the function sayss
 const ui = new UI(); //imports UI and instantiates
 
-const movies = await fetch(`${baseUrl}/movie/show`); //use backticks
-const allMovies = await movies.json();
+//const movies = await fetch(`${baseUrl}/movie/show`); //use backticks
+//const allMovies = await movies.json();
+
+// MOVE THESE INSIDE THE LISTENER BELOW
+// const movies = await fetch(`${baseUrl}/movie/show`); 
+// const allMovies = await movies.json();
+
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    // Only fetch movies if we are on the dashboard (where movie-grid exists)
+    if (document.getElementById("movie-grid")) {
+      const response = await fetch(`${baseUrl}/movie/show`);
+      if (!response.ok) throw new Error("Backend is sleepy");
+      const data = await response.json();
+      window.allMovies = Array.from(data);
+      loadMovies(`${baseUrl}/schedule/now-showing`, "now");
+    }
+    //this makes it able to see the my bookings without having to book a ticket.
+    // This is the part that fixes the "Direct Access" bug
+    if (document.getElementById("tickets-container")) {
+      console.log("Tickets page detected, loading tickets...");
+      await loadUserTickets(); // Added await to ensure it finishes
+      await updateSidebarUserInfo();
+    }
+  } catch (err) {
+    console.error("Initial load failed:", err);
+  }
+});
 const token = localStorage.getItem("token");
 // Force it onto the window object explicitly
 window.allMovies = Array.from(allMovies); //saves all the movies in the db
