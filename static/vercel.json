@@ -1,4 +1,10 @@
 {
-  "outputDirectory": ".",
-  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/js/(.*)", "destination": "/static/js/$1" },
+    { "source": "/css/(.*)", "destination": "/static/css/$1" },
+    { "source": "/html/(.*)", "destination": "/static/html/$1" },
+    { "source": "/images/(.*)", "destination": "/static/images/$1" }
+  ]
 }
