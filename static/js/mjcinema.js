@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const data = await response.json();
       window.allMovies = Array.from(data);
       loadMovies(`${baseUrl}/schedule/now-showing`, "now");
+      loadMovies(`${baseUrl}/schedule/coming-soon`, "soon");
     }
     //this makes it able to see the my bookings without having to book a ticket.
     // This is the part that fixes the "Direct Access" bug
