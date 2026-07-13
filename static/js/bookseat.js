@@ -1,7 +1,7 @@
 let priceList = {}; //pricelist where the data we fetched will go
 let selectedSeats = []; //initialized the selected seats which is empty at first
 const baseUrl = "https://mjcinema-backend.onrender.com";
-async function initBooking() {
+export async function initBooking() {
   const scheduleId = localStorage.getItem("selectedScheduleId");
   const token = localStorage.getItem("token");
   if (!scheduleId) {
@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // ticket booking
-async function bookTicket(selectedSeats = []) {
+export async function bookTicket(selectedSeats = []) {
   const id = localStorage.getItem("selectedScheduleId");
   const user = localStorage.getItem("userId");
   const token = localStorage.getItem("token");

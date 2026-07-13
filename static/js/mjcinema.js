@@ -1,5 +1,6 @@
 import { UI } from "/js/ui.js";
-import { Bookseat } from "/js/bookseat.js";
+import { initBooking } from "/js/bookseat.js";
+import { bookTicket } from "/js/bookseat.js";
 import { Auth } from "/js/auth.js";
 const baseUrl = "https://mjcinema-backend.onrender.com";
 const authApp = new Auth(); //automatically does what the function sayss
@@ -668,4 +669,4 @@ window.showBookings = showBookings;
 window.getUserDetails = getUserDetails;
 window.cancelTicket = cancelTicket;
 window.updateSidebarUserInfo = updateSidebarUserInfo;
-window.initBooking = initBooking;
+// window.initBooking = initBooking;
