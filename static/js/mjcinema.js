@@ -1,5 +1,5 @@
-import { UI } from "./ui.js";
-import { Auth } from "./auth.js";
+import { UI } from "/js/ui.js";
+import { Auth } from "/js/auth.js";
 const baseUrl = "https://mjcinema-backend.onrender.com";
 const authApp = new Auth(); //automatically does what the function sayss
 const ui = new UI(); //imports UI and instantiates

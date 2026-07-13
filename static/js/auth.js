@@ -1,4 +1,4 @@
-import { UI } from "./ui.js";
+import { UI } from "/js/ui.js";
 const ui = new UI(); //imports UI and instantiates
 
 export class Auth {
