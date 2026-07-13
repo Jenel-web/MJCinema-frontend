@@ -3,7 +3,7 @@ const ui = new UI(); //imports UI and instantiates
 
 export class Auth {
   constructor() {
-    this.baseUrl = "https://mjcinema-backend-production.up.railway.app";
+    this.baseUrl = "https://mjcinema-backend.onrender.com";
     // Initialize listeners when the class is instantiated
     this.initListeners();
   }

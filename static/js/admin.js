@@ -1,4 +1,4 @@
-const baseUrl = "https://mjcinema-backend-production.up.railway.app";
+const baseUrl = "https://mjcinema-backend.onrender.com";
 
 async function loadHome() {
   const bookingsEl = document.getElementById("totalBookings");

@@ -1,6 +1,6 @@
 let priceList = {}; //pricelist where the data we fetched will go
 let selectedSeats = []; //initialized the selected seats which is empty at first
-const baseUrl = "https://mjcinema-backend-production.up.railway.app";
+const baseUrl = "https://mjcinema-backend.onrender.com";
 async function initBooking() {
   const scheduleId = localStorage.getItem("selectedScheduleId");
   const token = localStorage.getItem("token");
