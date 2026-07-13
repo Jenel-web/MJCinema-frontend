@@ -1,12 +1,14 @@
 let priceList = {}; //pricelist where the data we fetched will go
 let selectedSeats = []; //initialized the selected seats which is empty at first
 const baseUrl = "https://mjcinema-backend.onrender.com";
+
+
 export async function initBooking() {
   const scheduleId = localStorage.getItem("selectedScheduleId");
   const token = localStorage.getItem("token");
   if (!scheduleId) {
     console.error("No Schedule ID found! Redirecting to home...");
-    window.location.href = "index.html";
+    window.location.href = "/index.html";
     return;
   }
   // 1. Fetch Schedule (including Cinema layout)
