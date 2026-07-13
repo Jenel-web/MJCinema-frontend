@@ -210,7 +210,7 @@ function showStatus(isSuccess, title, message) {
   };
 }
 const bookBtn = document.querySelector(".btn-confirm");
-
+if(bookBtn0){
 bookBtn.addEventListener("click", (e) => {
   e.preventDefault();
 
@@ -232,3 +232,4 @@ bookBtn.addEventListener("click", (e) => {
     await bookTicket(selectedSeats); // Trigger your Java API
   };
 });
+}
