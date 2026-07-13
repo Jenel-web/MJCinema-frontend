@@ -14,21 +14,44 @@ const ui = new UI(); //imports UI and instantiates
 // const allMovies = await movies.json();
 
 let allMovies = [];
+// document.addEventListener("DOMContentLoaded", async () => {
+//   try {
+//     // Only fetch movies if we are on the dashboard (where movie-grid exists)
+//     if (document.getElementById("movie-grid")) {
+//       const response = await fetch(`${baseUrl}/movie/show`);
+//       if (!response.ok) throw new Error("Backend is sleepy");
+//       const data = await response.json();
+//       window.allMovies = Array.from(data);
+//       loadMovies(`${baseUrl}/schedule/now-showing`, "now");
+//     }
+//     //this makes it able to see the my bookings without having to book
+//     // This is the part that fixes the "Direct Access" bug
+//     if (document.getElementById("tickets-container")) {
+//       console.log("Tickets page detected, loading tickets...");
+//       await loadUserTickets(); // Added await to ensure it finishes
+//       await updateSidebarUserInfo();
+//     }
+//   } catch (err) {
+//     console.error("Initial load failed:", err);
+//   }
+// });
+
 document.addEventListener("DOMContentLoaded", async () => {
   try {
-    // Only fetch movies if we are on the dashboard (where movie-grid exists)
+    // 1. Only run if we are on the Home/Dashboard page
     if (document.getElementById("movie-grid")) {
+      console.log("Dashboard detected. Connecting to backend...");
       const response = await fetch(`${baseUrl}/movie/show`);
       if (!response.ok) throw new Error("Backend is sleepy");
       const data = await response.json();
       window.allMovies = Array.from(data);
       loadMovies(`${baseUrl}/schedule/now-showing`, "now");
     }
-    //this makes it able to see the my bookings without having to book
-    // This is the part that fixes the "Direct Access" bug
+
+    // 2. Only run if we are on the Tickets page
     if (document.getElementById("tickets-container")) {
       console.log("Tickets page detected, loading tickets...");
-      await loadUserTickets(); // Added await to ensure it finishes
+      await loadUserTickets();
       await updateSidebarUserInfo();
     }
   } catch (err) {
