@@ -1,4 +1,5 @@
 import { UI } from "/js/ui.js";
+import { Bookseat } from "/js/bookseat.js";
 import { Auth } from "/js/auth.js";
 const baseUrl = "https://mjcinema-backend.onrender.com";
 const authApp = new Auth(); //automatically does what the function sayss
@@ -121,11 +122,13 @@ async function loadMovies(url, type) {
       `
       )
       .join("");
-  } catch (error) {
-    console.error("The cinema is closed!", error);
-    document.getElementById("movie-grid").innerHTML =
-      "<p>Failed to load movies.</p>";
+  }catch (error) {
+      console.error("The cinema is closed!", error);
+      const grid = document.getElementById("movie-grid");
+      if (grid) {
+          grid.innerHTML = "<p>Failed to load movies.</p>";
   }
+}
 }
 
 function ClickedCardHandler(movieId, type) {
@@ -604,18 +607,18 @@ const nowShowing = document.getElementById("now-showing");
 const comingSoon = document.getElementById("coming-soon");
 const cinema = document.getElementById("cinema");
 //its loaded the moment the browser is opened.
-document.addEventListener("DOMContentLoaded", async () => {
-  try {
-    const response = await fetch(`${baseUrl}/movie/show`);
-    if (!response.ok) throw new Error("Backend is sleepy");
-    const allMovies = await response.json();
-    window.allMovies = Array.from(allMovies);
-    // Then call your load function
-    loadMovies(`${baseUrl}/schedule/now-showing`, "now");
-  } catch (err) {
-    console.error("Initial load failed:", err);
-  }
-});
+// document.addEventListener("DOMContentLoaded", async () => {
+//   try {
+//     const response = await fetch(`${baseUrl}/movie/show`);
+//     if (!response.ok) throw new Error("Backend is sleepy");
+//     const allMovies = await response.json();
+//     window.allMovies = Array.from(allMovies);
+//     // Then call your load function
+//     loadMovies(`${baseUrl}/schedule/now-showing`, "now");
+//   } catch (err) {
+//     console.error("Initial load failed:", err);
+//   }
+// });
 if (nowShowing) {
   nowShowing.addEventListener("click", (e) => {
     e.preventDefault();
