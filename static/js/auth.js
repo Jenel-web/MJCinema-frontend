@@ -73,7 +73,7 @@ export class Auth {
     if (result.success) {
       ui.showPopup("Account Created. Redirecting...", "green");
       setTimeout(() => {
-        window.location.href = "index.html";
+        window.location.href = "/index.html";
       }, 2000);
     } else {
       ui.showPopup(result.message, "red");
@@ -98,10 +98,10 @@ export class Auth {
       localStorage.setItem("token", result.data.jwtToken);
       ui.showPopup("Login successful!", "green");
       if (result.data.role === "USER") {
-        window.location.href = "./html/dashboard.html";
+        window.location.href = "dashboard.html";
       } else {
         console.log(result.data.role);
-        window.location.href = "../html/admin.html";
+        window.location.href = "admin.html";
       }
     } else {
       const msg =
