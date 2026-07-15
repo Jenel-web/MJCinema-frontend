@@ -98,10 +98,10 @@ export class Auth {
       localStorage.setItem("token", result.data.jwtToken);
       ui.showPopup("Login successful!", "green");
       if (result.data.role === "USER") {
-        window.location.href = "dashboard.html";
+        window.location.href = "../html/dashboard.html";
       } else {
         console.log(result.data.role);
-        window.location.href = "admin.html";
+        window.location.href = "../html/admin.html";
       }
     } else {
       const msg =
