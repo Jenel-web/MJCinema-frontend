@@ -131,7 +131,9 @@ function updateUI() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  initBooking();
+ if (document.getElementById("seat-grid")) {
+   initBooking();
+ }
 });
 
 // ticket booking
