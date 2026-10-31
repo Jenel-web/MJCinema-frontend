@@ -1,28 +1,191 @@
 @import "tailwindcss";
 
-/* Tokens from ../tokens.md (dark theme only) */
+/*
+ * Theme generated from design/design/system/tokens.md (dark theme only).
+ * Every color used by components comes from here; no ad-hoc hex values in components.
+ */
 @theme {
+  /* Surfaces */
   --color-bg: #08080a;
   --color-s1: #121216;
   --color-s2: #1a1a20;
   --color-s3: #25252d;
+
+  /* Borders */
+  --color-ln: rgb(255 255 255 / 0.09);
+  --color-ln2: rgb(255 255 255 / 0.16);
+
+  /* Text */
   --color-tx: #f5f5f6;
   --color-mu: #a6a6b0;
+  --color-dis: #8a8a94;
+
+  /* Brand + status */
   --color-rd: #d91f27;
   --color-rd2: #ef3a41;
+  --color-rd-deep: #7d1217;
+  --color-rd-fold: #8f1218;
   --color-gd: #e6b25d;
   --color-bl: #6ea8fe;
   --color-ok: #3ecf8e;
   --color-wn: #f5a524;
   --color-err: #ff8a8f;
-  --color-ln: rgb(255 255 255 / 0.09);
-  --color-ln2: rgb(255 255 255 / 0.16);
-  --font-display: "Barlow Condensed", sans-serif;
-  --font-sans: "DM Sans", sans-serif;
+  --color-err-banner: #ffb3b6;
+  --color-ok-banner: #9ff0c9;
+  --color-danger: #ff9a9e;
+
+  /* Tinted fills (always on a dark surface) */
+  --color-rd-tint: rgb(217 31 39 / 0.14);
+  --color-rd-line: rgb(217 31 39 / 0.4);
+  --color-focus: rgb(217 31 39 / 0.22);
+  --color-err-tint: rgb(239 58 65 / 0.12);
+  --color-err-line: rgb(239 58 65 / 0.4);
+  --color-ok-tint: rgb(62 207 142 / 0.12);
+  --color-ok-line: rgb(62 207 142 / 0.4);
+  --color-badge-ok: rgb(62 207 142 / 0.14);
+  --color-badge-wn: rgb(245 165 36 / 0.14);
+  --color-badge-cancel: rgb(239 58 65 / 0.16);
+  --color-badge-neutral: rgb(255 255 255 / 0.08);
+  --color-danger-soft: rgb(239 58 65 / 0.1);
+  --color-danger-line: rgb(239 58 65 / 0.6);
+  --color-ghost: rgb(255 255 255 / 0.07);
+  --color-chip: rgb(255 255 255 / 0.04);
+  --color-track: rgb(255 255 255 / 0.08);
+  --color-scrim: rgb(0 0 0 / 0.7);
+
+  /* Typography */
+  --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --font-sans: "DM Sans", system-ui, sans-serif;
+
+  /* Radius: 12 inputs/banners, 16 cards/toast, 20 dialogs, 28 auth card, 999 buttons/chips/badges */
+  --radius-ctl: 12px;
+  --radius-icon: 14px;
+  --radius-card: 16px;
+  --radius-dialog: 20px;
+  --radius-auth: 28px;
+
+  /* Widths */
+  --container-dialog-sm: 460px;
+  --container-dialog-md: 540px;
+  --container-dialog-lg: 1040px;
+  --container-toast: 380px;
 }
 
-body {
-  background: var(--color-bg);
-  color: var(--color-tx);
-  font-family: var(--font-sans);
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    background: var(--color-bg);
+    color: var(--color-tx);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-rd2);
+    outline-offset: 2px;
+  }
+  button,
+  [role="tab"] {
+    cursor: pointer;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+}
+
+/* Headings: Barlow Condensed 800, uppercase, 0.015em, line-height 1 */
+@utility heading {
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.015em;
+  line-height: 1;
+}
+
+/* Glass card: white-to-transparent gradient + 1px --ln border. No drop shadows. */
+@utility glass {
+  background-image: linear-gradient(
+    180deg,
+    rgb(255 255 255 / 0.055),
+    rgb(255 255 255 / 0.02)
+  );
+  border: 1px solid var(--color-ln);
+}
+
+/* Red page glow behind page headers */
+@utility page-glow {
+  background-image: radial-gradient(
+    60% 420px at 50% 0%,
+    rgb(217 31 39 / 0.28),
+    transparent 70%
+  );
+  background-repeat: no-repeat;
+}
+
+/* Ticket code: monospace 600, 14px, 0.06em */
+@utility ticket-code {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+}
+
+/* Motion: 150ms ease; dialogs fade and rise 8px. Nothing animates on its own. */
+@keyframes mj-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes mj-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* Error shake (auth card on a failed login) */
+@keyframes mj-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-8px);
+  }
+  40% {
+    transform: translateX(8px);
+  }
+  60% {
+    transform: translateX(-6px);
+  }
+  80% {
+    transform: translateX(6px);
+  }
+}
+@utility animate-shake {
+  animation: mj-shake 400ms ease both;
+}
+@utility animate-fade {
+  animation: mj-fade 150ms ease both;
+}
+@utility animate-rise {
+  animation: mj-rise 150ms ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
