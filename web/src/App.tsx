@@ -1,6 +1,11 @@
 import { lazy, Suspense } from 'react'
 import { Route, Routes } from 'react-router-dom'
-import AdminPage from './pages/AdminPage'
+import AdminLayout from './features/admin/AdminLayout'
+import AdminBookingsPage from './pages/admin/AdminBookingsPage'
+import AdminHomePage from './pages/admin/AdminHomePage'
+import AdminMoviesPage from './pages/admin/AdminMoviesPage'
+import AdminSchedulesPage from './pages/admin/AdminSchedulesPage'
+import AdminUsersPage from './pages/admin/AdminUsersPage'
 import BookSeatPage from './pages/BookSeatPage'
 import DashboardPage from './pages/DashboardPage'
 import LoginPage from './pages/LoginPage'
@@ -18,7 +23,13 @@ export default function App() {
       <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/bookseat" element={<BookSeatPage />} />
       <Route path="/tickets" element={<TicketsPage />} />
-      <Route path="/admin" element={<AdminPage />} />
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<AdminHomePage />} />
+        <Route path="movies" element={<AdminMoviesPage />} />
+        <Route path="schedules" element={<AdminSchedulesPage />} />
+        <Route path="bookings" element={<AdminBookingsPage />} />
+        <Route path="users" element={<AdminUsersPage />} />
+      </Route>
       {StyleguidePage && (
         <Route
           path="/styleguide"

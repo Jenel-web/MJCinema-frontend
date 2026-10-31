@@ -31,11 +31,17 @@ interface Options {
   text?: boolean
 }
 
+/**
+ * Error body -> message, like the legacy `result.message || fallback`:
+ * a JSON body gives its `message` string, or "" when it has none (so callers show their fallback
+ * instead of a raw JSON blob); a non-JSON body (the plain-text endpoints) is the message itself.
+ */
 async function readError(res: Response): Promise<{ message: string; data?: unknown }> {
   const raw = await res.text()
   try {
     const data = JSON.parse(raw)
-    return { message: data?.message ?? raw, data }
+    const message = data && typeof data === 'object' && typeof data.message === 'string' ? data.message : ''
+    return { message, data }
   } catch {
     return { message: raw }
   }

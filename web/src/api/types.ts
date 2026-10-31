@@ -50,10 +50,15 @@ export interface Schedule {
 
 export interface ScheduleDetail {
   movie: { title: string }
+  /** Present in the real response; optional here so the booking header can omit what is missing. */
+  showDate?: string
+  startTime?: string
   cinema: {
     totalRows: number
     totalColumns: number
     seatLayout: string
+    cinemaName?: string
+    location?: string
   }
 }
 
@@ -92,6 +97,12 @@ export interface UserDetails {
 // Admin
 /** Keyed by Monday date, e.g. { "2026-01-05": 12 }. */
 export type SalesTrend = Record<string, number>
+
+/** GET /movie/showActiveCount. */
+export interface ActiveMovieCount {
+  activeCount: number
+  totalCount: number
+}
 
 export interface MovieLeaderboardItem {
   title: string

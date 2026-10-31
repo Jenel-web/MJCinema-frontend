@@ -20,6 +20,10 @@ export interface ModalProps {
   closeOnOverlay?: boolean
   /** Esc closes. Default true. */
   closeOnEsc?: boolean
+  /** Default true. Pass false to supply your own padding inside (e.g. edge-to-edge sections). */
+  padded?: boolean
+  /** Below the md breakpoint the dialog becomes a full-screen sheet. */
+  fullscreenOnMobile?: boolean
   className?: string
   children?: ReactNode
 }
@@ -41,6 +45,8 @@ export default function Modal({
   showClose = true,
   closeOnOverlay = true,
   closeOnEsc = true,
+  padded = true,
+  fullscreenOnMobile = false,
   className,
   children,
   'aria-label': ariaLabel,
@@ -102,7 +108,10 @@ export default function Modal({
 
   return createPortal(
     <div
-      className="animate-fade fixed inset-0 z-50 flex items-center justify-center bg-scrim p-4"
+      className={cn(
+        'animate-fade fixed inset-0 z-50 flex items-center justify-center bg-scrim p-4',
+        fullscreenOnMobile && 'max-md:p-0',
+      )}
       onMouseDown={(e) => {
         if (closeOnOverlay && e.target === e.currentTarget) onClose()
       }}
@@ -116,7 +125,10 @@ export default function Modal({
         tabIndex={-1}
         className={cn(
           'animate-rise relative max-h-[calc(100dvh-2rem)] w-full overflow-y-auto',
-          'rounded-dialog border border-ln2 bg-s1 p-7 focus:outline-none',
+          'rounded-dialog border border-ln2 bg-s1 focus:outline-none',
+          padded && 'p-7',
+          fullscreenOnMobile &&
+            'max-md:h-dvh max-md:max-h-none max-md:max-w-none max-md:rounded-none max-md:border-0',
           sizes[size],
           className,
         )}

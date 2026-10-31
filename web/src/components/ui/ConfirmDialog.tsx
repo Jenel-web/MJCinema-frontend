@@ -15,6 +15,8 @@ export interface ConfirmDialogProps {
   onCancel: () => void
   /** Disables both buttons and shows a spinner on confirm. */
   loading?: boolean
+  /** Extra content between the description and the buttons (e.g. a booking summary). */
+  children?: ReactNode
 }
 
 /** Two-button confirmation (replaces the browser confirm()). Cancel left (ghost), confirm right (red). */
@@ -27,10 +29,12 @@ export default function ConfirmDialog({
   onConfirm,
   onCancel,
   loading = false,
+  children,
 }: ConfirmDialogProps) {
   return (
     <Modal open={open} onClose={onCancel} title={title} size="sm" showClose={false}>
       {description && <p className="mt-4 text-base text-mu">{description}</p>}
+      {children}
       <div className="mt-6 flex gap-3">
         <Button variant="ghost" size="lg" className="flex-1" onClick={onCancel} disabled={loading}>
           {cancelLabel}

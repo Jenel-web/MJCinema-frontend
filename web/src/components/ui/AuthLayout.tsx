@@ -1,19 +1,14 @@
 import type { ReactNode } from 'react'
 import { cn } from '../../lib/cn'
+import ArtCard from './ArtCard'
 import Logo from './Logo'
-import PosterCard from './PosterCard'
-
-export interface AuthPoster {
-  title: string
-  hue: number
-}
 
 export interface AuthLayoutProps {
   /** Hero headline. Use <br /> for the desktop line break. */
   headline: ReactNode
   description: string
-  /** Exactly three posters: left, middle (front), right. */
-  posters: [AuthPoster, AuthPoster, AuthPoster]
+  /** Hues of the three decorative cards: left, middle (front), right. */
+  art: [number, number, number]
   /** Heading above the form on desktop (hidden on mobile, where the headline leads). */
   title: string
   /** Applied to the card, e.g. the shake animation. */
@@ -22,18 +17,18 @@ export interface AuthLayoutProps {
 }
 
 /**
- * Two-panel auth screen shared by Login and Register: brand panel (logo, posters, headline)
+ * Two-panel auth screen shared by Login and Register: brand panel (logo, decorative art, headline)
  * on the left, form on the right. On mobile it stacks without the card chrome.
  */
 export default function AuthLayout({
   headline,
   description,
-  posters,
+  art,
   title,
   cardClassName,
   children,
 }: AuthLayoutProps) {
-  const [left, middle, right] = posters
+  const [left, middle, right] = art
   return (
     <main className="page-glow flex min-h-dvh px-4 py-8 md:items-center md:justify-center md:px-10 md:py-12">
       <div
@@ -46,24 +41,24 @@ export default function AuthLayout({
         <section className="flex flex-col md:page-glow md:p-12">
           <Logo size={30} />
 
-          {/* Desktop: three overlapping posters (positioned by wrappers; PosterCard is itself relative) */}
+          {/* Desktop: three overlapping cards (positioned by wrappers) */}
           <div aria-hidden="true" className="relative mt-10 hidden h-[246px] w-[380px] md:block">
             <div className="absolute top-9 left-0 z-10 w-[140px]">
-              <PosterCard {...left} />
+              <ArtCard hue={left} />
             </div>
             <div className="absolute top-0 left-[120px] z-20 w-[140px]">
-              <PosterCard {...middle} />
+              <ArtCard hue={middle} />
             </div>
             <div className="absolute top-3 left-[240px] z-30 w-[140px]">
-              <PosterCard {...right} />
+              <ArtCard hue={right} />
             </div>
           </div>
 
           {/* Mobile: row of three, middle one larger */}
           <div aria-hidden="true" className="mt-8 flex items-center justify-center gap-3 md:hidden">
-            <PosterCard {...left} className="w-[26%]" />
-            <PosterCard {...middle} className="w-[32%]" />
-            <PosterCard {...right} className="w-[26%]" />
+            <ArtCard hue={left} className="w-[26%]" />
+            <ArtCard hue={middle} className="w-[32%]" />
+            <ArtCard hue={right} className="w-[26%]" />
           </div>
 
           <h1 className="heading mt-6 max-w-[420px] text-[44px] md:mt-8 md:max-w-none md:text-[64px] md:leading-[0.95]">
