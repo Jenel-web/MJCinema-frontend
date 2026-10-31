@@ -180,6 +180,24 @@ test.describe('my bookings', () => {
     expect(calls(log, '/ticket/cancel')).toEqual([])
   })
 
+  test('cancel success with a non-JSON body still reloads (legacy never read the body)', async ({ page }) => {
+    await seed(page)
+    let cancelled = false
+    await mockApi(page, {
+      tickets: (route) =>
+        json(route, 200, cancelled ? tickets().filter((x) => x.seatNumber !== 'D6') : tickets()),
+      cancel: (route) => {
+        cancelled = true
+        return route.fulfill({ status: 200, contentType: 'text/plain', headers: CRED_CORS, body: 'Ticket cancelled' })
+      },
+    })
+    await page.goto('/tickets')
+    await page.getByRole('button', { name: 'Cancel ticket MJC-Ni-D6' }).click()
+    await page.getByRole('dialog').getByRole('button', { name: 'Cancel booking' }).click()
+    await expect(page.getByText('Ticket cancelled successfully.')).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Cancel ticket MJC-Ni-D6' })).toHaveCount(0)
+  })
+
   test('cancel failure: "Error: <message>"', async ({ page }) => {
     await seed(page)
     await mockApi(page, { cancel: (route) => json(route, 400, { message: 'Too late' }, CRED_CORS) })

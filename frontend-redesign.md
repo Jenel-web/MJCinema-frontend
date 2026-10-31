@@ -35,7 +35,7 @@ Movie posters come from TMDB: `https://image.tmdb.org/t/p/w500` + `movie.poster`
 | -------------------- | --------------------------------- | -------------------------------------------------------------- |
 | `token`              | Login (`jwtToken`)                | Sent as `Authorization: Bearer <token>` on authenticated calls |
 | `userId`             | Login                             | Tickets, user details, booking                                 |
-| `username`           | Login                             | (stored, not displayed directly)                               |
+| `username`           | Login                             | Shown next to the avatar in the dashboard profile button       |
 | `movieId`            | Clicking a movie card             | Stored, barely used                                            |
 | `selectedScheduleId` | "Select Seats" in the movie modal | Seat booking page and booking call                             |
 
@@ -146,6 +146,8 @@ Opens when a movie card is clicked. Dark overlay covering the page, **page scrol
 | -------------------- | --------------------------------------------------------------------------------------------------------------- |
 | Click ✕              | Closes the modal, restores scrolling (no click-outside or Esc close)                                            |
 | Click **Book Seats** | Calls `GET /schedule/movieSchedules/{movieId}`. Hides the button and shows the **showtime picker** in the modal |
+
+**Redesign:** the two rows above describe legacy. The new modal has no Book Seats button, loads the schedules on open and closes on Esc too: see section 10 item 11.
 
 **Showtime picker (inside the modal):** heading "Select a Showtime", a dropdown ("-- Choose a showtime --" plus options formatted `showDate | startTime - cinema.location`), and a **"Select Seats"** button.
 
@@ -311,8 +313,8 @@ Top-level popup: success (✅) or error (❌) with the message and a ✕ button,
 | 1   | Auth error banner                           | Login and Register | Failed validation or login                    | Red message + card shake                             | Auto after 3s                   |
 | 2   | Status popup                                | Login and Register | Login success, register success, server error | Green or red message                                 | Auto after 3s                   |
 | 3   | Profile dropdown                            | Dashboard          | Click profile icon                            | My Bookings, Profile, Logout                         | Click outside or the icon again |
-| 4   | Movie modal                                 | Dashboard          | Click a movie card                            | Poster, title, rating, overview, Book Seats          | ✕ only                          |
-| 5   | Showtime picker (inline in the movie modal) | Dashboard          | Click Book Seats                              | Dropdown of showtimes, Select Seats                  | Part of the modal               |
+| 4   | Movie modal                                 | Dashboard          | Click a movie card                            | Poster, title, rating, overview, showtime picker     | ✕ or Esc (not outside click); Back arrow on mobile |
+| 5   | Showtime picker (inline in the movie modal) | Dashboard          | Open a Now Showing movie                      | Dropdown of showtimes, Select Seats                  | Part of the modal               |
 | 6   | Browser alert: no showtime                  | Dashboard          | Select Seats with no choice                   | "Please select a time slot first!"                   | OK                              |
 | 7   | Browser alert: no seats                     | Seat booking       | Confirm with no seats                         | "Please select atleast one seat."                    | OK                              |
 | 8   | Confirm modal                               | Seat booking       | Confirm Booking                               | "Do you want to proceed...?" Go Back / Yes, Book Now | Either button                   |
@@ -331,7 +333,7 @@ The redesign may replace the browser `alert` and `confirm` popups (6, 7, 10, 11)
 
 1. Login, then Dashboard (Now Showing).
 2. Click a movie card, which opens the Movie modal.
-3. Click **Book Seats**, which loads the schedules and shows the dropdown.
+3. (Redesign: the schedules load when the modal opens and the picker is already shown; see section 10 item 11.) Legacy: click **Book Seats**, which loads the schedules and shows the dropdown.
 4. Choose a showtime, then **Select Seats** (`selectedScheduleId` saved).
 5. Seat page loads schedule, prices and occupied seats. Pick seats (total updates live).
 6. **Confirm Booking**, then the confirm modal, then **Yes, Book Now**.
@@ -410,6 +412,10 @@ Parity first: behaviour stays as documented. Improvements are a second pass afte
 8. Toast auto-dismiss is 5 seconds (design) instead of 4.
 9. Routes: / (login), /register, /dashboard, /bookseat, /tickets, /admin, /admin/movies, /admin/schedules, /admin/bookings, /admin/users. Legacy redirect targets map to these (/index.html -> /, /html/dashboard.html -> /dashboard, and so on).
 10. Seat booking, network error (the server cannot be reached while booking): shows the failure status modal with the title "Booking Failed" and the message "Server is offline. Try again later." (the same wording as login and register). The selected seats are kept and **Okay** only closes it. The error is still logged to the console as before. Decided by the project owner after the first migration pass.
+11. Movie modal (design 4.3-movie-modal): there is no "Book Seats" button. For Now Showing movies `GET /schedule/movieSchedules/{movieId}` is called as soon as the modal opens and the showtime picker is always visible, with "Select seats" in a sticky footer (disabled-looking until a showtime is chosen; clicking it with none chosen shows "Please select a time slot first!" in the footer). Coming Soon and Cinema-tab movies show no picker. The hero's "Book seats" opens the modal scrolled to the picker. Esc closes the modal (an e2e test covers it); an outside click does not.
+12. Admin Schedules: the legacy "Stat 3" / "Stat 4" "Coming soon" placeholder cards are not rebuilt (no data, no behaviour).
+13. The seat-booking confirm dialog also closes on Esc or an outside click, which is the same as **Go Back** (it never submits).
+14. `PATCH /ticket/cancel`: the body of a successful response is ignored (read as text), as legacy never read it. `GET /movie/showActiveCount` returns `{ activeCount, totalCount }` (legacy showed `active/total`; the redesign shows `activeCount`).
 
 ## 11. Redesign rules
 
