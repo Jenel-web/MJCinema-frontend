@@ -1,5 +1,6 @@
 import { authJson, bearer, request } from './client'
 import type {
+  ActiveMovieCount,
   AddScheduleRequest,
   BestShowtimeItem,
   MovieLeaderboardItem,
@@ -19,7 +20,8 @@ export const getSalesTrend = () => get<SalesTrend>('/ticket/getSalesTrend')
 
 // Movies
 export const getMovieLeaderboard = () => get<MovieLeaderboardItem[]>('/movie/leaderboard')
-export const getActiveMovieCount = () => get<number>('/movie/showActiveCount')
+/** Legacy reads `{ activeCount, totalCount }` (the md said a plain number). */
+export const getActiveMovieCount = () => get<ActiveMovieCount>('/movie/showActiveCount')
 export const getMovieTable = () => get<MovieTableRow[]>('/movie/showMovieTable')
 
 // Schedules

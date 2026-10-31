@@ -162,6 +162,17 @@ test.describe('login (mocked API)', () => {
     expect(await page.evaluate(() => localStorage.length)).toBe(0)
   })
 
+  test('hero art is decorative: no movie titles and no API call on load', async ({ page }) => {
+    const calls: string[] = []
+    page.on('request', (r) => { if (r.url().startsWith(API_URL)) calls.push(r.url()) })
+    await page.goto('/')
+    await page.waitForLoadState('networkidle')
+    expect(calls).toEqual([])
+    for (const title of ['Night Harbor', 'Velvet Hour', 'Ember Road']) {
+      await expect(page.getByText(title)).toHaveCount(0)
+    }
+  })
+
   test('Create an account goes to /register', async ({ page }) => {
     await page.goto('/')
     await page.getByRole('link', { name: 'Create an account' }).click()

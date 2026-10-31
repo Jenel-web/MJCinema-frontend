@@ -13,6 +13,11 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   fullWidth?: boolean
   /** Square 44px pill for icon-only buttons; pass an aria-label. */
   iconOnly?: boolean
+  /**
+   * Looks disabled (aria-disabled) but still receives clicks, so the screen can explain why
+   * it cannot continue (e.g. "Please select a time slot first!").
+   */
+  softDisabled?: boolean
 }
 
 const variants: Record<ButtonVariant, string> = {
@@ -45,6 +50,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
     loading = false,
     fullWidth = false,
     iconOnly = false,
+    softDisabled = false,
     className,
     disabled,
     children,
@@ -59,10 +65,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
       type={type}
       disabled={disabled || loading}
       aria-busy={loading || undefined}
+      aria-disabled={softDisabled || undefined}
       className={cn(
         'inline-flex items-center justify-center gap-2 rounded-full font-semibold whitespace-nowrap',
         'transition duration-150 ease-out active:scale-[0.98] disabled:active:scale-100',
-        variants[variant],
+        softDisabled ? 'bg-s3 text-dis' : variants[variant],
         iconOnly ? iconSizes[size] : sizes[size],
         fullWidth && 'w-full',
         className,
