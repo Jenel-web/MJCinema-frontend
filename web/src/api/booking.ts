@@ -33,13 +33,18 @@ export const bookTicket = (body: BookTicketRequest) =>
 export const getMyTickets = (userId: number | string) =>
   request<Ticket[]>(`/ticket/mytickets?userId=${userId}`, { headers: authJson() })
 
-/** PATCH /ticket/cancel, body { ticketCode }, Bearer + Content-Type, credentials: "include". */
+/**
+ * PATCH /ticket/cancel, body { ticketCode }, Bearer + Content-Type, credentials: "include".
+ * Legacy never read the body of a successful response, so it is read as text and ignored:
+ * a non-JSON or empty 200 must still count as success.
+ */
 export const cancelTicket = (ticketCode: string) =>
-  request<unknown>('/ticket/cancel', {
+  request<string>('/ticket/cancel', {
     method: 'PATCH',
     headers: authJson(),
     body: { ticketCode },
     credentials: 'include',
+    text: true,
   })
 
 /** GET /user/getUser?userId=, Bearer + Content-Type. */
