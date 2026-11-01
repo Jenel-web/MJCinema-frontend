@@ -352,7 +352,7 @@ The redesign may replace the browser `alert` and `confirm` popups (6, 7, 10, 11)
 
 ## 8. Backend call index (quick copy list)
 
-Base: `https://mjcinema-backend.onrender.com` (Bearer = `Authorization: Bearer <token>`)
+Base: `https://mjcinema-backend-new.onrender.com` (set by `VITE_API_URL`; the old `https://mjcinema-backend.onrender.com` is no longer the default) (Bearer = `Authorization: Bearer <token>`)
 
 | Method | Endpoint                             | Params / body                                                                            | Auth                  | Used on                                   |
 | ------ | ------------------------------------ | ---------------------------------------------------------------------------------------- | --------------------- | ----------------------------------------- |

@@ -4,7 +4,7 @@ import { loadEnv } from 'vite'
 const fileEnv = loadEnv('development', process.cwd(), '')
 const get = (key: string): string => (process.env[key] ?? fileEnv[key] ?? '').trim()
 
-export const API_URL = get('VITE_API_URL') || 'https://mjcinema-backend.onrender.com'
+export const API_URL = (get('VITE_API_URL') || 'https://mjcinema-backend-new.onrender.com').replace(/\/+$/, '')
 
 export type Role = 'user' | 'admin'
 
