@@ -1,5 +1,5 @@
-import { useRef, useState, type SyntheticEvent } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useEffect, useRef, useState, type SyntheticEvent } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { authErrors, login, postLoginPath } from '../api'
 import { AuthLayout, Banner, Button, Checkbox, Input, useToast } from '../components/ui'
 import { EyeIcon, EyeOffIcon } from '../components/ui/icons'
@@ -9,7 +9,15 @@ export default function LoginPage() {
   const navigate = useNavigate()
   const toast = useToast()
   const passwordRef = useRef<HTMLInputElement>(null)
+  const location = useLocation()
   const { error, shaking, showError, clearError } = useAuthFeedback()
+
+  // Sent here by a 401 (see App): say why, then drop the flag so a refresh does not repeat it.
+  useEffect(() => {
+    if (!(location.state as { sessionExpired?: boolean } | null)?.sessionExpired) return
+    showError('Your session expired. Please log in again.')
+    navigate('/', { replace: true, state: null })
+  }, [location.state, navigate, showError])
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')

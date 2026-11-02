@@ -1,7 +1,7 @@
 export * from './admin'
 export * from './auth'
 export * from './booking'
-export { getToken } from './client'
+export { getToken, setUnauthorizedHandler } from './client'
 export type { ApiResult } from './client'
 export { BASE_URL, STORAGE_KEYS } from './config'
 export * from './movies'

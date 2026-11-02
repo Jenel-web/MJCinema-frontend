@@ -47,9 +47,19 @@ async function readError(res: Response): Promise<{ message: string; data?: unkno
   }
 }
 
+/** Called when the backend answers 401 (no token, or an expired / invalid one). Set once by App. */
+let onUnauthorized: (() => void) | null = null
+export function setUnauthorizedHandler(handler: (() => void) | null): void {
+  onUnauthorized = handler
+}
+
+/** A 401 here means "wrong credentials", not "session over", so login and register never trigger the handler. */
+const NO_SESSION_PATHS = ['/user/login', '/user/register']
+
 /**
  * Network failures throw (TypeError), exactly like fetch; callers decide what to show,
  * as the legacy screens did. HTTP errors resolve to { ok: false, message }.
+ * A 401 from a protected endpoint also calls the unauthorized handler (clear storage, back to "/").
  */
 export async function request<T>(path: string, opts: Options = {}): Promise<ApiResult<T>> {
   const init: RequestInit = { method: opts.method ?? 'GET' }
@@ -58,6 +68,7 @@ export async function request<T>(path: string, opts: Options = {}): Promise<ApiR
   if (opts.credentials) init.credentials = opts.credentials
 
   const res = await fetch(`${BASE_URL}${path}`, init)
+  if (res.status === 401 && !NO_SESSION_PATHS.includes(path)) onUnauthorized?.()
   if (!res.ok) {
     const { message, data } = await readError(res)
     return { ok: false, status: res.status, message, data }

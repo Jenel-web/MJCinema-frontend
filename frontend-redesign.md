@@ -39,7 +39,7 @@ Movie posters come from TMDB: `https://image.tmdb.org/t/p/w500` + `movie.poster`
 | `movieId`            | Clicking a movie card             | Stored, barely used                                            |
 | `selectedScheduleId` | "Select Seats" in the movie modal | Seat booking page and booking call                             |
 
-Logout does `window.location.href = "/index.html"` and `localStorage.clear()`. There is **no route guard**: pages load without a token, so the redesign should decide whether to add redirects (see section 10).
+Logout does `window.location.href = "/index.html"` and `localStorage.clear()`. There is **no route guard**: pages load without a token, so the redesign should decide whether to add redirects (see section 10). The one automatic redirect is section 10 item 15: a 401 from a protected call clears `localStorage` and goes to the login page.
 
 ## 3. Navigation map (who goes where)
 
@@ -58,6 +58,8 @@ Seat booking ─ Back ─► previous page (history.back)
              ─ Booked OK ─► Dashboard
 Tickets ─ Back ─► previous page (history.back)
 Admin ─ sidebar swaps sections on the same page (no page loads)
+
+Any screen ─ a protected call answered with 401 (no token, or it expired) ─► localStorage cleared ─► Login (with "Your session expired. Please log in again.")
 ```
 
 ---
@@ -404,7 +406,7 @@ Parity first: behaviour stays as documented. Improvements are a second pass afte
 
 1. Design extras with no data source are omitted: genre filter chips, genre / duration / rating label / cast / trailer, "Seats held" timer, trend percentages, Recent Bookings, period and date pickers, table paging and table filters, Export CSV, navbar search icon, poster thumbnails in My Bookings, cinema room names and "from ₱" prices. Only these are derived client-side: the hero movie (the Now Showing movie with the earliest upcoming schedule: one `GET /schedule/movieSchedules/{movieId}` per Now Showing movie, picking the smallest showDate + startTime that has not started yet, ties go to the earlier item in GET /schedule/now-showing, and if no movie has an upcoming schedule it falls back to the first item of GET /schedule/now-showing) and showtime grouping (by showDate, then cinema.location, then startTime).
 2. Section 9 items: "Remember me" and "Forgot password?" render as in the design with no behaviour (as legacy). The "Profile" menu item has no behaviour. Admin "Settings" has no behaviour. Admin "Logout" does the same as the dashboard logout (clear localStorage, go to /). Admin Bookings and Users are "coming soon" empty states: no API calls, no fake data.
-3. No route guards (parity with legacy).
+3. No route guards (parity with legacy). Exception: a 401 from a protected call sends the user to `/` (item 15).
 4. Browser alert() and confirm() become in-page dialogs with the same messages.
 5. The movie modal stays a modal (a full-screen sheet on mobile). Movies opened from the Cinema tab open it without booking, as legacy.
 6. Seat pricing keeps the legacy rule: rows A-B VIP, rows G-H Balcony, every other row Regular. The legend text is generated from that rule and the prices come from GET /schedule/schedPrice. The design legend ("H-J") is sample data.
@@ -416,6 +418,7 @@ Parity first: behaviour stays as documented. Improvements are a second pass afte
 12. Admin Schedules: the legacy "Stat 3" / "Stat 4" "Coming soon" placeholder cards are not rebuilt (no data, no behaviour).
 13. The seat-booking confirm dialog also closes on Esc or an outside click, which is the same as **Go Back** (it never submits).
 14. `PATCH /ticket/cancel`: the body of a successful response is ignored (read as text), as legacy never read it. `GET /movie/showActiveCount` returns `{ activeCount, totalCount }` (legacy showed `active/total`; the redesign shows `activeCount`).
+15. Session expired: when a protected backend call answers **401** (no token, an expired token or an invalid one; the backend returns `{ "message": "Please log in to continue." }`), the app does the same as Logout (`localStorage.clear()`) and goes to `/` with the red banner "Your session expired. Please log in again." (shown once, a refresh does not repeat it). This replaces the old behaviour where the backend redirected to its own `/index.html`, the app received that HTML as a 200, failed to parse it and showed "Server is offline. Try again later." `POST /user/login` and `POST /user/register` are excluded (a 401 there is a wrong password, not an expired session). Other errors (400, 403, 500) are unchanged. There are still no route guards: a page that makes no protected call opens without a token. Implemented in `web/src/api/client.ts` (`setUnauthorizedHandler`), registered in `web/src/App.tsx`, banner in `web/src/pages/LoginPage.tsx`; covered by `web/e2e/session-expired.spec.ts`.
 
 ## 11. Redesign rules
 
